@@ -1,69 +1,49 @@
-const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const graphql = require('graphql');
-const joinMonster = require('join-monster')
+const { ApolloServer } = require('apollo-server');
+const { PubSub } = require('apollo-server');
+const { PrismaClient } = require('@prisma/client');
+const path = require('path');
+const fs = require('fs');
+const { getUserId } = require('./src/utils');
+const Query = require('./src/resolvers/Query');
+const Mutation = require('./src/resolvers/Mutation');
+const User = require('./src/resolvers/User');
+const Link = require('./src/resolvers/Link');
+const Vote = require('./src/resolvers/Vote')
+const Subscription = require('./src/resolvers/Subscription');
 
-const { Client } = require('pg')
-const client = new Client({
-  host: "localhost",
-  user: "admin",
-  password: "imUHMaf@YOh#",
-  database: "postgres"
-})
-client.connect();
+const pubsub = new PubSub()
 
-const User = new graphql.GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    id: { type: graphql.GraphQLString },
-    username: { type: graphql.GraphQLString },
-    email: { type: graphql.GraphQLString },
-    first_name: { type: graphql.GraphQLString },
-    last_name: { type: graphql.GraphQLString },
-    created_at: { type: graphql.GraphQLString },
-    updated_at: { type: graphql.GraphQLString },
-  })
-});
+const prisma = new PrismaClient();
 
-User._typeConfig = {
-  sqlTable: 'user',
-  uniqueKey: 'id',
+const resolvers = {
+  Query,
+  Mutation,
+  User,
+  Link,
+  Subscription,
+  Vote,
 }
 
-const QueryRoot = new graphql.GraphQLObjectType({
-  name: 'Query',
-  fields: () => ({
-    hello: {
-      type: graphql.GraphQLString,
-      resolve: () => "Hello world!"
-    },
-    users: {
-      type: new graphql.GraphQLList(User),
-      resolve: (parent, args, context, resolveInfo) => {
-        return joinMonster.default(resolveInfo, {}, sql => {
-          return client.query(sql)
-        })
-      }
-    },
-    user: {
-      type: User,
-      args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
-      where: (userTable, args, context) => `${userTable}.id = ${args.id}`,
-      resolve: (parent, args, context, resolveInfo) => {
-        return joinMonster.default(resolveInfo, {}, sql => {
-          return client.query(sql)
-        })
-      }
-    },
-  })
-});
-
-const schema = new graphql.GraphQLSchema({ query: QueryRoot });
-
-
-const app = express();
-app.use('/api', graphqlHTTP({
-  schema: schema,
-  graphiql: true,
-}));
-app.listen(4000);
+const server = new ApolloServer({
+  typeDefs: fs.readFileSync(
+    path.join(__dirname, 'src', 'schema.graphql'),
+    'utf8'
+  ),
+  resolvers,
+  context: ({ req }) => {
+    return {
+      ...req,
+      prisma,
+      pubsub,
+      userId: 
+        req && req.headers.authorization
+          ? getUserId(req)
+          : null
+    }
+  }
+})
+server
+  .listen()
+  .then(({ url }) =>
+    console.log(`Server is running on ${url}`)
+  );
