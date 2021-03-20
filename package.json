@@ -4,14 +4,13 @@
   "description": "## Getting Started 1. Install npm packages:",
   "main": "server.js",
   "dependencies": {
-    "@prisma/client": "^2.18.0",
-    "apollo-server": "^2.21.0",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "graphql": "^15.5.0",
-    "join-monster": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^8.5.1"
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.5.1"
   },
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
@@ -19,7 +18,7 @@
     "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
     "client": "cd client && npm run start",
     "seed": "node scripts/seedDB.js",
-    "install": "cd client && npm install",
+    "install": "cd frontend && npm install",
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build"
   },
