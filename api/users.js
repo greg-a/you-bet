@@ -1,19 +1,20 @@
-const crypto = require('crypto');
+const { createHmac } = require('crypto');
 const db = require('../models');
 const { users } = require('../models');
-const { Sequelize, sequelize } = require('../models');
+const { Sequelize } = require('../models');
 const Op = Sequelize.Op;
 
 const rootURL = '/api/users/';
 const secret = 'abc123' // create secure secret in .env?
 
 module.exports = function (app) {
+  // get all users (eventually query by first name, last name, username)
   app.get(rootURL, async function (req, res) {
     const results = await users.findAll();
-    // res.json(results);
-    res.send('helooo')
+    res.json(results);
   });
 
+  // get user by user id
   app.get(`${rootURL}:id`, async function (req, res) {
     const results = await users.findAll({
       where: {
@@ -23,27 +24,11 @@ module.exports = function (app) {
     res.json(results);
   });
 
-  app.post(`${rootURL}login`, async function (req, res) {
-    const { username, password } = req.body;
-
-    if (username && password) {
-      const hashedPassword = createHmac('sha256', secret)
-        .update(password)
-        .digest('hex');
-      console.log(username, password, hashedPassword)
-      // const results = await users.findAll({
-      //   where: {
-      //     username,
-      //     password: hashedPassword
-      //   }
-      // });
-    }
-  });
-
+  // create new user
   app.post(rootURL, async function (req, res) {
     const paramsClone = { ...req.body };
     paramsClone.password = createHmac('sha256', secret)
-      .update(password)
+      .update(req.body.password)
       .digest('hex');
     try {
       const createUser = await db.users.create(paramsClone);
