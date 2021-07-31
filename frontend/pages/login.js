@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Grid, NoSsr } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import { userLogin } from '../services';
 
 const LoginPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
 
   const handleChange = (event) => {
@@ -20,7 +22,8 @@ const LoginPage = () => {
     const { data } = await userLogin(loginInfo);
     saveJWToken(data);
     } catch (err) {
-      console.log('error', err)
+      console.log('error', err);
+      enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })
     }
   };
 
