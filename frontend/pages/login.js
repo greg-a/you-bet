@@ -11,9 +11,17 @@ const LoginPage = () => {
     setLoginInfo((old) => ({ ...old, [name]: value }));
   };
 
+  const saveJWToken = (token) => {
+    document.cookie = `JWToken=${token}`;
+  };
+
   const handleSubmit = async () => {
-    const response = await userLogin(loginInfo);
-    console.log(response)
+    try {
+    const { data } = await userLogin(loginInfo);
+    saveJWToken(data);
+    } catch (err) {
+      console.log('error', err)
+    }
   };
 
   return (

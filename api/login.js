@@ -17,17 +17,17 @@ module.exports = function (app) {
         const hashedPassword = createHmac('sha256', secret)
           .update(password)
           .digest('hex');
-        await users.findAll({
+        const loggedIn = await users.findOne({
           where: {
             username,
             password: hashedPassword
           }
         });
+        if (!loggedIn) return res.sendStatus(403);
         const token = generateAccessToken(username);
-        console.log(token)
         await users.update({ token }, {
           where: {
-            username,
+            username: loggedIn.username,
           },
         });
         res.json(token);
