@@ -12,9 +12,6 @@ app.use(express.static("public"));
 
 require("./api/users")(app);
 require("./api/login")(app);
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "./client/build/index.html"));
-// });
 
 const syncOptions = { force: false };
 

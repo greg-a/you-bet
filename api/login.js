@@ -1,11 +1,12 @@
 const { createHmac } = require('crypto');
+const dotenv = require('dotenv');
 const { users } = require('../models');
 const { Sequelize } = require('../models');
 const { authenticateToken, generateAccessToken } = require('../utils/token');
 const Op = Sequelize.Op;
 
 const rootURL = '/api/login/';
-const secret = 'abc123' // create secure secret in .env?
+const secret = process.env.TOKEN_SECRET;
 
 module.exports = function (app) {
   app.post(rootURL, async (req, res) => {
@@ -39,7 +40,6 @@ module.exports = function (app) {
 
   app.get(`${rootURL}token`, authenticateToken, async (req, res) => {
     try {
-      console.log('USER', req.user)
       const userInfo = await users.findOne({
         where: {
           username: req.user.username,
@@ -53,5 +53,14 @@ module.exports = function (app) {
     } catch (err) {
       res.sendStatus(500);
     }
+  });
+
+  app.get('/api/logout', authenticateToken, async (req, res) => {
+    await users.update({ token: null }, {
+      where: {
+        username: req.user.username,
+      },
+    });
+    res.redirect('/login');
   });
 };

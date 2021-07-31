@@ -1,11 +1,12 @@
 const { createHmac } = require('crypto');
+const dotenv = require('dotenv');
 const db = require('../models');
 const { users } = require('../models');
 const { Sequelize } = require('../models');
 const Op = Sequelize.Op;
 
 const rootURL = '/api/users/';
-const secret = 'abc123' // create secure secret in .env?
+const secret = process.env.TOKEN_SECRET;
 
 module.exports = function (app) {
   // get all users (eventually query by first name, last name, username)
