@@ -22,7 +22,6 @@ const LoginPage = () => {
     const { data } = await userLogin(loginInfo);
     saveJWToken(data);
     } catch (err) {
-      console.log('error', err);
       enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })
     }
   };

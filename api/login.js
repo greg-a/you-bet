@@ -38,7 +38,7 @@ module.exports = function (app) {
     }
   });
 
-  app.get(`${rootURL}token`, authenticateToken, async (req, res) => {
+  app.get(`${rootURL}token/`, authenticateToken, async (req, res) => {
     try {
       const userInfo = await users.findOne({
         where: {
