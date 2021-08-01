@@ -21,6 +21,7 @@ const LoginPage = () => {
     try {
     const { data } = await userLogin(loginInfo);
     saveJWToken(data);
+    window.location.href = '/';
     } catch (err) {
       enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })
     }
