@@ -6,6 +6,7 @@ import Theme from '../styles/mui-theme';
 import '../styles/globals.css'
 import { getCookie } from '../utils/utils';
 import { checkJWToken } from '../services';
+import ActionButton from '../components/Nav/ActionButton/ActionButton';
 
 function MyApp({ Component, pageProps }) {
   const AuthContext = createContext();
@@ -61,6 +62,9 @@ function MyApp({ Component, pageProps }) {
       <AuthContext.Provider value={{ userInfo }}>
         <SnackbarProvider>
           <Component {...pageProps} />
+          {userInfo && (
+            <ActionButton />
+          )}
         </SnackbarProvider>
       </AuthContext.Provider>
     </ThemeProvider>

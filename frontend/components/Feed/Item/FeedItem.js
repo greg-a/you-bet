@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const FeedItem = () => {
+const FeedItem = ({ data }) => {
   const classes = useStyles();
 
   return (
@@ -55,9 +55,9 @@ const FeedItem = () => {
         />
       </ListItem>
       <Grid container justifyContent="space-around">
-        <Button size="small" style={{ color: 'white' }}>Comment</Button>
-        <Button size="small" style={{ color: 'white' }}>Counter</Button>
-        <Button size="small" style={{ color: 'white' }}>Accept</Button>
+        <Button size="small" color="secondary">Comment</Button>
+        <Button size="small" color="secondary">Counter</Button>
+        <Button size="small" color="secondary">Accept</Button>
       </Grid>
     </div>
   );
