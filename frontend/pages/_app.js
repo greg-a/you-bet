@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
   const [userInfo, setUserInfo] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  axios.defaults.headers.common['Authorization'] = `JWT sd${jwToken}`;
+  axios.defaults.headers.common['Authorization'] = `JWT ${jwToken}`;
 
   const handleRedirect = (path) => {
     if (window.location.pathname !== path) window.location.href = path;
@@ -39,18 +39,21 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setJWToken(getCookie('JWToken'));
+    setTimeout(() => setIsLoading(false), 500);
   }, []);
 
   if (isLoading) return (
     <Backdrop open>
-    <Grid container style={{ textAlign: 'center', height: '80vh' }} justifyContent="center">
-      <NoSsr>
-        <Grid item md={12} className="logo-font">
-          YouBet
+      <Grid container style={{ textAlign: 'center', height: '80vh' }} justifyContent="center">
+        <NoSsr>
+          <Grid item md={12} className="logo-font">
+            YouBet
+          </Grid>
+        </NoSsr>
+        <Grid item md={12}>
+          <CircularProgress color="inherit" />
         </Grid>
-      </NoSsr>
-      <CircularProgress color="inherit" />
-    </Grid>
+      </Grid>
     </Backdrop>
   );
   return (
