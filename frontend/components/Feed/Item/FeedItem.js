@@ -7,13 +7,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { Button, Card, CardActions, CardContent, Tooltip } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, Grid, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   inline: {
     display: 'inline',
   },
-  root: {
+  body: {
     minWidth: 275,
   },
   bullet: {
@@ -23,35 +23,43 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: 14,
+    color: 'white',
   },
   pos: {
     marginBottom: 12,
   },
+  container: {
+    borderWidth: 1,
+    borderColor: 'white',
+    borderStyle: 'solid',
+    borderRadius: 5,
+    marginBottom: 5,
+  }
 }));
 
 const FeedItem = () => {
   const classes = useStyles();
 
   return (
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      </ListItemAvatar>
-      <Card className={classes.root} variant="elevation">
-        <CardContent>
-          <Typography className={classes.title} color="textSecondary" gutterBottom>
+    <div className={classes.container}>
+      <ListItem alignItems="flex-start" button>
+        <ListItemAvatar>
+          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        </ListItemAvatar>
+        <ListItemText
+          className={classes.body}
+          primary={<b>Remy Sharp</b>}
+          secondary={<Typography className={classes.title} color="textSecondary" gutterBottom>
             Kamala will be the next president
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small">Comment</Button>
-          <Button size="small">Counter</Button>
-          <Tooltip title="$20">
-            <Button size="small">Accept</Button>
-          </Tooltip>
-        </CardActions>
-      </Card>
-    </ListItem>
+          </Typography>}
+        />
+      </ListItem>
+      <Grid container justifyContent="space-around">
+        <Button size="small" style={{ color: 'white' }}>Comment</Button>
+        <Button size="small" style={{ color: 'white' }}>Counter</Button>
+        <Button size="small" style={{ color: 'white' }}>Accept</Button>
+      </Grid>
+    </div>
   );
 };
 

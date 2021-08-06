@@ -8,25 +8,28 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import FeedItem from './Item/FeedItem';
+import { Button, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     maxWidth: '36ch',
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
   inline: {
     display: 'inline',
   },
 }));
 
-const FeedList = ({ data = [1] }) => {
+const FeedList = ({ data = [1, 2] }) => {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
       {data.map((itemData, i) => (
-        <FeedItem />
+        <>
+          <FeedItem />
+        </>
       ))}
     </List>
   );
