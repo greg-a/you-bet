@@ -4,4 +4,4 @@ YouBet is an app that will allow users to propose bets to other users.
 
 - Requires Next.js, Node.js, and PostgreSQL prior to getting started
 - `npm install` to install
-- `npm start` to run
+- `npm run start` to run
