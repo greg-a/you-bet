@@ -21,12 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FeedList = ({ data = [1, 2, 4] }) => {
+const FeedList = ({ data = [1] }) => {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
-      {data.map((itemData, i) => (
+      {data.map((itemData) => (
         <div key={itemData}>
           <FeedItem />
         </div>

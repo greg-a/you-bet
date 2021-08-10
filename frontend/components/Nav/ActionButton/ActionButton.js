@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -15,6 +15,8 @@ import ShareIcon from '@material-ui/icons/Share';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import NewBetButton from './Actions/NewBetButton';
 import CreateIcon from '@material-ui/icons/Create';
+import ModalBase from '../../Modals/ModalBase';
+import NewBetModal from '../../Modals/ModalBodies/NewBet';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,17 +46,14 @@ const useStyles = makeStyles((theme) => ({
 
 const actions = [
   { icon: <CreateIcon />, name: 'Create Bet' },
-  { icon: <FileCopyIcon />, name: 'Copy' },
-  { icon: <SaveIcon />, name: 'Save' },
-  { icon: <PrintIcon />, name: 'Print' },
-  { icon: <ShareIcon />, name: 'Share' },
 ];
 
 const ActionButton = () => {
   const classes = useStyles();
-  const [direction, setDirection] = React.useState('up');
-  const [open, setOpen] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
+  const [direction, setDirection] = useState('up');
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [modalData, setModalData] = useState({ open: false });
 
   const handleDirectionChange = (event) => {
     setDirection(event.target.value);
@@ -64,8 +63,22 @@ const ActionButton = () => {
     setHidden(event.target.checked);
   };
 
+  const handleCreateBet = () => {
+    setModalData({
+      open: true,
+      title: 'Create Bet',
+      body: <NewBetModal />
+    });
+  };
+
   const handleClick = (event) => {
+    const { name } = event.currentTarget;
+    if (name === 'Create Bet') handleCreateBet();
     console.log(event.currentTarget)
+  };
+
+  const handleCloseModal = () => {
+    setModalData({ open: false })
   };
 
   const handleClose = () => {
@@ -77,26 +90,36 @@ const ActionButton = () => {
   };
 
   return (
-        <SpeedDial
-          ariaLabel="Action Buttons"
-          className={classes.speedDial}
-          hidden={hidden}
-          icon={<SpeedDialIcon />}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          open={open}
-          direction={direction}
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={handleClick}
-              name={action.name}
-            />
-          ))}
-        </SpeedDial>
+    <>
+      {modalData && (
+        <ModalBase
+          title={modalData.title}
+          open={modalData.open}
+          body={modalData.body}
+          onClose={handleCloseModal}
+        />
+      )}
+      <SpeedDial
+        ariaLabel="Action Buttons"
+        className={classes.speedDial}
+        hidden={hidden}
+        icon={<SpeedDialIcon />}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        open={open}
+        direction={direction}
+      >
+        {actions.map((action) => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={handleClick}
+            name={action.name}
+          />
+        ))}
+      </SpeedDial>
+    </>
   );
 };
 

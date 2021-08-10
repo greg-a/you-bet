@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: theme.palette.secondary.main,
     borderStyle: 'solid',
     borderRadius: 5,
     marginBottom: 5,
