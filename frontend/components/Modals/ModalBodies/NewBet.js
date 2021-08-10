@@ -1,31 +1,78 @@
-import React from 'react';
-import { Grid, TextField } from '@material-ui/core';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import React, { useState } from 'react';
+import { Button, Grid, InputAdornment, InputLabel, NoSsr, TextField } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
+import SimpleButton from '../../Form/Buttons/SimpleButton';
 
 const NewBetModal = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const today = new Date();
+  const [betInfo, setBetInfo] = useState({ description: '', betAmount: 0, endDate: today.toISOString().substring(0, 10) });
+
+  const validateForm = () => {
+    const { description, betAmount, endDate } = betInfo;
+    if (description && betAmount && endDate) return true;
+    return false;
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setBetInfo((old) => ({ ...old, [name]: value }));
+  };
+
+  const handleSubmit = () => {
+    if (!validateForm()) return enqueueSnackbar('Form is incomplete', { variant: 'error', persist: true })
+  };
+
   return (
-    <Grid container spacing={3}>
-      <Grid item md={12}>
-        <BasicTextInput
-          placeholder="description"
-          multiline
-        />
+    <NoSsr>
+      <Grid container spacing={6}>
+        <Grid item md={12}>
+          <BasicTextInput
+            label="description"
+            name="description"
+            onChange={handleChange}
+            value={betInfo.description}
+            multiline
+          />
+        </Grid>
+        <Grid item md={3}>
+          <BasicTextInput
+            label="amount"
+            type="number"
+            name="betAmount"
+            onChange={handleChange}
+            value={betInfo.bet}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MonetizationOnIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item md={4}>
+          <BasicTextInput
+            label="end date"
+            type="date"
+            name="endDate"
+            defaultValue={betInfo.endDate}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </Grid>
+        <Grid item md={2} />
+        <Grid item md={3}>
+          <SimpleButton
+            title="Submit"
+            onClick={handleSubmit}
+          />
+        </Grid>
       </Grid>
-      <Grid item md={3}>
-        <BasicTextInput
-          placeholder="$"
-        />
-      </Grid>
-      <Grid item md={3}>
-        <BasicTextInput
-          type="date"
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </Grid>
-    </Grid>
+    </NoSsr>
   );
 };
 

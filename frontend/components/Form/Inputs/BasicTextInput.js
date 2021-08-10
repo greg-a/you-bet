@@ -5,9 +5,10 @@ const BasicTextInput = (props) => (
   <TextField
     {...props}
     fullWidth
-    variant="outlined"
+    variant={props.label ? 'filled' : 'outlined'}
     size="small"
-    name={props.placeholder}
+    color="primary"
+    name={props.placeholder || props.name}
   />
 );
 

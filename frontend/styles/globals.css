@@ -28,7 +28,7 @@ a {
 }
 
 .MuiInputBase-root {
-  background-color: white;
+  background-color: white !important;
 }
 
 .modal-backdrop {

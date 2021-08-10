@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    minWidth: '40%',
+    width: '40%',
     backgroundColor: 'black',
     borderRadius: 10,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(6),
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
