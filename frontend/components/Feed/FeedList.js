@@ -21,16 +21,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FeedList = ({ data = [1] }) => {
+const FeedList = ({ data }) => {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
-      {data.map((itemData) => (
-        <div key={itemData}>
-          <FeedItem />
-        </div>
-      ))}
+      {data?.length > 0 ? (
+        <>
+          {data.map((bet) => (
+            <div key={bet.id}>
+              <FeedItem data={bet} />
+            </div>
+          ))}
+        </>
+      ) : (
+        <p>no results</p>
+      )}
     </List>
   );
 };

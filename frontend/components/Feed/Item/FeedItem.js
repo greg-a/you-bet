@@ -8,6 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Button, Card, CardActions, CardContent, Grid, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
+import { formatDate } from '../../../utils/formatters';
 
 const useStyles = makeStyles((theme) => ({
   inline: {
@@ -39,18 +40,24 @@ const useStyles = makeStyles((theme) => ({
 
 const FeedItem = ({ data }) => {
   const classes = useStyles();
+  const user = data.user.first_name && data.user.last_name ? `${data.user.first_name} ${data.user.last_name}(@${data.user.username})` : data.user.username;
 
   return (
     <div className={classes.container}>
       <ListItem alignItems="flex-start" button>
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt={user} src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
           className={classes.body}
-          primary={<b>Remy Sharp</b>}
+          primary={(
+            <Grid container justifyContent="space-between">
+              <b>{user}</b>
+              <Typography variant="caption">{formatDate(data.createdAt)}</Typography>
+            </Grid>
+          )}
           secondary={<Typography className={classes.title} color="textSecondary" gutterBottom>
-            Kamala will be the next president
+            {data.description}
           </Typography>}
         />
       </ListItem>
