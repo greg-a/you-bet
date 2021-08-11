@@ -26,6 +26,7 @@ const ModalBase = ({
               className={classes.closeButton}
               data-test="close-modal"
               color="inherit"
+              size="small"
             >
               <CloseIcon />
             </IconButton>

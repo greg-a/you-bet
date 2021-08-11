@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Grid, InputAdornment, InputLabel, NoSsr, TextField } from '@material-ui/core';
+import { Grid, InputAdornment, NoSsr } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
 import SimpleButton from '../../Form/Buttons/SimpleButton';
+import { createBet } from '../../../services/bets-services';
 
-const NewBetModal = () => {
+const NewBetModal = ({ onSubmit }) => {
   const { enqueueSnackbar } = useSnackbar();
   const today = new Date();
   const [betInfo, setBetInfo] = useState({ description: '', betAmount: 0, endDate: today.toISOString().substring(0, 10) });
@@ -21,8 +22,15 @@ const NewBetModal = () => {
     setBetInfo((old) => ({ ...old, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    if (!validateForm()) return enqueueSnackbar('Form is incomplete', { variant: 'error', persist: true })
+  const handleSubmit = async () => {
+    if (!validateForm()) return enqueueSnackbar('Form is incomplete', { variant: 'error', persist: true });
+    try {
+      await createBet(betInfo);
+      enqueueSnackbar('Bet was saved!', { variant: 'success' });
+      onSubmit();
+    } catch (err) {
+      enqueueSnackbar(err.message, 'error')
+    }
   };
 
   return (

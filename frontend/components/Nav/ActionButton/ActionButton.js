@@ -63,22 +63,21 @@ const ActionButton = () => {
     setHidden(event.target.checked);
   };
 
+  const handleCloseModal = () => {
+    setModalData({ open: false })
+  };
+
   const handleCreateBet = () => {
     setModalData({
       open: true,
       title: 'Create Bet',
-      body: <NewBetModal />
+      body: <NewBetModal onSubmit={handleCloseModal}/>
     });
   };
 
   const handleClick = (event) => {
     const { name } = event.currentTarget;
     if (name === 'Create Bet') handleCreateBet();
-    console.log(event.currentTarget)
-  };
-
-  const handleCloseModal = () => {
-    setModalData({ open: false })
   };
 
   const handleClose = () => {

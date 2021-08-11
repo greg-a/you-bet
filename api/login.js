@@ -24,7 +24,7 @@ module.exports = function (app) {
           }
         });
         if (!loggedIn) return res.sendStatus(403);
-        const token = generateAccessToken(username);
+        const token = generateAccessToken(loggedIn.id);
         await users.update({ token }, {
           where: {
             username: loggedIn.username,
@@ -42,9 +42,10 @@ module.exports = function (app) {
     try {
       const userInfo = await users.findOne({
         where: {
-          username: req.user.username,
+          id: req.user.id,
         },
       });
+      console.log('USER INFO', userInfo)
       if (userInfo.token === req.token) {
         res.json(userInfo);
       } else {
@@ -58,7 +59,7 @@ module.exports = function (app) {
   app.get('/api/logout', authenticateToken, async (req, res) => {
     await users.update({ token: null }, {
       where: {
-        username: req.user.username,
+        id: req.user.id,
       },
     });
     res.redirect('/login');

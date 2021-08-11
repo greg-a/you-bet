@@ -19,8 +19,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '45vh',
   },
   closeButton: {
-    width: 40,
-    padding: 5,
+    position: 'absolute',
+    top: 20,
+    right: 20,
   },
   headerContainer: {
     display: 'flex',
