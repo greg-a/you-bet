@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Typography, useMediaQuery,
-} from '@material-ui/core';
+import { Button, Grid, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack';;
-import { formatDate } from '../../../utils/formatters';
-import { acceptBet, newMessage } from '../../../services/index';
+import { useSnackbar } from 'notistack';
+import { newMessage } from '../../../services/index';
 import BasicTextInput from '../Inputs/BasicTextInput';
 import ModalBase from '../../Modals/ModalBase';
 import SimpleButton from './SimpleButton';
@@ -17,6 +14,7 @@ const CommentButton = ({ betInfo }) => {
   const [message, setMessage] = useState('');
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+   
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -41,7 +39,7 @@ const CommentButton = ({ betInfo }) => {
   return (
     <div>
       <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Comment
+        Comment{betInfo.messages.length > 0 ? ` (${betInfo.messages.length})` : ''}
       </Button>
       <ModalBase
         open={open}

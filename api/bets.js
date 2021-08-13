@@ -1,4 +1,4 @@
-const { bets, users, messages } = require('../models');
+const { bets, users, messages, counters } = require('../models');
 const { Sequelize } = require('../models');
 const { authenticateToken } = require('../utils/token');
 const Op = Sequelize.Op;
@@ -12,6 +12,8 @@ module.exports = (app) => {
         order: [['createdAt', 'DESC']],
         include: [
           { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+          { model: messages },
+          { model: counters },
         ],
       });
       res.json(results);

@@ -6,7 +6,8 @@ const theme = createTheme({
       main: '#025e89',
     },
     secondary: {
-      main: '#D9DBF1'
+      main: '#D9DBF1',
+      dark: '#D9DBF1A8',
     },
   },
   spacing: 4,
@@ -15,6 +16,7 @@ const theme = createTheme({
     h6: {
       fontFamily: 'Conthrax',
     },
+    description: '#D9DBF1A8',
   },
 });
 

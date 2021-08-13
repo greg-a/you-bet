@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, useMediaQuery,
-} from '@material-ui/core';
+import { Button, Grid, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack';;
-import { formatDate } from '../../../utils/formatters';
+import { useSnackbar } from 'notistack';
 import { acceptBet } from '../../../services/index';
+import BetDescription from '../Description/BetDescription';
+import ModalBase from '../../Modals/ModalBase';
+import SimpleButton from './SimpleButton';
 
 const AcceptBetButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -33,31 +33,24 @@ const AcceptBetButton = ({ betInfo }) => {
 
   return (
     <div>
-      <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Accept
+      <Button size="small" color="secondary" fullWidth onClick={handleClickOpen} disabled={betInfo.acceptedUserId > 0}>
+        {betInfo.acceptedUserId ? 'Accepted' : 'Accept'}
       </Button>
-      <Dialog
-        fullScreen={fullScreen}
+      <ModalBase
         open={open}
         onClose={handleClose}
-        aria-labelledby="accept-bet-dialog"
-      >
-        <DialogTitle id="accept-bet-dialog">{`Accept bet for $${betInfo.bet_amount}`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {betInfo.description}
-          </DialogContentText>
-            <Typography variant="caption">{`End Date: ${formatDate(betInfo.end_date, 'date')}`}</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleAcceptBet} color="primary" autoFocus>
-            Accept
-          </Button>
-        </DialogActions>
-      </Dialog>
+        title="Accept Bet"
+        body={(
+          <Grid container spacing={3}>
+            <Grid item md={12}>
+              <BetDescription betInfo={betInfo} />
+            </Grid>
+            <Grid item md={12}>
+              <SimpleButton title="Accept" onClick={handleAcceptBet} />
+            </Grid>
+          </Grid>
+        )}
+      />
     </div>
   );
 };

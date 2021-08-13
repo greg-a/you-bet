@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Typography, useMediaQuery,
-} from '@material-ui/core';
+import { Button, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack';;
-import { formatDate } from '../../../utils/formatters';
-import { acceptBet, createCounterOffer, newMessage } from '../../../services/index';
-import BasicTextInput from '../Inputs/BasicTextInput';
+import { useSnackbar } from 'notistack';
+import { createCounterOffer } from '../../../services/index';
 import ModalBase from '../../Modals/ModalBase';
-import SimpleButton from './SimpleButton';
 import BetDescription from '../Description/BetDescription';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
 
@@ -40,14 +35,18 @@ const CounterButton = ({ betInfo }) => {
   return (
     <div>
       <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Counter
+        Counter{betInfo.counters.length > 0 ? ` (${betInfo.counters.length})` : ''}
       </Button>
       <ModalBase
         open={open}
         onClose={handleClose}
         title="Counter"
         body={
-        <NewBetModal description={<BetDescription betInfo={betInfo} />} onSubmit={handleCounterOffer} />}
+          <NewBetModal
+            description={<BetDescription betInfo={betInfo} />}
+            onSubmit={handleCounterOffer}
+          />
+        }
       />
     </div>
   );

@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   bets.associate = function (models) {
     bets.belongsTo(models.users, { as: 'main_user' });
     bets.belongsTo(models.users, { as: 'accepted_user' });
+    bets.hasMany(models.messages);
+    bets.hasMany(models.counters);
   };
 
   return bets;

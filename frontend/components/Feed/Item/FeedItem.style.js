@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 12,
   },
   container: {
-    borderWidth: 1,
-    borderColor: theme.palette.secondary.main,
+    borderWidth: 0.5,
+    borderColor: theme.palette.secondary.dark,
     borderStyle: 'solid',
     borderRadius: 5,
-    marginBottom: 5,
+    marginBottom: 8,
   },
 }));
 
