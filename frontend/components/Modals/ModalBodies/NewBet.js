@@ -66,6 +66,7 @@ const NewBetModal = ({ onSubmit }) => {
             label="end date"
             type="date"
             name="endDate"
+            onChange={handleChange}
             defaultValue={betInfo.endDate}
             InputLabelProps={{
               shrink: true,

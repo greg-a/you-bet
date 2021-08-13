@@ -1,42 +1,18 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
 import {
-  Avatar, Button, Card, CardActions, CardContent, Grid, ListItem, ListItemAvatar,
-  ListItemSecondaryAction, ListItemText, Tooltip, Typography,
+  Avatar, Button, Grid, ListItem, ListItemAvatar, ListItemText, Typography,
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import { formatDate } from '../../../utils/formatters';
-
-const useStyles = makeStyles((theme) => ({
-  inline: {
-    display: 'inline',
-  },
-  body: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-    color: 'white',
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  container: {
-    borderWidth: 1,
-    borderColor: theme.palette.secondary.main,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    marginBottom: 5,
-  }
-}));
+import useStyles from './FeedItem.style';
+import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
 
 const FeedItem = ({ data }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const user = data.user.first_name && data.user.last_name ? `${data.user.first_name} ${data.user.last_name}` : data.user.username;
+
+  const [confirmDialog, setConfirmDialog] = useState({ open: false });
+  const user = data.main_user.first_name && data.main_user.last_name ? `${data.main_user.first_name} ${data.main_user.last_name}` : data.main_user.username;
 
   return (
     <div className={classes.container}>
@@ -58,9 +34,15 @@ const FeedItem = ({ data }) => {
         />
       </ListItem>
       <Grid container justifyContent="space-around">
-        <Button size="small" color="secondary">Comment</Button>
-        <Button size="small" color="secondary">Counter</Button>
-        <Button size="small" color="secondary">Accept</Button>
+        <Grid item md={4}>
+          <Button size="small" color="secondary" fullWidth>Comment</Button>
+        </Grid>
+        <Grid item md={4}>
+          <Button size="small" color="secondary" fullWidth>Counter</Button>
+        </Grid>
+        <Grid item md={4}>
+          <AcceptBetButton betInfo={data} />
+        </Grid>
       </Grid>
     </div>
   );

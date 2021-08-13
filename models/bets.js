@@ -1,5 +1,5 @@
-module.exports = function (sequelize, DataTypes) {
-  var bets = sequelize.define("bets", {
+module.exports = (sequelize, DataTypes) => {
+  const bets = sequelize.define("bets", {
     bet_amount: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -14,7 +14,8 @@ module.exports = function (sequelize, DataTypes) {
   });
 
   bets.associate = function (models) {
-    bets.belongsTo(models.users);
+    bets.belongsTo(models.users, { as: 'main_user' });
+    bets.belongsTo(models.users, { as: 'accepted_user' });
   };
 
   return bets;

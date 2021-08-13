@@ -44,9 +44,7 @@ const actions = [
 const ActionButton = () => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const [direction, setDirection] = useState('up');
-  const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const [open, setOpen] = useState(true);
   const [modalData, setModalData] = useState({ open: false });
 
   const handleCloseModal = () => {
@@ -76,8 +74,8 @@ const ActionButton = () => {
     if (name === 'Logout') handleLogout();
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = (event) => {
+    if (event.type === 'click') setOpen(false);
   };
 
   const handleOpen = () => {
@@ -97,12 +95,11 @@ const ActionButton = () => {
       <SpeedDial
         ariaLabel="Action Buttons"
         className={classes.speedDial}
-        hidden={hidden}
         icon={<SpeedDialIcon />}
         onClose={handleClose}
         onOpen={handleOpen}
         open={open}
-        direction={direction}
+        direction="up"
       >
         {actions.map((action) => (
           <SpeedDialAction

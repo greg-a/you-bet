@@ -4,3 +4,4 @@ const rootURL = '/api/bets/';
 
 export const getAllBets = () => http.get(rootURL);
 export const createBet = (data) => http.post(rootURL, data);
+export const acceptBet = (betId) => http.put(rootURL, betId);

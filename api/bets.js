@@ -11,7 +11,7 @@ module.exports = function (app) {
       const results = await bets.findAll({
         order: [['createdAt', 'DESC']],
         include: [
-          { model: users, attributes: ['id', 'first_name', 'last_name', 'username'] },
+          { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
         ],
       });
       res.json(results);
@@ -23,15 +23,30 @@ module.exports = function (app) {
 
   app.post(rootURL, authenticateToken, async (req, res) => {
     try {
-    await bets.create({
-      userId: req.user.id,
-      description: req.body.description,
-      bet_amount: req.body.betAmount,
-      end_date: req.body.endDate,
-    });
-    res.sendStatus(200);
-  } catch (err) {
-    res.sendStatus(500);
-  }
+      await bets.create({
+        mainUserId: req.user.id,
+        description: req.body.description,
+        bet_amount: req.body.betAmount,
+        end_date: req.body.endDate,
+      });
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  });
+
+  app.put(rootURL, authenticateToken, async (req, res) => {
+    try {
+      bets.update({
+        acceptedUserId: req.user.id,
+      }, {
+        where: { 
+          id: req.body.betId,
+        },
+      });
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   });
 };
