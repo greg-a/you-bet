@@ -4,11 +4,12 @@ import { useSnackbar } from 'notistack';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
 import SimpleButton from '../../Form/Buttons/SimpleButton';
-import { createBet } from '../../../services/index';
 import { validateBet } from '../../../utils/validateForms';
+import useFeedList from '../../../hooks/useFeedList';
 
 const NewBetModal = ({ onSubmit, description }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { updateFeedList } = useFeedList();
   const today = new Date();
   const [betInfo, setBetInfo] = useState({ description: '', betAmount: 0, endDate: today.toISOString().substring(0, 10) });
 
@@ -21,6 +22,7 @@ const NewBetModal = ({ onSubmit, description }) => {
     if (!validateBet(betInfo)) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
     try {
       await onSubmit(betInfo);
+      updateFeedList();
     } catch (err) {
       enqueueSnackbar(err.message, 'error')
     }

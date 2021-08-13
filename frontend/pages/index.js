@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
-import { useSnackbar } from 'notistack';
 import styles from '../styles/Home.module.css';
 import FeedList from '../components/Feed/FeedList';
-import { getAllBets } from '../services/index';
+import useFeedList from '../hooks/useFeedList';
 
 const Home = () => {
-  const { enqueueSnackbar: alert } = useSnackbar();
-  const [feed, setFeed] = useState();
-
-  useEffect(async () => {
-    try {
-      const { data } = await getAllBets();
-      setFeed(data);
-    } catch (err) {
-      alert(err.message)
-    }
-  }, []);
+  const { feedList } = useFeedList();
 
   return (
     <div className={styles.container}>
@@ -24,7 +13,7 @@ const Home = () => {
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <FeedList data={feed} />
+      <FeedList data={feedList} />
     </div>
   )
 };

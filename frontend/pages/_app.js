@@ -7,6 +7,7 @@ import '../styles/globals.css'
 import { getCookie } from '../utils/utils';
 import { checkJWToken } from '../services';
 import ActionButton from '../components/Nav/ActionButton/ActionButton';
+import { FeedListProvider } from '../contexts/feedListContext';
 
 function MyApp({ Component, pageProps }) {
   const AuthContext = createContext();
@@ -61,10 +62,12 @@ function MyApp({ Component, pageProps }) {
     <ThemeProvider theme={Theme}>
       <AuthContext.Provider value={{ userInfo }}>
         <SnackbarProvider>
-          <Component {...pageProps} />
-          {userInfo && (
-            <ActionButton />
-          )}
+          <FeedListProvider>
+            <Component {...pageProps} />
+            {userInfo && (
+              <ActionButton />
+            )}
+          </FeedListProvider>
         </SnackbarProvider>
       </AuthContext.Provider>
     </ThemeProvider>
