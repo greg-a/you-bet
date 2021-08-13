@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useSnackbar } from 'notistack';
 import styles from '../styles/Home.module.css';
@@ -11,9 +11,8 @@ const Home = () => {
 
   useEffect(async () => {
     try {
-    const { data } = await getAllBets();
-    setFeed(data);
-    console.log(data)
+      const { data } = await getAllBets();
+      setFeed(data);
     } catch (err) {
       alert(err.message)
     }

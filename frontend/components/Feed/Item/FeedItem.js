@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { formatDate } from '../../../utils/formatters';
 import useStyles from './FeedItem.style';
 import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
+import CommentButton from '../../Form/Buttons/CommentButton';
 
 const FeedItem = ({ data }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -35,7 +36,7 @@ const FeedItem = ({ data }) => {
       </ListItem>
       <Grid container justifyContent="space-around">
         <Grid item md={4}>
-          <Button size="small" color="secondary" fullWidth>Comment</Button>
+          <CommentButton betInfo={data} />
         </Grid>
         <Grid item md={4}>
           <Button size="small" color="secondary" fullWidth>Counter</Button>

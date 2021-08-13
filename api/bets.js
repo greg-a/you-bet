@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 
 const rootURL = '/api/bets/';
 
-module.exports = function (app) {
+module.exports = (app) => {
   app.get(rootURL, async (req, res) => {
     try {
       const results = await bets.findAll({

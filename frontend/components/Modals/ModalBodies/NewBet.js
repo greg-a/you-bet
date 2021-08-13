@@ -45,7 +45,7 @@ const NewBetModal = ({ onSubmit }) => {
             multiline
           />
         </Grid>
-        <Grid item md={3}>
+        <Grid item md={6}>
           <BasicTextInput
             label="amount"
             type="number"
@@ -61,7 +61,7 @@ const NewBetModal = ({ onSubmit }) => {
             }}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item md={6}>
           <BasicTextInput
             label="end date"
             type="date"
@@ -73,8 +73,7 @@ const NewBetModal = ({ onSubmit }) => {
             }}
           />
         </Grid>
-        <Grid item md={2} />
-        <Grid item md={3}>
+        <Grid item md={12}>
           <SimpleButton
             title="Submit"
             onClick={handleSubmit}

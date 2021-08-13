@@ -13,6 +13,7 @@ app.use(express.static("public"));
 require("./api/users")(app);
 require("./api/login")(app);
 require("./api/bets")(app);
+require("./api/messages")(app);
 
 const syncOptions = { force: false };
 
