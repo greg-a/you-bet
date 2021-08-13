@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Switch from '@material-ui/core/Switch';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import NewBetButton from './Actions/NewBetButton';
+import { useSnackbar } from 'notistack';
 import CreateIcon from '@material-ui/icons/Create';
 import ModalBase from '../../Modals/ModalBase';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
+import { userLogout } from '../../../services/auth-services';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,22 +38,16 @@ const useStyles = makeStyles((theme) => ({
 
 const actions = [
   { icon: <CreateIcon />, name: 'Create Bet' },
+  { icon: <ExitToAppIcon />, name: 'Logout' },
 ];
 
 const ActionButton = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [direction, setDirection] = useState('up');
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [modalData, setModalData] = useState({ open: false });
-
-  const handleDirectionChange = (event) => {
-    setDirection(event.target.value);
-  };
-
-  const handleHiddenChange = (event) => {
-    setHidden(event.target.checked);
-  };
 
   const handleCloseModal = () => {
     setModalData({ open: false })
@@ -71,13 +57,23 @@ const ActionButton = () => {
     setModalData({
       open: true,
       title: 'Create Bet',
-      body: <NewBetModal onSubmit={handleCloseModal}/>
+      body: <NewBetModal onSubmit={handleCloseModal} />
     });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await userLogout();
+      window.location.href = '/login';
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' })
+    }
   };
 
   const handleClick = (event) => {
     const { name } = event.currentTarget;
     if (name === 'Create Bet') handleCreateBet();
+    if (name === 'Logout') handleLogout();
   };
 
   const handleClose = () => {

@@ -23,7 +23,7 @@ const NewBetModal = ({ onSubmit }) => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return enqueueSnackbar('Form is incomplete', { variant: 'error', persist: true });
+    if (!validateForm()) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
     try {
       await createBet(betInfo);
       enqueueSnackbar('Bet was saved!', { variant: 'success' });

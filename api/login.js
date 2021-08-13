@@ -57,11 +57,16 @@ module.exports = function (app) {
   });
 
   app.get('/api/logout', authenticateToken, async (req, res) => {
+    try {
     await users.update({ token: null }, {
       where: {
         id: req.user.id,
       },
     });
-    res.redirect('/login');
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(500);
+  }
   });
 };

@@ -1,13 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import { Button, Card, CardActions, CardContent, Grid, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
+import {
+  Avatar, Button, Card, CardActions, CardContent, Grid, ListItem, ListItemAvatar,
+  ListItemSecondaryAction, ListItemText, Tooltip, Typography,
+} from '@material-ui/core';
 import { formatDate } from '../../../utils/formatters';
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FeedItem = ({ data }) => {
   const classes = useStyles();
-  const user = data.user.first_name && data.user.last_name ? `${data.user.first_name} ${data.user.last_name}(@${data.user.username})` : data.user.username;
+  const user = data.user.first_name && data.user.last_name ? `${data.user.first_name} ${data.user.last_name}` : data.user.username;
 
   return (
     <div className={classes.container}>
