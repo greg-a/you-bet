@@ -5,7 +5,7 @@ import {
 import { useTheme } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack';;
 import { formatDate } from '../../../utils/formatters';
-import { acceptBet } from '../../../services/bets-services';
+import { acceptBet } from '../../../services/index';
 
 const AcceptBetButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();

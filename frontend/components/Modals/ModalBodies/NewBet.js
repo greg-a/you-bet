@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
-import { Grid, InputAdornment, NoSsr } from '@material-ui/core';
+import { Grid, InputAdornment, NoSsr, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
 import SimpleButton from '../../Form/Buttons/SimpleButton';
-import { createBet } from '../../../services/bets-services';
+import { createBet } from '../../../services/index';
+import { validateBet } from '../../../utils/validateForms';
 
-const NewBetModal = ({ onSubmit }) => {
+const NewBetModal = ({ onSubmit, description }) => {
   const { enqueueSnackbar } = useSnackbar();
   const today = new Date();
   const [betInfo, setBetInfo] = useState({ description: '', betAmount: 0, endDate: today.toISOString().substring(0, 10) });
-
-  const validateForm = () => {
-    const { description, betAmount, endDate } = betInfo;
-    if (description && betAmount && endDate) return true;
-    return false;
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,11 +18,9 @@ const NewBetModal = ({ onSubmit }) => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
+    if (!validateBet(betInfo)) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
     try {
-      await createBet(betInfo);
-      enqueueSnackbar('Bet was saved!', { variant: 'success' });
-      onSubmit();
+      await onSubmit(betInfo);
     } catch (err) {
       enqueueSnackbar(err.message, 'error')
     }
@@ -36,6 +29,12 @@ const NewBetModal = ({ onSubmit }) => {
   return (
     <NoSsr>
       <Grid container spacing={6}>
+        {description && (
+          <Grid item md={12}>
+            {description}
+            <Typography>Your Counter Offer</Typography>
+          </Grid>
+        )}
         <Grid item md={12}>
           <BasicTextInput
             label="description"

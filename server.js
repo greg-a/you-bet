@@ -14,6 +14,7 @@ require("./api/users")(app);
 require("./api/login")(app);
 require("./api/bets")(app);
 require("./api/messages")(app);
+require("./api/counters")(app);
 
 const syncOptions = { force: false };
 

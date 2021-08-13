@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 import CreateIcon from '@material-ui/icons/Create';
 import ModalBase from '../../Modals/ModalBase';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
-import { userLogout } from '../../../services/auth-services';
+import { userLogout, createBet } from '../../../services/index';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,11 +51,21 @@ const ActionButton = () => {
     setModalData({ open: false })
   };
 
+  const handleSubmitBet = async (betInfo) => {
+    try {
+      await createBet(betInfo);
+      enqueueSnackbar('Bet was saved!', { variant: 'success' });
+      handleCloseModal();
+    } catch (err) {
+      enqueueSnackbar(err.message, 'error');
+    }
+  };
+
   const handleCreateBet = () => {
     setModalData({
       open: true,
       title: 'Create Bet',
-      body: <NewBetModal onSubmit={handleCloseModal} />
+      body: <NewBetModal onSubmit={handleSubmitBet} />
     });
   };
 

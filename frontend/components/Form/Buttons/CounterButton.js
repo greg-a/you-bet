@@ -5,13 +5,14 @@ import {
 import { useTheme } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack';;
 import { formatDate } from '../../../utils/formatters';
-import { acceptBet, newMessage } from '../../../services/index';
+import { acceptBet, createCounterOffer, newMessage } from '../../../services/index';
 import BasicTextInput from '../Inputs/BasicTextInput';
 import ModalBase from '../../Modals/ModalBase';
 import SimpleButton from './SimpleButton';
 import BetDescription from '../Description/BetDescription';
+import NewBetModal from '../../Modals/ModalBodies/NewBet';
 
-const CommentButton = ({ betInfo }) => {
+const CounterButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -24,14 +25,12 @@ const CommentButton = ({ betInfo }) => {
 
   const handleClose = () => {
     setOpen(false);
-    setTimeout(() => setMessage(''), 500);
   };
 
-  const handleComment = async () => {
-    if (message.length === 0) return enqueueSnackbar('Enter a comment please', { variant: 'warning' })
+  const handleCounterOffer = async (counterOffer) => {
     try {
-      await newMessage({ betId: betInfo.id, message });
-      enqueueSnackbar('Successful Comment!', { variant: 'success' });
+      await createCounterOffer({ ...counterOffer, ...{ betId: betInfo.id } });
+      enqueueSnackbar('Successful Counter Offer!', { variant: 'success' });
       handleClose();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
@@ -41,33 +40,17 @@ const CommentButton = ({ betInfo }) => {
   return (
     <div>
       <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Comment
+        Counter
       </Button>
       <ModalBase
         open={open}
         onClose={handleClose}
-        title="Comment"
-        body={(
-          <Grid container spacing={3}>
-            <Grid item md={12}>
-              <BetDescription betInfo={betInfo} />
-            </Grid>
-            <Grid item md={12}>
-              <BasicTextInput
-                multiline
-                placeholder="comment"
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-              />
-            </Grid>
-            <Grid item md={12}>
-              <SimpleButton title="Comment" onClick={handleComment} />
-            </Grid>
-          </Grid>
-        )}
+        title="Counter"
+        body={
+        <NewBetModal description={<BetDescription betInfo={betInfo} />} onSubmit={handleCounterOffer} />}
       />
     </div>
   );
 };
 
-export default CommentButton;
+export default CounterButton;

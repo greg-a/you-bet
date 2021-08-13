@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  IconButton, Modal, Typography,
+  Fade, IconButton, Modal, Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import useStyles from './ModalBase.style';
@@ -16,23 +16,29 @@ const ModalBase = ({
         open={open}
         onClose={onClose}
         data-test="basic-modal"
-        className="modal-backdrop"
+        className="modal-backdrop" 
+        closeAfterTransition
+        BackdropProps={{
+          timeout: 500,
+        }}
       >
-        <div className={classes.paper}>
-          <div className={classes.headerContainer}>
-            <Typography variant="h4" gutterBottom>{title}</Typography>
-            <IconButton
-              onClick={onClose}
-              className={classes.closeButton}
-              data-test="close-modal"
-              color="inherit"
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton>
+        <Fade in={open}>
+          <div className={classes.paper}>
+            <div className={classes.headerContainer}>
+              <Typography variant="h4" gutterBottom>{title}</Typography>
+              <IconButton
+                onClick={onClose}
+                className={classes.closeButton}
+                data-test="close-modal"
+                color="inherit"
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+            </div>
+            {body}
           </div>
-          {body}
-        </div>
+        </Fade>
       </Modal>
     </div>
   );

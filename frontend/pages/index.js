@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useSnackbar } from 'notistack';
 import styles from '../styles/Home.module.css';
 import FeedList from '../components/Feed/FeedList';
-import { getAllBets } from '../services/bets-services';
+import { getAllBets } from '../services/index';
 
 const Home = () => {
   const { enqueueSnackbar: alert } = useSnackbar();
