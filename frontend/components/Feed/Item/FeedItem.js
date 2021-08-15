@@ -8,9 +8,12 @@ import useStyles from './FeedItem.style';
 import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
 import CommentButton from '../../Form/Buttons/CommentButton';
 import CounterButton from '../../Form/Buttons/CounterButton';
+import useAuth from '../../../hooks/useAuth';
+import EditBetButton from '../../Form/Buttons/EditBetButton';
 
 const FeedItem = ({ data }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { userInfo } = useAuth();
   const classes = useStyles();
 
   const [confirmDialog, setConfirmDialog] = useState({ open: false });
@@ -43,7 +46,11 @@ const FeedItem = ({ data }) => {
           <CounterButton betInfo={data} />
         </Grid>
         <Grid item md={4}>
-          <AcceptBetButton betInfo={data} />
+          {userInfo.id === data.main_user.id ? (
+            <EditBetButton betInfo={data} />
+          ) : (
+            <AcceptBetButton betInfo={data} />
+          )}
         </Grid>
       </Grid>
     </div>
