@@ -8,9 +8,10 @@ import { getCookie } from '../utils/utils';
 import { checkJWToken } from '../services';
 import ActionButton from '../components/Nav/ActionButton/ActionButton';
 import { FeedListProvider } from '../contexts/feedListContext';
+import AppBarLogo from '../components/Nav/AppBar/AppBar';
+import AuthContext from '../contexts/authContext';
 
 function MyApp({ Component, pageProps }) {
-  const AuthContext = createContext();
   const [jwToken, setJWToken] = useState();
   const [userInfo, setUserInfo] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -47,11 +48,7 @@ function MyApp({ Component, pageProps }) {
   if (isLoading) return (
     <Backdrop open>
       <Grid container style={{ textAlign: 'center', height: '80vh' }} justifyContent="center">
-        <NoSsr>
-          <Grid item md={12} className="logo-font">
-            YouBet
-          </Grid>
-        </NoSsr>
+        <AppBarLogo />
         <Grid item md={12}>
           <CircularProgress color="inherit" />
         </Grid>
@@ -63,6 +60,8 @@ function MyApp({ Component, pageProps }) {
       <AuthContext.Provider value={{ userInfo }}>
         <SnackbarProvider>
           <FeedListProvider>
+            <AppBarLogo />
+            <div style={{ marginTop: 100 }} />
             <Component {...pageProps} />
             {userInfo && (
               <ActionButton />
@@ -72,6 +71,6 @@ function MyApp({ Component, pageProps }) {
       </AuthContext.Provider>
     </ThemeProvider>
   );
-}
+};
 
-export default MyApp
+export default MyApp;

@@ -23,8 +23,9 @@ a {
 }
 
 .logo-font {
-  font-family: 'Squada';
-  font-size: 80px;
+  font-family: 'Squada' !important;
+  font-size: 50px !important;
+  margin-top: 45px;
 }
 
 .MuiInputBase-root {
@@ -36,5 +37,5 @@ a {
 }
 
 .Mui-disabled {
-  color: rgba(168, 168, 168, 0.53);
+  color: rgba(168, 168, 168, 0.53) !important;
 }

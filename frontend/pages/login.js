@@ -28,11 +28,8 @@ const LoginPage = () => {
   };
 
   return (
-    <Grid container style={{ textAlign: 'center', height: '80vh', paddingTop: '50px' }} justifyContent="center">
+    <Grid container style={{ textAlign: 'center', height: '70vh', paddingTop: '50px' }} justifyContent="center">
       <NoSsr>
-        <Grid item md={12} className="logo-font">
-          YouBet
-        </Grid>
         <Grid item md={2}>
           <Grid container spacing={5}>
             <Grid item md={12}>
