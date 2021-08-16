@@ -12,8 +12,8 @@ module.exports = (app) => {
         order: [['createdAt', 'DESC']],
         include: [
           { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
-          { model: messages },
-          { model: counters },
+          { model: messages, include: [{ model: users }] },
+          { model: counters, include: [{ model: users }] },
         ],
       });
       res.json(results);

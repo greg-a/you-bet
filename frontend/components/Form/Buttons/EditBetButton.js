@@ -4,7 +4,6 @@ import { useTheme } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack';
 import { createCounterOffer } from '../../../services/index';
 import ModalBase from '../../Modals/ModalBase';
-import BetDescription from '../Description/BetDescription';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
 
 const EditBetButton = ({ betInfo }) => {

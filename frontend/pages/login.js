@@ -27,6 +27,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleCreateAccount = () => {
+    window.location.href = '/signup';
+  };
+
   return (
     <Grid container style={{ textAlign: 'center', height: '70vh', paddingTop: '50px' }} justifyContent="center">
       <NoSsr>
@@ -52,7 +56,7 @@ const LoginPage = () => {
               </Button>
             </Grid>
             <Grid item md={12}>
-              <Button variant="contained" color="secondary">
+              <Button onClick={handleCreateAccount} variant="contained" color="secondary">
                 Create Account
               </Button>
             </Grid>

@@ -19,7 +19,8 @@ function MyApp({ Component, pageProps }) {
   axios.defaults.headers.common['Authorization'] = `JWT ${jwToken}`;
 
   const handleRedirect = (path) => {
-    if (window.location.pathname !== path) window.location.href = path;
+    if (window.location.pathname === '/signup') return null;
+    if (window.location.pathname !== path) return window.location.href = path;
   };
 
   const handleAutoLogin = async () => {
