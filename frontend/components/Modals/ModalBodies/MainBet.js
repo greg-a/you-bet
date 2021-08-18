@@ -7,7 +7,7 @@ const MainBet = ({ betInfo }) => {
   const [selectedChip, setSelectedChip] = useState('details');
   const bodies = { 
     details: <BetDescription betInfo={betInfo} />,
-    comments: <CommentFeed comments={betInfo.messages} />,
+    comments: <CommentFeed betInfo={betInfo} />,
     counters: <div>counters</div>,
   };
 

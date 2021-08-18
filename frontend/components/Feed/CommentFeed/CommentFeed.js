@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CommentFeed = ({ comments }) => {
+const CommentFeed = ({ betInfo }) => {
   const classes = useStyles();
   return (
     <>
       <List className={classes.root} dense>
-        {comments?.length > 0 ? (
+        {betInfo?.messages.length > 0 ? (
           <>
-            {comments.map((comment) => (
+            {betInfo.messages.map((comment) => (
               <BasicFeedItem
                 body={comment.message}
                 user={comment.user}
@@ -39,7 +39,7 @@ const CommentFeed = ({ comments }) => {
         )}
       </List>
       <CommentTextInput 
-        betInfo={{ id: comments[0].betId }}
+        betInfo={betInfo}
       />
     </>
   );
