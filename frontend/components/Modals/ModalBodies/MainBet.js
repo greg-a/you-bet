@@ -6,7 +6,7 @@ import BetDescription from '../../Form/Description/BetDescription';
 
 const MainBet = ({ betInfo }) => {
   const [selectedChip, setSelectedChip] = useState('details');
-  const bodies = { 
+  const bodies = {
     details: <BetDescription betInfo={betInfo} />,
     comments: <CommentFeed betInfo={betInfo} />,
     counters: <BetFeed betInfo={betInfo.counter_bets} />,
@@ -18,35 +18,41 @@ const MainBet = ({ betInfo }) => {
   };
 
   return (
-    <Grid container>
-      <Grid item md={12}>
-        <Grid container justifyContent="space-around">
-          <Chip
-            label="Details"
-            name="details"
-            clickable
-            color={selectedChip === 'details' ? 'primary' : 'secondary'}
-            onClick={handleChipClick}
-          />
-          <Chip
-            label="Comments"
-            name="comments"
-            clickable
-            color="primary"
-            color={selectedChip === 'comments' ? 'primary' : 'secondary'}
-            onClick={handleChipClick}
-          />
-          <Chip
-            label="Counters"
-            name="counters"
-            clickable
-            color="primary"
-            color={selectedChip === 'counters' ? 'primary' : 'secondary'}
-            onClick={handleChipClick}
-          />
+    <Grid container spacing={4}>
+      <Grid item xs={12}>
+        <Grid container justifyContent="space-around" style={{ textAlign: 'center' }}>
+          <Grid item xs={3}>
+            <Chip
+              label="Details"
+              name="details"
+              clickable
+              color={selectedChip === 'details' ? 'primary' : 'secondary'}
+              onClick={handleChipClick}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Chip
+              label="Comments"
+              name="comments"
+              clickable
+              color="primary"
+              color={selectedChip === 'comments' ? 'primary' : 'secondary'}
+              onClick={handleChipClick}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Chip
+              label="Counters"
+              name="counters"
+              clickable
+              color="primary"
+              color={selectedChip === 'counters' ? 'primary' : 'secondary'}
+              onClick={handleChipClick}
+            />
+          </Grid>
         </Grid>
       </Grid>
-      <Grid item md={12}>
+      <Grid item xs={12} style={{ minHeight: '42vh' }}>
         {bodies[selectedChip]}
       </Grid>
     </Grid>

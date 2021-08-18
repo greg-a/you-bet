@@ -51,6 +51,7 @@ function MyApp({ Component, pageProps }) {
       <Grid container style={{ textAlign: 'center', height: '80vh' }} justifyContent="center">
         <AppBarLogo />
         <Grid item md={12}>
+          <div style={{ marginTop: 250 }} />
           <CircularProgress color="inherit" />
         </Grid>
       </Grid>
@@ -62,7 +63,7 @@ function MyApp({ Component, pageProps }) {
         <SnackbarProvider>
           <FeedListProvider>
             <AppBarLogo />
-            <div style={{ marginTop: 100 }} />
+            <div style={{ marginTop: 50 }} />
             <Component {...pageProps} />
             {userInfo && (
               <ActionButton />

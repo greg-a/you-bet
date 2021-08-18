@@ -45,10 +45,10 @@ const AcceptBetButton = ({ betInfo }) => {
         title="Accept Bet"
         body={(
           <Grid container spacing={3}>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <BetDescription betInfo={betInfo} />
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <SimpleButton title="Accept" onClick={handleAcceptBet} />
             </Grid>
           </Grid>

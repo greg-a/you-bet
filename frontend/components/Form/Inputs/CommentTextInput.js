@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import SimpleButton from '../Buttons/SimpleButton';
@@ -26,7 +26,7 @@ const CommentTextInput = ({ betInfo, onSubmit = () => {} }) => {
 
   return (
     <Grid container spacing={3} style={{ paddingTop: 10 }}>
-      <Grid item md={12}>
+      <Grid item xs={12}>
         <BasicTextInput
           multiline
           placeholder="what do you think..."
@@ -35,7 +35,7 @@ const CommentTextInput = ({ betInfo, onSubmit = () => {} }) => {
           autoFocus
         />
       </Grid>
-      <Grid item md={12}>
+      <Grid item xs={12}>
         <SimpleButton title="Send" onClick={handleComment} />
       </Grid>
     </Grid>

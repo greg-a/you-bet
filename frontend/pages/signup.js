@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import SimpleButton from '../components/Form/Buttons/SimpleButton';
@@ -22,11 +22,13 @@ const Signup = () => {
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
-    console.log(newAccountInfo);
   };
 
 return (
-  <Grid container alignContent="center" direction="column" spacing={3}>
+    <Grid container alignContent="center" direction="column" spacing={3} style={{ paddingTop: '100px' }}>
+    <Grid item md={12} xs={8} style={{ textAlign: 'initial' }}>
+      <Typography variant="h5">Sign Up</Typography>
+    </Grid>
     <Grid item>
       <BasicTextInput
         type="text"

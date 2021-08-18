@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -9,6 +9,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import ModalBase from '../../Modals/ModalBase';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
 import { userLogout, createBet } from '../../../services/index';
+import { useMediaQuery } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,8 @@ const actions = [
 ];
 
 const ActionButton = () => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [open, setOpen] = useState(true);
@@ -91,6 +94,10 @@ const ActionButton = () => {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    setOpen(!fullScreen);
+  }, [fullScreen]);
 
   return (
     <>

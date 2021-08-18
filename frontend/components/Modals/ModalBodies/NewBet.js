@@ -44,7 +44,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
             <Typography>Your Counter Offer</Typography>
           </Grid>
         )}
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <BasicTextInput
             label="description"
             name="description"
@@ -53,7 +53,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
             multiline
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={6}>
           <BasicTextInput
             label="amount"
             type="number"
@@ -69,7 +69,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
             }}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={6}>
           <BasicTextInput
             label="end date"
             type="date"
@@ -81,7 +81,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
             }}
           />
         </Grid>
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <SimpleButton
             title="Submit"
             onClick={handleSubmit}
