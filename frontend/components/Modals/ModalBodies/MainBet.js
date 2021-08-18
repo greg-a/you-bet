@@ -1,12 +1,13 @@
 import { Chip, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
+import CommentFeed from '../../Feed/CommentFeed/CommentFeed';
 import BetDescription from '../../Form/Description/BetDescription';
 
 const MainBet = ({ betInfo }) => {
   const [selectedChip, setSelectedChip] = useState('details');
   const bodies = { 
-    details: <BetDescription betInfo = { betInfo } />,
-    comments: <div>comments</div>,
+    details: <BetDescription betInfo={betInfo} />,
+    comments: <CommentFeed comments={betInfo.messages} />,
     counters: <div>counters</div>,
   };
 
@@ -23,7 +24,6 @@ const MainBet = ({ betInfo }) => {
             label="Details"
             name="details"
             clickable
-            size="small"
             color={selectedChip === 'details' ? 'primary' : 'secondary'}
             onClick={handleChipClick}
           />
@@ -31,7 +31,6 @@ const MainBet = ({ betInfo }) => {
             label="Comments"
             name="comments"
             clickable
-            size="small"
             color="primary"
             color={selectedChip === 'comments' ? 'primary' : 'secondary'}
             onClick={handleChipClick}
@@ -40,7 +39,6 @@ const MainBet = ({ betInfo }) => {
             label="Counters"
             name="counters"
             clickable
-            size="small"
             color="primary"
             color={selectedChip === 'counters' ? 'primary' : 'secondary'}
             onClick={handleChipClick}
@@ -48,7 +46,7 @@ const MainBet = ({ betInfo }) => {
         </Grid>
       </Grid>
       <Grid item md={12}>
-        { bodies[selectedChip] }
+        {bodies[selectedChip]}
       </Grid>
     </Grid>
   );

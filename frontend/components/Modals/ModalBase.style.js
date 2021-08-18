@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 400,
+    width: 412,
     backgroundColor: 'black',
     borderRadius: 10,
     boxShadow: theme.shadows[5],

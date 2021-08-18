@@ -1,6 +1,5 @@
 import React from 'react';
 import { List, makeStyles } from '@material-ui/core';
-import useAuth from '../../../hooks/useAuth';
 import BetFeedItem from '../FeedItems/BetFeedItem';
 
 const useStyles = makeStyles((theme) => ({

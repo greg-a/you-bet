@@ -10,7 +10,12 @@ import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
 const BetFeedItem = ({ betInfo }) => {
   const { userInfo } = useAuth();
   return (
-    <BasicFeedItem data={betInfo}>
+    <BasicFeedItem
+      user={betInfo.main_user}
+      modalData={betInfo}
+      body={betInfo.description}
+      timestamp={betInfo.createdAt}
+    >
       <Grid container justifyContent="space-around">
         <Grid item md={4}>
           <CommentButton betInfo={betInfo} />

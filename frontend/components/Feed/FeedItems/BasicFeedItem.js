@@ -1,47 +1,45 @@
 import React, { useState } from 'react';
 import {
-  Avatar, Button, Grid, ListItem, ListItemAvatar, ListItemText, Typography,
+  Avatar, Grid, ListItem, ListItemAvatar, ListItemText, Typography,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { formatDate } from '../../../utils/formatters';
 import useStyles from './FeedItem.style';
-import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
-import CommentButton from '../../Form/Buttons/CommentButton';
-import CounterButton from '../../Form/Buttons/CounterButton';
 import useAuth from '../../../hooks/useAuth';
-import EditBetButton from '../../Form/Buttons/EditBetButton';
 import ModalBase from '../../Modals/ModalBase';
 import MainBet from '../../Modals/ModalBodies/MainBet';
 
-const BasicFeedItem = ({ data, children }) => {
+const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { userInfo } = useAuth();
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
-  const user = data.main_user.first_name && data.main_user.last_name ? `${data.main_user.first_name} ${data.main_user.last_name}` : data.main_user.username;
+  const username = user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username;
 
   return (
     <div className={classes.container}>
-      <ModalBase
-        title="Bet"
-        onClose={() => setModalOpen(false)}
-        open={modalOpen}
-        body={<MainBet betInfo={data} />}
-      />
+      {modalData && (
+        <ModalBase
+          title="Bet"
+          onClose={() => setModalOpen(false)}
+          open={modalOpen}
+          body={<MainBet betInfo={modalData} />}
+        />
+      )}
       <ListItem alignItems="flex-start" button onClick={() => setModalOpen(true)}>
         <ListItemAvatar>
-          <Avatar alt={user} src="/static/images/avatar/1.jpg" />
+          <Avatar alt={username} src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
           className={classes.body}
           primary={(
             <Grid container justifyContent="space-between">
-              <b>{user}</b>
-              <Typography variant="caption">{formatDate(data.createdAt)}</Typography>
+              <b>{username}</b>
+              <Typography variant="caption">{formatDate(timestamp)}</Typography>
             </Grid>
           )}
           secondary={<Typography className={classes.title} color="textSecondary" gutterBottom>
-            {data.description}
+            {body}
           </Typography>}
         />
       </ListItem>
