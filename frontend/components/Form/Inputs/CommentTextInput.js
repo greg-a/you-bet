@@ -32,6 +32,7 @@ const CommentTextInput = ({ betInfo, onSubmit = () => {} }) => {
           placeholder="what do you think..."
           value={message}
           onChange={(event) => setMessage(event.target.value)}
+          autoFocus
         />
       </Grid>
       <Grid item md={12}>

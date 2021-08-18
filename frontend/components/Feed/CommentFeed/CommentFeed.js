@@ -1,8 +1,6 @@
 import React from 'react';
-import { Grid, List, makeStyles } from '@material-ui/core';
+import { List, makeStyles } from '@material-ui/core';
 import BasicFeedItem from '../FeedItems/BasicFeedItem';
-import BasicTextInput from '../../Form/Inputs/BasicTextInput';
-import SimpleButton from '../../Form/Buttons/SimpleButton';
 import CommentTextInput from '../../Form/Inputs/CommentTextInput';
 
 const useStyles = makeStyles((theme) => ({
