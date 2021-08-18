@@ -8,7 +8,7 @@ import useFeedList from '../../../hooks/useFeedList';
 
 const CommentTextInput = ({ betInfo, onSubmit = () => {} }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { updateFeedList } = useFeedList();
+  const { refreshFeedList } = useFeedList();
   const [message, setMessage] = useState('');
 
   const handleComment = async () => {
@@ -17,7 +17,7 @@ const CommentTextInput = ({ betInfo, onSubmit = () => {} }) => {
       await newMessage({ betId: betInfo.id, message });
       enqueueSnackbar('Successful Comment!', { variant: 'success' });
       setMessage('');
-      updateFeedList();
+      refreshFeedList();
       onSubmit();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });

@@ -10,7 +10,7 @@ import useFeedList from '../../../hooks/useFeedList';
 
 const AcceptBetButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { updateFeedList } = useFeedList();
+  const { refreshFeedList } = useFeedList();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -25,9 +25,9 @@ const AcceptBetButton = ({ betInfo }) => {
 
   const handleAcceptBet = async () => {
     try {
-      await acceptBet({ betId: betInfo.id });
+      await acceptBet(betInfo.id);
       enqueueSnackbar('Bet accepted!', { variant: 'success' });
-      updateFeedList();
+      refreshFeedList();
       handleClose();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });

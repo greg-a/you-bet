@@ -7,7 +7,7 @@ const { Provider } = feedListContext;
 export const FeedListProvider = ({children}) => {
   const [feedList, setFeedList] = useState([]);
 
-  const updateFeedList = async () => {
+  const refreshFeedList = async () => {
     try {
     const { data } = await getAllBets();
     setFeedList(data);
@@ -18,11 +18,11 @@ export const FeedListProvider = ({children}) => {
   };
 
   useEffect(() => {
-    updateFeedList();
+    refreshFeedList();
   }, []);
 
   return (
-    <Provider value={{ feedList, updateFeedList }}>
+    <Provider value={{ feedList, refreshFeedList }}>
       {children}
     </Provider>
   );

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Button, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack';
-import { createCounterOffer } from '../../../services/index';
+import useFeedList from '../../../hooks/useFeedList';
 import ModalBase from '../../Modals/ModalBase';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
+import { editBet } from '../../../services/index';
 
 const EditBetButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { refreshFeedList } = useFeedList();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -20,10 +22,11 @@ const EditBetButton = ({ betInfo }) => {
     setOpen(false);
   };
 
-  const handleCounterOffer = async (counterOffer) => {
+  const handleEditBet = async (newBet) => {
     try {
-      await createCounterOffer({ ...counterOffer, ...{ betId: betInfo.id } });
-      enqueueSnackbar('Successful Counter Offer!', { variant: 'success' });
+      await editBet(betInfo.id, newBet);
+      enqueueSnackbar('Successfully edited bet', { variant: 'success' });
+      refreshFeedList();
       handleClose();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
@@ -42,7 +45,7 @@ const EditBetButton = ({ betInfo }) => {
         body={
           <NewBetModal
             editBet={betInfo}
-            onSubmit={handleCounterOffer}
+            onSubmit={handleEditBet}
           />
         }
       />

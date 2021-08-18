@@ -34,7 +34,7 @@ const CounterButton = ({ betInfo }) => {
   return (
     <div>
       <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Counter{betInfo.counter_bets.length > 0 ? ` (${betInfo.counter_bets.length})` : ''}
+        Counter{betInfo.counter_bets?.length > 0 ? ` (${betInfo.counter_bets.length})` : ''}
       </Button>
       <ModalBase
         open={open}

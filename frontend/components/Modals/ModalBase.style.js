@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     display: 'flex',
     flexDirection: 'column',
+    minHeight: '65vh',
   },
   body: {
     overflowY: 'auto',

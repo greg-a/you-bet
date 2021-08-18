@@ -9,7 +9,7 @@ import useFeedList from '../../../hooks/useFeedList';
 
 const NewBetModal = ({ onSubmit, description, editBet }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { updateFeedList } = useFeedList();
+  const { refreshFeedList } = useFeedList();
   const today = new Date();
   const [betInfo, setBetInfo] = useState({ description: '', betAmount: 0, endDate: today.toISOString().substring(0, 10) });
 
@@ -22,7 +22,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
     if (!validateBet(betInfo)) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
     try {
       await onSubmit(betInfo);
-      updateFeedList();
+      refreshFeedList();
     } catch (err) {
       enqueueSnackbar(err.message, 'error')
     }
