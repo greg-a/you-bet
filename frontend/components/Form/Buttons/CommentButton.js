@@ -9,7 +9,7 @@ const CommentButton = ({ betInfo }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-   
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,10 +30,12 @@ const CommentButton = ({ betInfo }) => {
         title="Comment"
         body={(
           <Grid container spacing={3}>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <BetDescription betInfo={betInfo} />
             </Grid>
-            <CommentTextInput betInfo={betInfo} onSubmit={handleClose} />
+            <Grid item xs={12}>
+              <CommentTextInput betInfo={betInfo} onSubmit={handleClose} />
+            </Grid>
           </Grid>
         )}
       />

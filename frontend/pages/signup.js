@@ -16,7 +16,9 @@ const Signup = () => {
 
   const handleSubmit = async () => {
     try {
-      await createAccount(newAccountInfo);
+      const newAccountInfoClone = { ...newAccountInfo };
+      newAccountInfoClone.username = newAccountInfoClone.username.toLowerCase();
+      await createAccount(newAccountInfoClone);
       enqueueSnackbar('Your create was created!', { variant: 'success' });
       window.location.href = '/';
     } catch (err) {

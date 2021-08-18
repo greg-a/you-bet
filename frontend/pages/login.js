@@ -19,9 +19,11 @@ const LoginPage = () => {
 
   const handleSubmit = async () => {
     try {
-    const { data } = await userLogin(loginInfo);
-    saveJWToken(data);
-    window.location.href = '/';
+      const loginInfoClone = { ...loginInfo };
+      loginInfoClone.username = loginInfoClone.username.toLowerCase();
+      const { data } = await userLogin(loginInfoClone);
+      saveJWToken(data);
+      window.location.href = '/';
     } catch (err) {
       enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })
     }
