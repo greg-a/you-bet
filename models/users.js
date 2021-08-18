@@ -30,7 +30,6 @@ module.exports = function (sequelize, DataTypes) {
 
   users.associate = function (models) {
     users.hasMany(models.bets);
-    users.hasMany(models.counters);
     users.hasMany(models.messages);
   };
 

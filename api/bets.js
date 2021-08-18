@@ -9,11 +9,14 @@ module.exports = (app) => {
   app.get(rootURL, async (req, res) => {
     try {
       const results = await bets.findAll({
+        where: {
+          parent_id: null,
+        },
         order: [['createdAt', 'DESC']],
         include: [
           { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
           { model: messages, include: [{ model: users }] },
-          { model: counters, include: [{ model: users }] },
+          { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }]},
         ],
       });
       res.json(results);
@@ -30,6 +33,7 @@ module.exports = (app) => {
         description: req.body.description,
         bet_amount: req.body.betAmount,
         end_date: req.body.endDate,
+        parent_id: req.body.betId || null,
       });
       res.sendStatus(200);
     } catch (err) {

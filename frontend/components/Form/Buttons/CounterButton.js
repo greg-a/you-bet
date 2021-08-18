@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { Button, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack';
-import { createCounterOffer } from '../../../services/index';
 import ModalBase from '../../Modals/ModalBase';
 import BetDescription from '../Description/BetDescription';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
+import { createBet } from '../../../services';
 
 const CounterButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -24,7 +23,7 @@ const CounterButton = ({ betInfo }) => {
 
   const handleCounterOffer = async (counterOffer) => {
     try {
-      await createCounterOffer({ ...counterOffer, ...{ betId: betInfo.id } });
+      await createBet({ ...counterOffer, ...{ betId: betInfo.id } });
       enqueueSnackbar('Successful Counter Offer!', { variant: 'success' });
       handleClose();
     } catch (err) {
@@ -35,7 +34,7 @@ const CounterButton = ({ betInfo }) => {
   return (
     <div>
       <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Counter{betInfo.counters.length > 0 ? ` (${betInfo.counters.length})` : ''}
+        Counter{betInfo.counter_bets.length > 0 ? ` (${betInfo.counter_bets.length})` : ''}
       </Button>
       <ModalBase
         open={open}

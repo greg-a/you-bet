@@ -11,13 +11,18 @@ module.exports = (sequelize, DataTypes) => {
     end_date: {
       type: DataTypes.DATEONLY,
     },
+    parent_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   });
 
   bets.associate = function (models) {
     bets.belongsTo(models.users, { as: 'main_user' });
     bets.belongsTo(models.users, { as: 'accepted_user' });
+    bets.belongsTo(models.bets, { as: 'parent_bet', foreignKey: 'parent_id' });
     bets.hasMany(models.messages);
-    bets.hasMany(models.counters);
+    bets.hasMany(models.bets, { as: 'counter_bets', foreignKey: 'parent_id' });
   };
 
   return bets;
