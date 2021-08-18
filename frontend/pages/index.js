@@ -1,8 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import FeedList from '../components/Feed/FeedList';
 import useFeedList from '../hooks/useFeedList';
+import BetFeed from '../components/Feed/BetFeed/BetFeed';
 
 const Home = () => {
   const { feedList } = useFeedList();
@@ -13,7 +13,7 @@ const Home = () => {
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <FeedList data={feedList} />
+      <BetFeed betInfo={feedList} />
     </div>
   )
 };

@@ -6,9 +6,11 @@ import { acceptBet } from '../../../services/index';
 import BetDescription from '../Description/BetDescription';
 import ModalBase from '../../Modals/ModalBase';
 import SimpleButton from './SimpleButton';
+import useFeedList from '../../../hooks/useFeedList';
 
 const AcceptBetButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { updateFeedList } = useFeedList();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -25,6 +27,7 @@ const AcceptBetButton = ({ betInfo }) => {
     try {
       await acceptBet({ betId: betInfo.id });
       enqueueSnackbar('Bet accepted!', { variant: 'success' });
+      updateFeedList();
       handleClose();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });

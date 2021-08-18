@@ -7,9 +7,11 @@ import BasicTextInput from '../Inputs/BasicTextInput';
 import ModalBase from '../../Modals/ModalBase';
 import SimpleButton from './SimpleButton';
 import BetDescription from '../Description/BetDescription';
+import useFeedList from '../../../hooks/useFeedList';
 
 const CommentButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { updateFeedList } = useFeedList();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const theme = useTheme();
@@ -30,6 +32,7 @@ const CommentButton = ({ betInfo }) => {
     try {
       await newMessage({ betId: betInfo.id, message });
       enqueueSnackbar('Successful Comment!', { variant: 'success' });
+      updateFeedList();
       handleClose();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });

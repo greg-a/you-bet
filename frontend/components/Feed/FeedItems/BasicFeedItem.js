@@ -10,18 +10,25 @@ import CommentButton from '../../Form/Buttons/CommentButton';
 import CounterButton from '../../Form/Buttons/CounterButton';
 import useAuth from '../../../hooks/useAuth';
 import EditBetButton from '../../Form/Buttons/EditBetButton';
+import ModalBase from '../../Modals/ModalBase';
+import MainBet from '../../Modals/ModalBodies/MainBet';
 
-const FeedItem = ({ data }) => {
+const BasicFeedItem = ({ data, children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { userInfo } = useAuth();
   const classes = useStyles();
-
-  const [confirmDialog, setConfirmDialog] = useState({ open: false });
+  const [modalOpen, setModalOpen] = useState(false);
   const user = data.main_user.first_name && data.main_user.last_name ? `${data.main_user.first_name} ${data.main_user.last_name}` : data.main_user.username;
 
   return (
     <div className={classes.container}>
-      <ListItem alignItems="flex-start" button>
+      <ModalBase
+        title="Bet"
+        onClose={() => setModalOpen(false)}
+        open={modalOpen}
+        body={<MainBet betInfo={data} />}
+      />
+      <ListItem alignItems="flex-start" button onClick={() => setModalOpen(true)}>
         <ListItemAvatar>
           <Avatar alt={user} src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
@@ -38,23 +45,9 @@ const FeedItem = ({ data }) => {
           </Typography>}
         />
       </ListItem>
-      <Grid container justifyContent="space-around">
-        <Grid item md={4}>
-          <CommentButton betInfo={data} />
-        </Grid>
-        <Grid item md={4}>
-          <CounterButton betInfo={data} />
-        </Grid>
-        <Grid item md={4}>
-          {userInfo.id === data.main_user.id ? (
-            <EditBetButton betInfo={data} />
-          ) : (
-            <AcceptBetButton betInfo={data} />
-          )}
-        </Grid>
-      </Grid>
+      {children}
     </div>
   );
 };
 
-export default FeedItem;
+export default BasicFeedItem;
