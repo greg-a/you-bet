@@ -10,6 +10,7 @@ import ActionButton from '../components/Nav/ActionButton/ActionButton';
 import { FeedListProvider } from '../contexts/feedListContext';
 import AppBarLogo from '../components/Nav/AppBar/AppBar';
 import AuthContext from '../contexts/authContext';
+import { SelectedBetProvider } from '../contexts/selectedBetContext';
 
 function MyApp({ Component, pageProps }) {
   const [jwToken, setJWToken] = useState();
@@ -62,12 +63,14 @@ function MyApp({ Component, pageProps }) {
       <AuthContext.Provider value={{ userInfo }}>
         <SnackbarProvider>
           <FeedListProvider>
-            <AppBarLogo />
-            <div style={{ marginTop: 50 }} />
-            <Component {...pageProps} />
-            {userInfo && (
-              <ActionButton />
-            )}
+            <SelectedBetProvider>
+              <AppBarLogo />
+              <div style={{ marginTop: 50 }} />
+              <Component {...pageProps} />
+              {userInfo && (
+                <ActionButton />
+              )}
+            </SelectedBetProvider>
           </FeedListProvider>
         </SnackbarProvider>
       </AuthContext.Provider>
