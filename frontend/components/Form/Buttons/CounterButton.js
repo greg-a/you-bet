@@ -7,7 +7,7 @@ import BetDescription from '../Description/BetDescription';
 import NewBetModal from '../../Modals/ModalBodies/NewBet';
 import { createBet } from '../../../services';
 
-const CounterButton = ({ betInfo }) => {
+const CounterButton = ({ betInfo, variant = 'text' }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -33,8 +33,8 @@ const CounterButton = ({ betInfo }) => {
 
   return (
     <div>
-      <Button size="small" color="secondary" fullWidth onClick={handleClickOpen}>
-        Counter{betInfo.counter_bets?.length > 0 ? ` (${betInfo.counter_bets.length})` : ''}
+      <Button size="small" color={variant === 'contained' ? 'primary' : 'secondary'} variant={variant} fullWidth onClick={handleClickOpen}>
+        Counter{betInfo?.counter_bets?.length > 0 && variant !== 'contained' ? ` (${betInfo.counter_bets.length})` : ''}
       </Button>
       <ModalBase
         open={open}

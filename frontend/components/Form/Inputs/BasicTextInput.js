@@ -8,7 +8,7 @@ const BasicTextInput = (props) => (
     variant={props.label ? 'filled' : 'outlined'}
     size="small"
     color="primary"
-    name={props.placeholder || props.name}
+    name={props.name || props.placeholder}
   />
 );
 

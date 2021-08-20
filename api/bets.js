@@ -58,7 +58,7 @@ module.exports = (app) => {
 
   app.put(`${rootURL}:id`, authenticateToken, async (req, res) => {
     try {
-      bets.update({
+      await bets.update({
         description: req.body.description,
         bet_amount: req.body.betAmount,
         end_date: req.body.endDate,
@@ -69,6 +69,25 @@ module.exports = (app) => {
           },
         });
       res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  });
+
+  app.get(`${rootURL}:id`, async (req, res) => {
+    try {
+      const results = await bets.findOne(
+        {
+          where: {
+            id: req.params.id,
+          },
+          include: [
+            { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+            { model: messages, include: [{ model: users }] },
+            { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
+          ],
+        });
+      res.json(results);
     } catch (err) {
       res.sendStatus(500);
     }

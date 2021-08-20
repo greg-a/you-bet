@@ -24,7 +24,7 @@ const BetFeedItem = ({ betInfo }) => {
           <CounterButton betInfo={betInfo} />
         </Grid>
         <Grid item md={4}>
-          {userInfo.id === betInfo.main_user.id ? (
+          {userInfo?.id === betInfo.main_user.id ? (
             <EditBetButton betInfo={betInfo} />
           ) : (
             <AcceptBetButton betInfo={betInfo} />

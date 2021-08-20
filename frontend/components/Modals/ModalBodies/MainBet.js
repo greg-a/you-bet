@@ -2,6 +2,7 @@ import { Chip, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
 import BetFeed from '../../Feed/BetFeed/BetFeed';
 import CommentFeed from '../../Feed/CommentFeed/CommentFeed';
+import CounterFeed from '../../Feed/CounterFeed/CounterFeed';
 import BetDescription from '../../Form/Description/BetDescription';
 
 const MainBet = ({ betInfo }) => {
@@ -9,7 +10,7 @@ const MainBet = ({ betInfo }) => {
   const bodies = {
     details: <BetDescription betInfo={betInfo} />,
     comments: <CommentFeed betInfo={betInfo} />,
-    counters: <BetFeed betInfo={betInfo.counter_bets} />,
+    counters: <CounterFeed betInfo={betInfo} />,
   };
 
   const handleChipClick = (event) => {

@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { NoSsr } from '@material-ui/core';
+import { Avatar, NoSsr } from '@material-ui/core';
 import useAuth from '../../../hooks/useAuth';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +33,9 @@ const AppBarLogo = () => {
       <div className={classes.root}>
         <AppBar position="fixed">
           <Toolbar className={classes.toolbar}>
+            <IconButton disabled={!userInfo}>
+              <Avatar alt={userInfo?.username} src="/static/images/avatar/1.jpg" />
+            </IconButton>
             <Typography variant="h6" className="logo-font">
               YouBet
             </Typography>

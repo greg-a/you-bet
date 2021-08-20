@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
   },
   body: {
     minWidth: 275,
+    paddingRight: 10,
   },
   bullet: {
     display: 'inline-block',
