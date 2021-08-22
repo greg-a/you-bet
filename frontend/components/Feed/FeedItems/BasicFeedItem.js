@@ -29,6 +29,11 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
     setSelectedBet(previousBet.current);
   };
 
+  const handleAvatarClick = (event) => {
+    event.stopPropagation();
+    console.log(modalData.main_user);
+  };
+
   return (
     <div className={classes.container}>
       {modalData && (
@@ -41,7 +46,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
       )}
       <ListItem alignItems="flex-start" button onClick={handleBetClick}>
         <ListItemAvatar>
-          <Avatar alt={username} src="/static/images/avatar/1.jpg" />
+          <Avatar alt={username} src="/static/images/avatar/1.jpg" onClick={handleAvatarClick} />
         </ListItemAvatar>
         <ListItemText
           className={classes.body}

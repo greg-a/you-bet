@@ -1,12 +1,12 @@
-module.exports = function (sequelize, DataTypes) {
-  var messages = sequelize.define("messages", {
+module.exports = (sequelize, DataTypes) => {
+  const messages = sequelize.define("messages", {
     message: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   });
 
-  messages.associate = function (models) {
+  messages.associate = (models) => {
     messages.belongsTo(models.users);
 
     messages.belongsTo(models.bets);

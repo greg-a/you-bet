@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  bets.associate = function (models) {
+  bets.associate = (models) => {
     bets.belongsTo(models.users, { as: 'main_user' });
     bets.belongsTo(models.users, { as: 'accepted_user' });
     bets.belongsTo(models.bets, { as: 'parent_bet', foreignKey: 'parent_id' });
