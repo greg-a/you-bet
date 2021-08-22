@@ -18,3 +18,8 @@ export const formatDate = (string, type = 'datetime') => {
   }
   return formattedDate;
 };
+
+export const formatUsername = (user) => {
+  if (user) return user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username;
+  return '...loading'
+};

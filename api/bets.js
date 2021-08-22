@@ -6,11 +6,25 @@ const Op = Sequelize.Op;
 const rootURL = '/api/bets/';
 
 module.exports = (app) => {
-  app.get(rootURL, async (req, res) => {
+  app.get(`${rootURL}:username?`, async (req, res) => {
     try {
+      let optionalWhere = {};
+      if (req.params.username) {
+        try {
+          const response = await users.findOne({
+            where: {
+              username: req.params.username
+            },
+          });
+          optionalWhere = { mainUserId: response.id };
+        } catch (err) {
+          res.sendStatus(400);
+        }
+      }
       const results = await bets.findAll({
         where: {
           parent_id: null,
+          ...optionalWhere,
         },
         order: [['createdAt', 'DESC']],
         include: [

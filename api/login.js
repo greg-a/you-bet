@@ -45,7 +45,6 @@ module.exports = function (app) {
           id: req.user.id,
         },
       });
-      console.log('USER INFO', userInfo)
       if (userInfo.token === req.token) {
         res.json(userInfo);
       } else {

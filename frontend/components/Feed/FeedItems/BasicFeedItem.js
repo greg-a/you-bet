@@ -3,7 +3,7 @@ import {
   Avatar, Grid, ListItem, ListItemAvatar, ListItemText, Typography,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
-import { formatDate } from '../../../utils/formatters';
+import { formatDate, formatUsername } from '../../../utils/formatters';
 import useStyles from './FeedItem.style';
 import useAuth from '../../../hooks/useAuth';
 import ModalBase from '../../Modals/ModalBase';
@@ -17,7 +17,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
   const previousBet = useRef(selectedBet);
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
-  const username = user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username;
+  const username = formatUsername(user);
 
   const handleBetClick = () => {
     setModalOpen(true);
