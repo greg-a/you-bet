@@ -1,5 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { Backdrop, CircularProgress, Grid, NoSsr, ThemeProvider } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { Backdrop, CircularProgress, Grid, ThemeProvider } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
 import axios from 'axios';
 import Theme from '../styles/mui-theme';
@@ -20,6 +20,7 @@ function MyApp({ Component, pageProps }) {
   axios.defaults.headers.common['Authorization'] = `JWT ${jwToken}`;
 
   const handleRedirect = (path) => {
+    console.log(path, window.location.pathname);
     if (window.location.pathname === '/signup') return null;
     if (window.location.pathname !== path) return window.location.href = path;
   };
@@ -29,6 +30,7 @@ function MyApp({ Component, pageProps }) {
       const { data } = await checkJWToken();
       if (data) {
         setUserInfo(data);
+        handleRedirect('/');
       } else {
         handleRedirect('/login');
       }
@@ -39,28 +41,29 @@ function MyApp({ Component, pageProps }) {
   };
 
   useEffect(() => {
-    if (jwToken && !userInfo) handleAutoLogin();
+    if (jwToken && !userInfo) return handleAutoLogin();
   }, [jwToken]);
-
+  
   useEffect(() => {
     setJWToken(getCookie('JWToken'));
     setTimeout(() => setIsLoading(false), 500);
   }, []);
 
   if (isLoading) return (
-    <Backdrop open>
-      <Grid container style={{ textAlign: 'center', height: '80vh' }} justifyContent="center">
-        <AppBarLogo />
-        <Grid item md={12}>
-          <div style={{ marginTop: 250 }} />
-          <CircularProgress color="inherit" />
+    <ThemeProvider theme={Theme}>
+      <Backdrop open>
+        <Grid container style={{ textAlign: 'center', height: '80vh' }} justifyContent="center" alignContent="center">
+          <AppBarLogo />
+          <Grid item xs={12}>
+            <CircularProgress color="inherit" />
+          </Grid>
         </Grid>
-      </Grid>
-    </Backdrop>
+      </Backdrop>
+    </ThemeProvider>
   );
   return (
     <ThemeProvider theme={Theme}>
-      <AuthContext.Provider value={{ userInfo }}>
+      <AuthContext.Provider value={{ userInfo, setUserInfo }}>
         <SnackbarProvider>
           <FeedListProvider>
             <SelectedBetProvider>

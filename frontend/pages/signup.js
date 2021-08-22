@@ -36,7 +36,7 @@ const Signup = () => {
       <Grid item md={12} xs={8} style={{ textAlign: 'initial' }}>
         <Typography variant="h5">Sign Up</Typography>
       </Grid>
-      <Grid item>
+      <Grid item md={12}>
         <BasicTextInput
           type="text"
           placeholder="first name"
@@ -44,7 +44,7 @@ const Signup = () => {
           onChange={handleChange}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <BasicTextInput
           type="text"
           placeholder="last name"
@@ -52,28 +52,28 @@ const Signup = () => {
           onChange={handleChange}
         />
       </Grid>
-      <Grid item md={12}>
+      <Grid item xs={12}>
         <BasicTextInput
           type="text"
           placeholder="username"
           onChange={handleChange}
         />
       </Grid>
-      <Grid item md={4}>
+      <Grid item xs={12}>
         <BasicTextInput
           type="email"
           placeholder="email"
           onChange={handleChange}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <BasicTextInput
           type="password"
           placeholder="password"
           onChange={handleChange}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <BasicTextInput
           type="password"
           placeholder="password"
