@@ -1,14 +1,14 @@
-import { Chip, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
+import { Avatar, Chip, Grid, IconButton, Typography } from '@material-ui/core';
 import BetFeed from '../../Feed/BetFeed/BetFeed';
 import CommentFeed from '../../Feed/CommentFeed/CommentFeed';
 import CounterFeed from '../../Feed/CounterFeed/CounterFeed';
 import BetDescription from '../../Form/Description/BetDescription';
+import UserHeader from '../../Feed/Header/UserHeader';
 
 const MainBet = ({ betInfo }) => {
-  const [selectedChip, setSelectedChip] = useState('details');
+  const [selectedChip, setSelectedChip] = useState('comments');
   const bodies = {
-    details: <BetDescription betInfo={betInfo} />,
     comments: <CommentFeed betInfo={betInfo} />,
     counters: <CounterFeed betInfo={betInfo} />,
   };
@@ -19,42 +19,41 @@ const MainBet = ({ betInfo }) => {
   };
 
   return (
-    <Grid container spacing={4}>
-      <Grid item xs={12}>
-        <Grid container justifyContent="space-around" style={{ textAlign: 'center' }}>
-          <Grid item xs={3}>
-            <Chip
-              label="Details"
-              name="details"
-              clickable
-              color={selectedChip === 'details' ? 'primary' : 'secondary'}
-              onClick={handleChipClick}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <Chip
-              label="Comments"
-              name="comments"
-              clickable
-              color="primary"
-              color={selectedChip === 'comments' ? 'primary' : 'secondary'}
-              onClick={handleChipClick}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <Chip
-              label="Counters"
-              name="counters"
-              clickable
-              color="primary"
-              color={selectedChip === 'counters' ? 'primary' : 'secondary'}
-              onClick={handleChipClick}
-            />
+    <Grid container spacing={4} justifyContent="center">
+      <Grid item xs={4}>
+        <Grid item xs={12}>
+          <UserHeader userInfo={betInfo.main_user} />
+        </Grid>
+        <Grid item xs={12}>
+          <BetDescription betInfo={betInfo} />
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container justifyContent="center" style={{ textAlign: 'center', marginBottom: 15 }}>
+            <Grid item xs={3}>
+              <Chip
+                label="Comments"
+                name="comments"
+                clickable
+                color="primary"
+                color={selectedChip === 'comments' ? 'primary' : 'secondary'}
+                onClick={handleChipClick}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Chip
+                label="Counters"
+                name="counters"
+                clickable
+                color="primary"
+                color={selectedChip === 'counters' ? 'primary' : 'secondary'}
+                onClick={handleChipClick}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12} style={{ minHeight: '42vh' }}>
-        {bodies[selectedChip]}
+        <Grid item xs={12} style={{ minHeight: '42vh' }}>
+          {bodies[selectedChip]}
+        </Grid>
       </Grid>
     </Grid>
   );

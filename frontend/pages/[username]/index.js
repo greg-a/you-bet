@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import Head from 'next/head';
-import styles from '../../styles/Home.module.css'
+import { useSnackbar } from 'notistack';
+import styles from '../../styles/Home.module.css';
 import { getUserBets } from '../../services';
 import { formatUsername } from '../../utils/formatters';
 import BetFeed from '../../components/Feed/BetFeed/BetFeed';
 
 const User = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter()
   const { username } = router.query;
   const [userFeed, setUserFeed] = useState([]);
@@ -20,7 +22,7 @@ const User = () => {
         setUserProfile(data[0].main_user);
       }
     } catch (err) {
-      alert(err.message);
+      enqueueSnackbar(err.message, {  variant: 'error' });
     }
   };
 
@@ -32,7 +34,6 @@ const User = () => {
     <div className={styles.container}>
       <Head>
         <title>{`${formatUsername(userProfile)} Profile`}</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <BetFeed betInfo={userFeed} />
     </div>

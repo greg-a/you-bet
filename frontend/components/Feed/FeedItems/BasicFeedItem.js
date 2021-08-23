@@ -9,6 +9,7 @@ import useAuth from '../../../hooks/useAuth';
 import ModalBase from '../../Modals/ModalBase';
 import MainBet from '../../Modals/ModalBodies/MainBet';
 import useSelectedBet from '../../../hooks/useSelectedBet';
+import { handleRedirect } from '../../../utils/utils';
 
 const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -20,8 +21,8 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
   const username = formatUsername(user);
 
   const handleBetClick = () => {
-    setModalOpen(true);
     setSelectedBet(modalData);
+    handleRedirect(`/${modalData.main_user.username}/bet/${modalData.id}`);
   };
 
   const handleModalClose = () => {
@@ -31,7 +32,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
 
   const handleAvatarClick = (event) => {
     event.stopPropagation();
-    console.log(modalData.main_user);
+    handleRedirect(`/${modalData.main_user.username}`);
   };
 
   return (

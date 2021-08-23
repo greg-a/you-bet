@@ -4,7 +4,7 @@ import { SnackbarProvider } from 'notistack';
 import axios from 'axios';
 import Theme from '../styles/mui-theme';
 import '../styles/globals.css'
-import { getCookie } from '../utils/utils';
+import { getCookie, handleRedirect } from '../utils/utils';
 import { checkJWToken } from '../services';
 import ActionButton from '../components/Nav/ActionButton/ActionButton';
 import { FeedListProvider } from '../contexts/feedListContext';
@@ -18,11 +18,6 @@ function MyApp({ Component, pageProps }) {
   const [isLoading, setIsLoading] = useState(true);
 
   axios.defaults.headers.common['Authorization'] = `JWT ${jwToken}`;
-
-  const handleRedirect = (path) => {
-    if (window.location.pathname === '/signup') return null;
-    if (window.location.pathname !== path) return window.location.href = path;
-  };
 
   const handleAutoLogin = async () => {
     try {

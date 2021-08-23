@@ -6,6 +6,7 @@ import CommentButton from '../../Form/Buttons/CommentButton';
 import CounterButton from '../../Form/Buttons/CounterButton';
 import EditBetButton from '../../Form/Buttons/EditBetButton';
 import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
+import BetDetailsButton from '../../Form/Buttons/BetDetailsButton';
 
 const BetFeedItem = ({ betInfo }) => {
   const { userInfo } = useAuth();
@@ -17,13 +18,16 @@ const BetFeedItem = ({ betInfo }) => {
       timestamp={betInfo.createdAt}
     >
       <Grid container justifyContent="space-around">
-        <Grid item md={4}>
+        <Grid item md={3}>
+          <BetDetailsButton betInfo={betInfo} />
+        </Grid>
+        <Grid item md={3}>
           <CommentButton betInfo={betInfo} />
         </Grid>
-        <Grid item md={4}>
+        <Grid item md={3}>
           <CounterButton betInfo={betInfo} />
         </Grid>
-        <Grid item md={4}>
+        <Grid item md={3}>
           {userInfo?.id === betInfo.main_user.id ? (
             <EditBetButton betInfo={betInfo} />
           ) : (

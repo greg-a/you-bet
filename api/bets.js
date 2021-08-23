@@ -88,19 +88,32 @@ module.exports = (app) => {
     }
   });
 
-  app.get(`${rootURL}:id`, async (req, res) => {
-    try {
-      const results = await bets.findOne(
-        {
+  app.get(`${rootURL}:username/bet/:betId`, async (req, res) => {
+    let userId;
+    if (req.params.username) {
+      try {
+        const response = await users.findOne({
           where: {
-            id: req.params.id,
+            username: req.params.username
           },
-          include: [
-            { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
-            { model: messages, include: [{ model: users }] },
-            { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
-          ],
         });
+        userId = response.id;
+      } catch (err) {
+        res.sendStatus(400);
+      }
+    }
+    try {
+      const results = await bets.findOne({
+        where: {
+          id: req.params.betId,
+          mainUserId: userId,
+        },
+        include: [
+          { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+          { model: messages, include: [{ model: users }] },
+          { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
+        ],
+      });
       res.json(results);
     } catch (err) {
       res.sendStatus(500);
