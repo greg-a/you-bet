@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Avatar, Chip, Grid, IconButton, Typography } from '@material-ui/core';
-import BetFeed from '../../Feed/BetFeed/BetFeed';
+import { Chip, Grid } from '@material-ui/core';
 import CommentFeed from '../../Feed/CommentFeed/CommentFeed';
 import CounterFeed from '../../Feed/CounterFeed/CounterFeed';
 import BetDescription from '../../Form/Description/BetDescription';
 import UserHeader from '../../Feed/Header/UserHeader';
+import useStyles from '../ModalBase.style';
 
 const MainBet = ({ betInfo }) => {
+  const classes = useStyles();
   const [selectedChip, setSelectedChip] = useState('comments');
   const bodies = {
     comments: <CommentFeed betInfo={betInfo} />,
@@ -20,7 +21,7 @@ const MainBet = ({ betInfo }) => {
 
   return (
     <Grid container spacing={4} justifyContent="center">
-      <Grid item xs={4}>
+      <Grid item xs={4} className={classes.container}>
         <Grid item xs={12}>
           <UserHeader userInfo={betInfo.main_user} />
         </Grid>
@@ -51,7 +52,7 @@ const MainBet = ({ betInfo }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} style={{ minHeight: '42vh' }}>
+        <Grid item xs={12}>
           {bodies[selectedChip]}
         </Grid>
       </Grid>

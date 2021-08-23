@@ -6,6 +6,7 @@ import styles from '../../styles/Home.module.css';
 import { getUserBets } from '../../services';
 import { formatUsername } from '../../utils/formatters';
 import BetFeed from '../../components/Feed/BetFeed/BetFeed';
+import { Grid } from '@material-ui/core';
 
 const User = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -35,7 +36,11 @@ const User = () => {
       <Head>
         <title>{`${formatUsername(userProfile)} Profile`}</title>
       </Head>
-      <BetFeed betInfo={userFeed} />
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12} md={4}>
+          <BetFeed betInfo={userFeed} />
+        </Grid>
+      </Grid>
     </div>
   );
 };

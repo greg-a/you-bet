@@ -5,8 +5,11 @@ import { useSnackbar } from 'notistack';
 import styles from '../../../../styles/Home.module.css';
 import MainBet from '../../../../components/Modals/ModalBodies/MainBet';
 import { getUserBetById } from '../../../../services';
+import { Grid } from '@material-ui/core';
+import useFeedList from '../../../../hooks/useFeedList';
 
 const Bet = () => {
+  const { feedList } = useFeedList();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { username, betId } = router.query;
@@ -24,7 +27,7 @@ const Bet = () => {
   useEffect(() => {
     getBet();
     console.log(username, betId);
-  }, []);
+  }, [feedList]);
 
   return (
     <div className={styles.container} style={{ marginTop: 100 }}>

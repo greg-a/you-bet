@@ -45,7 +45,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
           body={<MainBet betInfo={modalData} />}
         />
       )}
-      <ListItem alignItems="flex-start" button onClick={handleBetClick}>
+      <ListItem alignItems="flex-start" button onClick={handleBetClick} style={{ overflowWrap: 'anywhere' }}>
         <ListItemAvatar>
           <Avatar alt={username} src="/static/images/avatar/1.jpg" onClick={handleAvatarClick} />
         </ListItemAvatar>

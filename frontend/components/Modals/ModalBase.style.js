@@ -30,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
   bodyContainer: {
     padding: 10,
   },
+  container: {
+    borderWidth: 0.5,
+    borderColor: theme.palette.secondary.dark,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    marginBottom: 8,
+  },
 }));
 
 export default useStyles;

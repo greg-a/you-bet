@@ -80,6 +80,10 @@
   margin-top: 3rem;
 }
 
+.feed {
+   border: 0.5px solid #eaeaea;
+}
+
 .card {
   margin: 1rem;
   flex-basis: 45%;

@@ -8,10 +8,10 @@ const UserHeader = ({ userInfo }) => {
     <Grid container spacing={3}>
       <Grid item>
         <IconButton>
-          <Avatar alt={username} src={userInfo.picURL || ''} />
+          <Avatar alt={username} src={userInfo.picURL || "/static/images/avatar/1.jpg"} />
         </IconButton>
       </Grid>
-      <Grid item>
+      <Grid item style={{ alignSelf: 'center' }}>
         <Typography variant="h5">
           {username}
         </Typography>

@@ -7,7 +7,6 @@ import useSelectedBet from '../../../hooks/useSelectedBet';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    maxWidth: '36ch',
     overflowY: 'auto',
     // backgroundColor: theme.palette.background.paper,
   },
