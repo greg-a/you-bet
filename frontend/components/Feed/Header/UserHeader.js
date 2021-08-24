@@ -1,20 +1,21 @@
 import React from 'react';
 import { Avatar, Grid, IconButton, Typography } from '@material-ui/core';
-import { formatUsername } from '../../../utils/formatters';
+import { formatDate, formatUsername } from '../../../utils/formatters';
 
-const UserHeader = ({ userInfo }) => {
+const UserHeader = ({ userInfo, timestamp }) => {
   const username = formatUsername(userInfo);
   return (
-    <Grid container spacing={3}>
-      <Grid item>
+    <Grid container>
+      <Grid item xs={2}>
         <IconButton>
-          <Avatar alt={username} src={userInfo.picURL || "/static/images/avatar/1.jpg"} />
+          <Avatar alt={username} src={userInfo.picURL || '/static/images/avatar/1.jpg'} />
         </IconButton>
       </Grid>
-      <Grid item style={{ alignSelf: 'center' }}>
-        <Typography variant="h5">
-          {username}
-        </Typography>
+      <Grid item xs={9} style={{ alignSelf: 'center' }}>
+        <Grid container justifyContent="space-between">
+          <b>{username}</b>
+          <Typography variant="caption">{formatDate(timestamp)}</Typography>
+        </Grid>
       </Grid>
     </Grid>
   );

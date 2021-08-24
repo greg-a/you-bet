@@ -5,8 +5,8 @@ import { useSnackbar } from 'notistack';
 import styles from '../../../../styles/Home.module.css';
 import MainBet from '../../../../components/Modals/ModalBodies/MainBet';
 import { getUserBetById } from '../../../../services';
-import { Grid } from '@material-ui/core';
 import useFeedList from '../../../../hooks/useFeedList';
+import { formatUsername } from '../../../../utils/formatters';
 
 const Bet = () => {
   const { feedList } = useFeedList();
@@ -25,14 +25,18 @@ const Bet = () => {
   };
 
   useEffect(() => {
-    getBet();
-    console.log(username, betId);
+    if (feedList.length > 0) return getBet();
   }, [feedList]);
 
   return (
     <div className={styles.container} style={{ marginTop: 100 }}>
-      {betInfo && (
+      <Head>
+        <title>{`${formatUsername(betInfo?.main_user)} Bet`}</title>
+      </Head>
+      {betInfo ? (
         <MainBet betInfo={betInfo} />
+      ) : (
+        <div>oops, this bet doesn't exist :(</div>
       )}
     </div>
   );

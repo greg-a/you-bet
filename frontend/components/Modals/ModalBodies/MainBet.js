@@ -23,7 +23,10 @@ const MainBet = ({ betInfo }) => {
     <Grid container spacing={4} justifyContent="center">
       <Grid item xs={4} className={classes.container}>
         <Grid item xs={12}>
-          <UserHeader userInfo={betInfo.main_user} />
+          <UserHeader
+            userInfo={betInfo.main_user}
+            timestamp={betInfo.createdAt}
+          />
         </Grid>
         <Grid item xs={12}>
           <BetDescription betInfo={betInfo} />
