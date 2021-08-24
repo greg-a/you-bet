@@ -5,13 +5,11 @@ import { formatDate, formatUsername } from '../../../utils/formatters';
 const UserHeader = ({ userInfo, timestamp }) => {
   const username = formatUsername(userInfo);
   return (
-    <Grid container>
+    <Grid container style={{ padding: 10 }}>
       <Grid item xs={2}>
-        <IconButton>
-          <Avatar alt={username} src={userInfo.picURL || '/static/images/avatar/1.jpg'} />
-        </IconButton>
+        <Avatar alt={username} src={userInfo?.picURL || '/static/images/avatar/1.jpg'} />
       </Grid>
-      <Grid item xs={9} style={{ alignSelf: 'center' }}>
+      <Grid item xs={10} style={{ alignSelf: 'center' }}>
         <Grid container justifyContent="space-between">
           <b>{username}</b>
           <Typography variant="caption">{formatDate(timestamp)}</Typography>

@@ -21,7 +21,7 @@ const MainBet = ({ betInfo }) => {
 
   return (
     <Grid container spacing={4} justifyContent="center">
-      <Grid item xs={4} className={classes.container}>
+      <Grid item xs={11} sm={4} className={classes.container}>
         <Grid item xs={12}>
           <UserHeader
             userInfo={betInfo.main_user}
