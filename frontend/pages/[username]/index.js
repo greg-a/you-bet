@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { Grid, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import styles from '../../styles/Home.module.css';
-import { getFollowList, getUserBets } from '../../services';
+import { getFollowList, getProfileBets } from '../../services';
 import { formatUsername } from '../../utils/formatters';
 import BetFeed from '../../components/Feed/BetFeed/BetFeed';
 import FollowButton from '../../components/Form/Buttons/FollowButton';
@@ -18,7 +18,7 @@ const User = () => {
 
   const getUserFeed = async () => {
     try {
-      const { data } = await getUserBets(username);
+      const { data } = await getProfileBets(username);
       if (data.length > 0) {
         setUserFeed(data);
         setUserProfile(data[0].main_user);

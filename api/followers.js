@@ -8,13 +8,19 @@ const rootURL = '/api/followers/';
 module.exports = (app) => {
   app.get(rootURL, authenticateToken, async (req, res) => {
     try {
-      const results = await followers.findAll({
+      const followingList = await followers.findAll({
         where: {
           mainUserId: req.user.id,
         },
+        attributes: ['followedUserId'],
       });
-      console.log('FOLLOWING LIST', results);
-      res.json(results);
+      const followerList = await followers.findAll({
+        where: {
+          followedUserId: req.user.id,
+        },
+        attributes: ['mainUserId'],
+      });
+      res.json({ followingList, followerList });
     } catch (err) {
       res.sendStatus(500);
     }

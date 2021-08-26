@@ -1,4 +1,4 @@
-const { bets, users, messages, counters } = require('../models');
+const { bets, users, messages, counters, followers } = require('../models');
 const { Sequelize } = require('../models');
 const { authenticateToken } = require('../utils/token');
 const Op = Sequelize.Op;
@@ -6,25 +6,37 @@ const Op = Sequelize.Op;
 const rootURL = '/api/bets/';
 
 module.exports = (app) => {
-  app.get(`${rootURL}:username?`, async (req, res) => {
-    let optionalWhere = {};
-    if (req.params.username) {
-      try {
-        const response = await users.findOne({
-          where: {
-            username: req.params.username
-          },
-        });
-        optionalWhere = { mainUserId: response.id };
-      } catch (err) {
-        res.sendStatus(400);
-      }
+  app.get(rootURL, authenticateToken, async (req, res) => {
+    // let optionalWhere = {};
+    // if (req.params.username) {
+    //   try {
+    //     const response = await users.findOne({
+    //       where: {
+    //         username: req.params.username
+    //       },
+    //     });
+    //     optionalWhere = { mainUserId: response.id };
+    //   } catch (err) {
+    //     res.sendStatus(400);
+    //   }
+    // }
+    let followList = [req.user.id];
+    try {
+      const results = await followers.findAll({
+        where: {
+          mainUserId: req.user.id,
+        },
+      });
+      followList = [ ...followerList, ...results.map(({ followedUserId }) => followedUserId)];
+    } catch (err) {
+      console.log(err);
     }
+
     try {
       const results = await bets.findAll({
         where: {
           parent_id: null,
-          ...optionalWhere,
+          mainUserId: followList,
         },
         order: [['createdAt', 'DESC']],
         include: [
@@ -35,7 +47,6 @@ module.exports = (app) => {
       });
       res.json(results);
     } catch (err) {
-      console.log(err);
       res.sendStatus(500);
     }
   });

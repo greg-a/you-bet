@@ -33,7 +33,7 @@ const UserDrawer = ({ open, window, onClose }) => {
 
   const drawer = (
     <div>
-      <Grid container justify="space-between" className={classes.headerContainer}>
+      <Grid container justifyContent="space-between" className={classes.headerContainer}>
         <Grid item xs={10} style={{ paddingTop: 10, paddingBottom: 10 }}>
           <UserHeader userInfo={userInfo} />
         </Grid>
