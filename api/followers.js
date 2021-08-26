@@ -32,4 +32,20 @@ module.exports = (app) => {
       res.sendStatus(500);
     }
   });
+
+  app.delete(rootURL, authenticateToken, async (req, res) => {
+    try {
+      const results = await followers.destroy({
+        where: {
+          mainUserId: req.user.id,
+          followedUserId: req.body.id,
+        },
+      });
+      console.log('UNFOLLOW', results);
+      res.sendStatus(200);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  })
 };

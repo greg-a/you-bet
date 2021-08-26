@@ -38,7 +38,6 @@ const MainBet = ({ betInfo }) => {
                 label="Comments"
                 name="comments"
                 clickable
-                color="primary"
                 color={selectedChip === 'comments' ? 'primary' : 'secondary'}
                 onClick={handleChipClick}
               />
@@ -48,7 +47,6 @@ const MainBet = ({ betInfo }) => {
                 label="Counters"
                 name="counters"
                 clickable
-                color="primary"
                 color={selectedChip === 'counters' ? 'primary' : 'secondary'}
                 onClick={handleChipClick}
               />
