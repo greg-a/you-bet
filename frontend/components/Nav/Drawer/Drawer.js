@@ -1,59 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Divider, Drawer, Grid, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, makeStyles, useTheme,
 } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import PersonIcon from '@material-ui/icons/Person';
+import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import useAuth from '../../../hooks/useAuth';
 import { formatUsername } from '../../../utils/formatters';
 import UserHeader from '../../Feed/Header/UserHeader';
-
-const drawerWidth = 340;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  appBar: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-}));
+import useStyles from '../Nav.styles';
 
 const UserDrawer = ({ open, window, onClose }) => {
-  const { userInfo } = useAuth();
   const classes = useStyles();
+  const { userInfo } = useAuth();
+  const router = useRouter();
   const theme = useTheme();
   const username = formatUsername(userInfo);
+  const [selectedPage, setSelectedPage] = useState('Home');
+
+  const handlePageClick = (event) => {
+    const pages = {
+      Home: '/',
+    };
+    const { textContent } = event.target;
+    setSelectedPage(textContent);
+    router.push('/');
+  };
 
   const drawer = (
     <div>
-      <Grid container justify="space-between">
-        <Grid item xs={10}>
+      <Grid container justify="space-between" className={classes.headerContainer}>
+        <Grid item xs={10} style={{ paddingTop: 10, paddingBottom: 10 }}>
           <UserHeader userInfo={userInfo} />
         </Grid>
         {open && (
@@ -64,24 +45,29 @@ const UserDrawer = ({ open, window, onClose }) => {
           </Grid>
         )}
       </Grid>
-      <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+      <div className={classes.drawerContainer}>
+        {/* <div className={classes.divider} /> */}
+        <List>
+          <ListItem button onClick={handlePageClick}>
+            <ListItemIcon><HomeIcon color={selectedPage === 'Home' ? 'primary' : 'secondary'} /></ListItemIcon>
+            <ListItemText primary="Home" />
           </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+          <ListItem button onClick={handlePageClick}>
+            <ListItemIcon><NotificationsIcon color={selectedPage === 'Notifications' ? 'primary' : 'secondary'} /></ListItemIcon>
+            <ListItemText primary="Notifications" />
           </ListItem>
-        ))}
-      </List>
+          <ListItem button onClick={handlePageClick}>
+            <ListItemIcon><MailIcon color={selectedPage === 'Messages' ? 'primary' : 'secondary'} /></ListItemIcon>
+            <ListItemText primary="Messages" />
+          </ListItem>
+          <ListItem button onClick={handlePageClick}>
+            <ListItemIcon><PersonIcon color={selectedPage === 'Profile' ? 'primary' : 'secondary'} /></ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
+        </List>
+        <div className={classes.divider} />
+        Test
+      </div>
     </div>
   );
 
@@ -89,7 +75,7 @@ const UserDrawer = ({ open, window, onClose }) => {
 
   return (
     <nav className={classes.drawer} aria-label="mailbox folders">
-      <Hidden smUp implementation="css">
+      <Hidden mdUp implementation="css">
         <Drawer
           container={container}
           variant="temporary"
@@ -104,7 +90,7 @@ const UserDrawer = ({ open, window, onClose }) => {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden xsDown implementation="css">
+      <Hidden smDown implementation="css">
         <Drawer
           classes={{
             paper: classes.drawerPaper,

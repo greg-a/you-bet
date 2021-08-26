@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Avatar, Grid, ListItem, ListItemAvatar, ListItemText, Typography,
 } from '@material-ui/core';
@@ -9,11 +10,11 @@ import useAuth from '../../../hooks/useAuth';
 import ModalBase from '../../Modals/ModalBase';
 import MainBet from '../../Modals/ModalBodies/MainBet';
 import useSelectedBet from '../../../hooks/useSelectedBet';
-import { handleRedirect } from '../../../utils/utils';
 
 const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { userInfo } = useAuth();
+  const router = useRouter();
   const { selectedBet, setSelectedBet } = useSelectedBet();
   const previousBet = useRef(selectedBet);
   const classes = useStyles();
@@ -22,7 +23,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
 
   const handleBetClick = () => {
     setSelectedBet(modalData);
-    handleRedirect(`/${modalData.main_user.username}/bet/${modalData.id}`);
+    router.push(`/${modalData.main_user.username}/bet/${modalData.id}`)
   };
 
   const handleModalClose = () => {
@@ -32,7 +33,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
 
   const handleAvatarClick = (event) => {
     event.stopPropagation();
-    handleRedirect(`/${modalData.main_user.username}`);
+    router.push(`/${modalData.main_user.username}`);
   };
 
   return (

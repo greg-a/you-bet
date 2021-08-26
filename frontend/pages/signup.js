@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Button, Grid, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
@@ -6,12 +7,12 @@ import SimpleButton from '../components/Form/Buttons/SimpleButton';
 import { createAccount } from '../services';
 
 const Signup = () => {
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [newAccountInfo, setNewAccountInfo] = useState();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value)
     setNewAccountInfo((old) => ({ ...old, [name]: value }));
   };
 
@@ -21,14 +22,14 @@ const Signup = () => {
       newAccountInfoClone.username = newAccountInfoClone.username.toLowerCase();
       await createAccount(newAccountInfoClone);
       enqueueSnackbar('Your create was created!', { variant: 'success' });
-      window.location.href = '/login';
+      router.push('/login');
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
 
   const handleBackButton = () => {
-    window.location.href = '/login';
+    router.push('/login');
   };
 
   return (

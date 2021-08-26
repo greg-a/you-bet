@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Button, Grid, NoSsr, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import { userLogin } from '../services';
 
 const LoginPage = () => {
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
 
@@ -23,14 +25,14 @@ const LoginPage = () => {
       loginInfoClone.username = loginInfoClone.username.toLowerCase();
       const { data } = await userLogin(loginInfoClone);
       saveJWToken(data);
-      window.location.href = '/';
+      router.push('/');
     } catch (err) {
       enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })
     }
   };
 
   const handleCreateAccount = () => {
-    window.location.href = '/signup';
+    router.push('/signup');
   };
 
   return (
