@@ -20,7 +20,7 @@
     "client": "cd frontend && npm run dev",
     "seed": "node scripts/seedDB.js",
     "install": "cd frontend && npm install",
-    "build": "cd client && npm run build",
+    "build": "cd frontend && npm run build",
     "heroku-postbuild": "npm run build"
   },
   "keywords": [],
