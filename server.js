@@ -4,18 +4,19 @@ var app = express();
 const db = require('./models');
 const path = require("path");
 
-var PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
 
-// require("./routes/apiRoutes")(app);
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "./client/build/index.html"));
-// });
+require("./api/users")(app);
+require("./api/login")(app);
+require("./api/bets")(app);
+require("./api/messages")(app);
+require("./api/followers")(app);
 
-var syncOptions = { force: false };
+const syncOptions = { force: false };
 
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;

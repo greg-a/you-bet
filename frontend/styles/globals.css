@@ -1,7 +1,14 @@
+@font-face {
+  font-family: 'Squada';
+  src: url('./fonts/SquadaOne-Regular.ttf');
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
+  background-color: black;
+  color: white;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -13,4 +20,22 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.logo-font {
+  font-family: 'Squada' !important;
+  font-size: 50px !important;
+  margin-top: 45px;
+}
+
+.MuiInputBase-root {
+  background-color: white !important;
+}
+
+.modal-backdrop {
+  background-color: #3B3B3BD1;
+}
+
+.Mui-disabled {
+  color: rgba(168, 168, 168, 0.53) !important;
 }
