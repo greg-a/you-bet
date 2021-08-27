@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'black',
     color: theme.palette.secondary.light,
     border: 'none',
+    overflow: 'hidden',
   },
   content: {
     flexGrow: 1,
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   drawerContainer: {
     borderColor: theme.palette.secondary.light,
     borderRightStyle: 'solid',
-    height: '86vh',
+    minHeight: '100vh',
     borderWidth: 0.5,
     marginTop: 1,
   },

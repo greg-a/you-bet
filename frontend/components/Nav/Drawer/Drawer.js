@@ -25,43 +25,51 @@ const UserDrawer = ({ open, window, onClose }) => {
   const handlePageClick = (event) => {
     const pages = {
       Home: '/',
+      Profile: `/${userInfo.username}`,
     };
     const { textContent } = event.target;
     setSelectedPage(textContent);
-    router.push('/');
+    router.push(pages[textContent]);
   };
 
   const drawer = (
     <div>
       <Grid container justifyContent="space-between" className={classes.headerContainer}>
-        <Grid item xs={10} style={{ paddingTop: 10, paddingBottom: 10 }}>
+        <Grid item xs={10}>
           <UserHeader userInfo={userInfo} />
         </Grid>
         {open && (
           <Grid item xs={2} style={{ alignSelf: 'center' }}>
             <IconButton onClick={onClose}>
-              <ChevronLeftIcon />
+              <ChevronLeftIcon color="secondary" />
             </IconButton>
           </Grid>
         )}
       </Grid>
       <div className={classes.drawerContainer}>
-        {/* <div className={classes.divider} /> */}
         <List>
           <ListItem button onClick={handlePageClick}>
-            <ListItemIcon><HomeIcon color={selectedPage === 'Home' ? 'primary' : 'secondary'} /></ListItemIcon>
+            <ListItemIcon>
+              <HomeIcon color={selectedPage === 'Home' ? 'primary' : 'secondary'} />
+            </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button onClick={handlePageClick}>
-            <ListItemIcon><NotificationsIcon color={selectedPage === 'Notifications' ? 'primary' : 'secondary'} /></ListItemIcon>
+          <ListItem button onClick={handlePageClick} disabled>
+            <ListItemIcon>
+              <NotificationsIcon color={selectedPage === 'Notifications' ? 'primary' : 'secondary'} />
+            </ListItemIcon>
             <ListItemText primary="Notifications" />
           </ListItem>
-          <ListItem button onClick={handlePageClick}>
-            <ListItemIcon><MailIcon color={selectedPage === 'Messages' ? 'primary' : 'secondary'} /></ListItemIcon>
+          <ListItem button onClick={handlePageClick} disabled>
+            <ListItemIcon>
+              <MailIcon color={selectedPage === 'Messages' ? 'primary' : 'secondary'} />
+            </ListItemIcon>
             <ListItemText primary="Messages" />
           </ListItem>
           <ListItem button onClick={handlePageClick}>
-            <ListItemIcon><PersonIcon color={selectedPage === 'Profile' ? 'primary' : 'secondary'} /></ListItemIcon>
+            <ListItemIcon>
+              <PersonIcon color={selectedPage === 'Profile' ? 'primary' : 'secondary'} />
+            </ListItemIcon>
             <ListItemText primary="Profile" />
           </ListItem>
         </List>

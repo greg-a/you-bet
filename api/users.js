@@ -38,15 +38,14 @@ module.exports = function (app) {
   });
 
   app.get(`${rootURL}profile/:username`, authenticateToken, async (req, res) => {
-    let profileId = null;
-    console.log('USERNAME', req.params.username)
+    let profile = null;
     try {
       const response = await users.findOne({
         where: {
           username: req.params.username,
         },
       });
-      profileId = response.id;
+      profile = response;
     } catch (err) {
       res.sendStatus(500);
     }
@@ -55,7 +54,7 @@ module.exports = function (app) {
       const results = await bets.findAll({
         where: {
           parent_id: null,
-          mainUserId: profileId,
+          mainUserId: profile.id,
         },
         order: [['createdAt', 'DESC']],
         include: [
@@ -64,7 +63,7 @@ module.exports = function (app) {
           { model: bets, as: 'counter_bets' },
         ],
       });
-      res.json(results);
+      res.json({ bets: results, profileInfo: profile });
     } catch (err) {
       res.sendStatus(500);
     }

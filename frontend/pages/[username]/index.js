@@ -24,11 +24,9 @@ const User = () => {
   
   const getUserFeed = async () => {
     try {
-      const { data } = await getProfileBets(username);
-      if (data.length > 0) {
-        setUserFeed(data);
-        setUserProfile(data[0].main_user);
-      }
+      const { data: { bets, profileInfo } } = await getProfileBets(username);
+      if (profileInfo) setUserProfile(profileInfo);
+      if (bets.length > 0) setUserFeed(bets);
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
@@ -43,11 +41,11 @@ const User = () => {
       <Head>
         <title>{`${formatUsername(userProfile)} Profile`}</title>
       </Head>
-      <Grid container spacing={3} justifyContent="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12} md={4}>
           <Grid container>
             <Grid item xs={10}>
-              <Typography variant="h4">Greg Allebach</Typography>
+              <Typography variant="h4">{formatUsername(userProfile)}</Typography>
             </Grid>
             <Grid item xs={2}>
               {userInfo.id !== userProfile?.id && (
