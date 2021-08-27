@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   AppBar, Avatar, Button, IconButton, makeStyles, NoSsr, Toolbar, Typography, useMediaQuery, useTheme,
 } from '@material-ui/core';
@@ -22,10 +23,16 @@ const useStyles = makeStyles((theme) => ({
 
 const AppBarLogo = () => {
   const theme = useTheme();
+  const router = useRouter();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
   const { userInfo } = useAuth();
   const [drawerOpenMobile, setDrawerOpenMobile] = useState(false);
+
+  const handleLoginClick = () => {
+    window.location.href = '/login';
+    document.cookie = 'JWToken=';
+  };
 
   useEffect(() => {
     setDrawerOpenMobile(false);
@@ -42,7 +49,7 @@ const AppBarLogo = () => {
             <Typography variant="h6" className="logo-font">
               YouBet
             </Typography>
-            <Button color="inherit">{userInfo?.username ? userInfo.username : 'Login'}</Button>
+            <Button color="inherit" onClick={handleLoginClick}>{userInfo?.username ? 'Logout' : 'Login'}</Button>
           </Toolbar>
         </AppBar>
         <UserDrawer open={drawerOpenMobile} onClose={() => setDrawerOpenMobile(false)} />

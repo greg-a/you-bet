@@ -44,7 +44,7 @@ const User = () => {
       <Grid container justifyContent="center">
         <Grid item xs={12} md={4}>
           <Grid container>
-            <Grid item xs={10}>
+            <Grid item xs={9} md={10}>
               <Typography variant="h4">{formatUsername(userProfile)}</Typography>
             </Grid>
             <Grid item xs={2}>

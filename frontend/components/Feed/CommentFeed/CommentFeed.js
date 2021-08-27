@@ -25,7 +25,7 @@ const CommentFeed = ({ betInfo }) => {
           betInfo={betInfo}
         />
       </Grid>
-      <Grid item xs={11}>
+      <Grid item xs={12} md={11}>
         <List className={classes.root} dense>
           <ListSubheader color="primary">Comments</ListSubheader>
           {betInfo?.messages.length > 0 ? (

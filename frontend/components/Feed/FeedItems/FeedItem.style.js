@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     borderStyle: 'solid',
     borderRadius: 5,
     marginBottom: 8,
+    overflowWrap: 'break-word',
   },
 }));
 

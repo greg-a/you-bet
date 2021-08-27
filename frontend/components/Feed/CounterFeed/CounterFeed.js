@@ -27,7 +27,7 @@ const CounterFeed = ({ betInfo }) => {
       <Grid item xs={11} style={{ marginTop: 10 }}>
         <CounterButton betInfo={betInfo} variant="contained" />
       </Grid>
-      <Grid item xs={11}>
+      <Grid item xs={12} md={11}>
         <List className={classes.root} dense>
           <ListSubheader color="primary">Counter Offers</ListSubheader>
           {betInfo?.counter_bets.length > 0 ? (

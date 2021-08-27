@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 const actions = [
   { icon: <CreateIcon />, name: 'Create Bet' },
-  { icon: <ExitToAppIcon />, name: 'Logout' },
 ];
 
 const ActionButton = () => {
@@ -72,19 +71,9 @@ const ActionButton = () => {
     });
   };
 
-  const handleLogout = async () => {
-    try {
-      await userLogout();
-      window.location.href = '/login';
-    } catch (err) {
-      enqueueSnackbar(err.message, { variant: 'error' })
-    }
-  };
-
   const handleClick = (event) => {
     const { name } = event.currentTarget;
     if (name === 'Create Bet') handleCreateBet();
-    if (name === 'Logout') handleLogout();
   };
 
   const handleClose = (event) => {

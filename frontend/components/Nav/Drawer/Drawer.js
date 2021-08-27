@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Divider, Drawer, Grid, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, makeStyles, useTheme,
+import { Drawer, Grid, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, useTheme,
 } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PersonIcon from '@material-ui/icons/Person';
@@ -13,6 +11,7 @@ import useAuth from '../../../hooks/useAuth';
 import { formatUsername } from '../../../utils/formatters';
 import UserHeader from '../../Feed/Header/UserHeader';
 import useStyles from '../Nav.styles';
+import FollowButtons from './FollowButtons/FollowButtons';
 
 const UserDrawer = ({ open, window, onClose }) => {
   const classes = useStyles();
@@ -30,6 +29,7 @@ const UserDrawer = ({ open, window, onClose }) => {
     const { textContent } = event.target;
     setSelectedPage(textContent);
     router.push(pages[textContent]);
+    onClose();
   };
 
   const drawer = (
@@ -74,7 +74,9 @@ const UserDrawer = ({ open, window, onClose }) => {
           </ListItem>
         </List>
         <div className={classes.divider} />
-        Test
+        {userInfo && (
+          <FollowButtons />
+        )}
       </div>
     </div>
   );

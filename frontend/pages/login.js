@@ -4,9 +4,11 @@ import { Button, Grid, NoSsr, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import { userLogin } from '../services';
+import useAuth from '../hooks/useAuth';
 
 const LoginPage = () => {
   const router = useRouter();
+  const { setJWToken } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
 
@@ -17,6 +19,7 @@ const LoginPage = () => {
 
   const saveJWToken = (token) => {
     document.cookie = `JWToken=${token}`;
+    setJWToken(token);
   };
 
   const handleSubmit = async () => {

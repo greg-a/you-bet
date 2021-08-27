@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps }) {
   );
   return (
     <ThemeProvider theme={Theme}>
-      <AuthContext.Provider value={{ userInfo, setUserInfo }}>
+      <AuthContext.Provider value={{ userInfo, setUserInfo, setJWToken }}>
         <SnackbarProvider>
           <FollowListProvider>
             <FeedListProvider>
