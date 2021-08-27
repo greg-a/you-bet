@@ -5,7 +5,7 @@ import { formatUsername } from '../../../utils/formatters';
 import SimpleButton from '../../Form/Buttons/SimpleButton';
 import { followUser, unfollowUser } from '../../../services';
 
-const FollowUser = ({ type, userInfo }) => {
+const FollowUser = ({ type, userInfo, onSubmit }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClick = async () => {
@@ -13,6 +13,7 @@ const FollowUser = ({ type, userInfo }) => {
       if (type === 'Follow') await followUser(userInfo.id);
       if (type === 'Unfollow') await unfollowUser(userInfo.id);
       enqueueSnackbar(`${type} successful!`, { variant: 'success' });
+      onSubmit();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }

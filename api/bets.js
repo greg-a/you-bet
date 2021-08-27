@@ -27,7 +27,7 @@ module.exports = (app) => {
           mainUserId: req.user.id,
         },
       });
-      followList = [ ...followerList, ...results.map(({ followedUserId }) => followedUserId)];
+      followList = [ ...followList, ...results.map(({ followedUserId }) => followedUserId)];
     } catch (err) {
       console.log(err);
     }

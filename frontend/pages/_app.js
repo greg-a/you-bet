@@ -12,6 +12,7 @@ import { FeedListProvider } from '../contexts/feedListContext';
 import AppBarLogo from '../components/Nav/AppBar/AppBar';
 import AuthContext from '../contexts/authContext';
 import { SelectedBetProvider } from '../contexts/selectedBetContext';
+import { FollowListProvider } from '../contexts/followListContext';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -38,7 +39,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (jwToken && !userInfo) return handleAutoLogin();
   }, [jwToken]);
-  
+
   useEffect(() => {
     setJWToken(getCookie('JWToken'));
     setTimeout(() => setIsLoading(false), 500);
@@ -60,16 +61,18 @@ function MyApp({ Component, pageProps }) {
     <ThemeProvider theme={Theme}>
       <AuthContext.Provider value={{ userInfo, setUserInfo }}>
         <SnackbarProvider>
-          <FeedListProvider>
-            <SelectedBetProvider>
-              <AppBarLogo />
-              <div style={{ marginTop: 50 }} />
-              <Component {...pageProps} />
-              {userInfo && (
-                <ActionButton />
-              )}
-            </SelectedBetProvider>
-          </FeedListProvider>
+          <FollowListProvider>
+            <FeedListProvider>
+              <SelectedBetProvider>
+                <AppBarLogo />
+                <div style={{ marginTop: 50 }} />
+                <Component {...pageProps} />
+                {userInfo && (
+                  <ActionButton />
+                )}
+              </SelectedBetProvider>
+            </FeedListProvider>
+          </FollowListProvider>
         </SnackbarProvider>
       </AuthContext.Provider>
     </ThemeProvider>

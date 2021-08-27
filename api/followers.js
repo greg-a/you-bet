@@ -39,12 +39,12 @@ module.exports = (app) => {
     }
   });
 
-  app.delete(rootURL, authenticateToken, async (req, res) => {
+  app.delete(`${rootURL}:id`, authenticateToken, async (req, res) => {
     try {
       const results = await followers.destroy({
         where: {
           mainUserId: req.user.id,
-          followedUserId: req.body.id,
+          followedUserId: req.params.id,
         },
       });
       console.log('UNFOLLOW', results);

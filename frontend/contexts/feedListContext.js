@@ -1,12 +1,15 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { getAllBets, getFollowList } from '../services';
+import useAuth from '../hooks/useAuth';
+import useFollowList from '../hooks/useFollowList';
+import { getAllBets } from '../services';
 
 export const feedListContext = createContext();
 const { Provider } = feedListContext;
 
 export const FeedListProvider = ({ children }) => {
+  const { userInfo } = useAuth();
+  const { followList } = useFollowList();
   const [feedList, setFeedList] = useState([]);
-  const [followList, setFollowList] = useState();
 
   const refreshFeedList = async () => {
     try {
@@ -17,22 +20,12 @@ export const FeedListProvider = ({ children }) => {
     }
   };
 
-  const refreshFollowList = async () => {
-    try {
-      const { data } = await getFollowList();
-      setFollowList(data);
-    } catch {
-      alert(err.message);
-    }
-  };
-
   useEffect(() => {
-    refreshFeedList();
-    refreshFollowList();
-  }, []);
+    if (userInfo) refreshFeedList();
+  }, [userInfo, followList]);
 
   return (
-    <Provider value={{ feedList, refreshFeedList, followList, refreshFollowList }}>
+    <Provider value={{ feedList, refreshFeedList }}>
       {children}
     </Provider>
   );
