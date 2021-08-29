@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static("frontend/.next"));
 
 require("./api/users")(app);
 require("./api/login")(app);
