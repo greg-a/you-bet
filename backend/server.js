@@ -8,13 +8,17 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("frontend/.next"));
+app.use(express.static(path.join(__dirname, '../frontend/out')));
 
 require("./api/users")(app);
 require("./api/login")(app);
 require("./api/bets")(app);
 require("./api/messages")(app);
 require("./api/followers")(app);
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/out/index.html'));
+});
 
 const syncOptions = { force: false };
 
