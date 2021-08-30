@@ -41,7 +41,6 @@ function MyApp({ Component, pageProps }) {
   }, [jwToken]);
 
   useEffect(() => {
-    console.log('environment', process.env)
     setJWToken(getCookie('JWToken'));
     setTimeout(() => setIsLoading(false), 500);
   }, []);
