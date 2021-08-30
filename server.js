@@ -8,14 +8,12 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, './frontend/out')));
 
 require('./api/users')(app);
 require('./api/login')(app);
 require('./api/bets')(app);
 require('./api/messages')(app);
 require('./api/followers')(app);
-require('./routes/index.js')(app);
 
 const syncOptions = { force: false };
 
