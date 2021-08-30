@@ -18,7 +18,6 @@
     "start:prod": "node server.js",
     "start:dev": "concurrently \"nodemon\" \"npm run client\"",
     "client": "cd frontend && npm run dev",
-    "install": "cd frontend && npm install",
     "build": "node server.js"
   },
   "keywords": [],
