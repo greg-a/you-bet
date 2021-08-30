@@ -22,8 +22,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "prisma": "^2.18.0"
-  }
+  "license": "ISC"
 }
