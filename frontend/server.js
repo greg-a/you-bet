@@ -9,7 +9,7 @@ const handle = app.getRequestHandler();
 
 const apiPaths = {
   '/api': {
-    target: 'http://localhost:8080',
+    target: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080',
     pathRewrite: {
       '^/api': '/api'
     },
@@ -22,9 +22,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 app.prepare().then(() => {
   const server = express();
 
-  if (isDevelopment) {
-    server.use('/api', createProxyMiddleware(apiPaths['/api']));
-  }
+  server.use('/api', createProxyMiddleware(apiPaths['/api']));
 
   server.all('*', (req, res) => {
     return handle(req, res);
