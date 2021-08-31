@@ -9,7 +9,7 @@ const handle = app.getRequestHandler();
 
 const apiPaths = {
   '/api': {
-    target: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080',
+    target: process.env.NODE_ENV === 'production' ? 'https://youbet-backend.herokuapp.com' : 'http://localhost:8080',
     pathRewrite: {
       '^/api': '/api'
     },
