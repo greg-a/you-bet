@@ -13,6 +13,9 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.5.1"
   },
+  "scripts": {
+    "build": "node server.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
