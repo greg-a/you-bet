@@ -8,3 +8,7 @@ export const handleRedirect = (path) => {
   if (window.location.pathname === '/signup') return null;
   if (window.location.pathname !== path) return window.location.href = path;
 };
+
+export const diceRoller = () => {
+  return 0;
+};

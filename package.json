@@ -13,20 +13,11 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.5.1"
   },
-  "scripts": {
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
-    "start:prod": "node server.js",
-    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
-    "client": "cd frontend && npm run dev",
-    "seed": "node scripts/seedDB.js",
-    "install": "cd frontend && npm install",
-    "build": "cd client && npm run build",
-    "heroku-postbuild": "npm run build"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "prisma": "^2.18.0"
+  "engines": {
+    "node": ">=14.16.1",
+    "npm": "~7.16.0"
   }
 }

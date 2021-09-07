@@ -17,7 +17,13 @@ module.exports = {
     logging: false
   },
   production: {
-    use_env_variable: "JAWSDB_URL",
-    dialect: "postgres"
+    use_env_variable: "DATABASE_URL",
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false // <<<<<< YOU NEED THIS
+      }
+    }
   }
 };
