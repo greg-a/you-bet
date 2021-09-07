@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }) {
   }, [jwToken]);
 
   useEffect(() => {
-    console.log('environment', process.env.NODE_ENV)
+    console.log('environment', process.env.VERCEL_ENV)
     setJWToken(getCookie('JWToken'));
     setTimeout(() => setIsLoading(false), 500);
   }, []);
