@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Grid, NoSsr, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
@@ -8,7 +8,7 @@ import useAuth from '../hooks/useAuth';
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setJWToken } = useAuth();
+  const { setJWToken, userInfo } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
 
@@ -37,6 +37,10 @@ const LoginPage = () => {
   const handleCreateAccount = () => {
     router.push('/signup');
   };
+
+  useEffect(() => {
+    if (userInfo) router.push('/');
+  }, []);
 
   return (
     <Grid container style={{ textAlign: 'center', height: '70vh', paddingTop: '150px' }} justifyContent="center">

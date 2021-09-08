@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "## Getting Started 1. Install npm packages:",
   "main": "server.js",
+  "scripts": {
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "client": "cd frontend && npm run dev",
+    "start:prod": ""
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "concurrently": "^6.2.0",
