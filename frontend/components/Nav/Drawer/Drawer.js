@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Drawer, Grid, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, useTheme,
+import {
+  Drawer, Grid, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, useTheme,
 } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import BasicTextInput from '../../Form/Inputs/BasicTextInput';
 import useAuth from '../../../hooks/useAuth';
 import { formatUsername } from '../../../utils/formatters';
 import UserHeader from '../../Feed/Header/UserHeader';
 import useStyles from '../Nav.styles';
 import FollowButtons from './FollowButtons/FollowButtons';
+import { userSearch } from '../../../services';
 
 const UserDrawer = ({ open, window, onClose }) => {
   const classes = useStyles();
@@ -20,6 +23,7 @@ const UserDrawer = ({ open, window, onClose }) => {
   const theme = useTheme();
   const username = formatUsername(userInfo);
   const [selectedPage, setSelectedPage] = useState('Home');
+  const [searchInput, setSearchInput] = useState('');
 
   const handlePageClick = (event) => {
     const pages = {
@@ -30,6 +34,13 @@ const UserDrawer = ({ open, window, onClose }) => {
     setSelectedPage(textContent);
     router.push(pages[textContent]);
     onClose();
+  };
+
+  const handleSearchInput = async (event) => {
+    const { value } = event.target;
+    setSearchInput(value);
+    const { data } = await userSearch(value);
+    console.log(data)
   };
 
   const drawer = (
@@ -75,7 +86,20 @@ const UserDrawer = ({ open, window, onClose }) => {
         </List>
         <div className={classes.divider} />
         {userInfo && (
-          <FollowButtons />
+          <Grid container style={{ marginTop: 10 }} justifyContent="center">
+            <Grid item xs={10}>
+              <BasicTextInput
+                placeholder="Search..."
+                name="search"
+                onChange={handleSearchInput}
+              />
+              {searchInput ? (
+                <div>nothing</div>
+              ) : (
+                <FollowButtons />
+              )}
+            </Grid>
+          </Grid>
         )}
       </div>
     </div>
