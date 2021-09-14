@@ -15,6 +15,7 @@ import UserHeader from '../../Feed/Header/UserHeader';
 import useStyles from '../Nav.styles';
 import FollowButtons from './FollowButtons/FollowButtons';
 import { userSearch } from '../../../services';
+import SearchResultsFeed from '../../Feed/SearchResults/SearchResults';
 
 const UserDrawer = ({ open, window, onClose }) => {
   const classes = useStyles();
@@ -24,6 +25,7 @@ const UserDrawer = ({ open, window, onClose }) => {
   const username = formatUsername(userInfo);
   const [selectedPage, setSelectedPage] = useState('Home');
   const [searchInput, setSearchInput] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const handlePageClick = (event) => {
     const pages = {
@@ -40,7 +42,7 @@ const UserDrawer = ({ open, window, onClose }) => {
     const { value } = event.target;
     setSearchInput(value);
     const { data } = await userSearch(value);
-    console.log(data)
+    setSearchResults(data);
   };
 
   const drawer = (
@@ -94,7 +96,7 @@ const UserDrawer = ({ open, window, onClose }) => {
                 onChange={handleSearchInput}
               />
               {searchInput ? (
-                <div>nothing</div>
+                <SearchResultsFeed userList={searchResults} />
               ) : (
                 <FollowButtons />
               )}

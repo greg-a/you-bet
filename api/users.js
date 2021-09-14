@@ -7,6 +7,7 @@ const Op = Sequelize.Op;
 
 const rootURL = '/api/users/';
 const secret = process.env.TOKEN_SECRET;
+const attributes = ['id', 'first_name', 'last_name', 'username'];
 
 module.exports = function (app) {
   app.get(rootURL, async (req, res) => {
@@ -25,6 +26,7 @@ module.exports = function (app) {
 
   app.get(`${rootURL}search/:input`, authenticateToken, async (req, res) => {
     const results = await users.findAll({
+      attributes,
       where: {
         [Op.or]: [
           { username: { [Op.iLike]: `%${req.params.input}%` } },
@@ -71,7 +73,7 @@ module.exports = function (app) {
         },
         order: [['createdAt', 'DESC']],
         include: [
-          { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+          { model: users, as: 'main_user', attributes },
           { model: messages },
           { model: bets, as: 'counter_bets' },
         ],

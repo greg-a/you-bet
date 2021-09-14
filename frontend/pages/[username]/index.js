@@ -34,7 +34,7 @@ const User = () => {
 
   useEffect(() => {
     getUserFeed();
-  }, []);
+  }, [router.query]);
 
   return (
     <div style={{ marginTop: 150 }}>
@@ -46,6 +46,7 @@ const User = () => {
           <Grid container>
             <Grid item xs={9} md={10}>
               <Typography variant="h4">{formatUsername(userProfile)}</Typography>
+              <Typography>{`@${userProfile?.username}`}</Typography>
             </Grid>
             <Grid item xs={2}>
               {userInfo.id !== userProfile?.id && (
