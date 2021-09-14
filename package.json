@@ -7,7 +7,7 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
     "client": "cd frontend && npm run dev",
-    "start:prod": ""
+    "start:prod": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
