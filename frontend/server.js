@@ -3,13 +3,13 @@ const next = require('next');
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const port = process.env.PORT || 3000;
-const dev = process.env.NEXT_PUBLIC_VERCEL_ENV !== undefined;
+const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const apiPaths = {
   '/api': {
-    target: process.env.NEXT_PUBLIC_VERCEL_ENV ? 'https://youbet-backend.herokuapp.com' : 'http://localhost:8080',
+    target: 'http://localhost:8080',
     pathRewrite: {
       '^/api': '/api'
     },
@@ -22,7 +22,7 @@ const isDevelopment = process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production';
 app.prepare().then(() => {
   const server = express();
 
-  server.use('/api', createProxyMiddleware(apiPaths['/api']));
+  if (isDevelopment) server.use('/api', createProxyMiddleware(apiPaths['/api']));
 
   server.all('*', (req, res) => {
     return handle(req, res);

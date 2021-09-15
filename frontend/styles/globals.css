@@ -39,3 +39,7 @@ a {
 .Mui-disabled {
   color: rgba(168, 168, 168, 0.53) !important;
 }
+
+.MuiListItemText-secondary {
+  color: rgba(184, 184, 184, 0.973) !important;
+}
