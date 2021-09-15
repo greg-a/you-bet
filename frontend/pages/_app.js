@@ -41,6 +41,7 @@ function MyApp({ Component, pageProps }) {
   }, [jwToken]);
 
   useEffect(() => {
+    handleAutoLogin();
     setJWToken(getCookie('JWToken'));
     setIsLoading(false)
   }, []);
