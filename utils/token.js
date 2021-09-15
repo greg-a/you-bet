@@ -5,7 +5,7 @@ const tokenSecret = process.env.TOKEN_SECRET;
 exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  console.log('request token', token);
+  console.log('request token', req.headers);
 
   if (token === null) return res.sendStatus(401);
 
