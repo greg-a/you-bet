@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Grid, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import SimpleButton from '../components/Form/Buttons/SimpleButton';
@@ -10,6 +10,7 @@ const Signup = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [newAccountInfo, setNewAccountInfo] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -18,13 +19,16 @@ const Signup = () => {
 
   const handleSubmit = async () => {
     try {
+      setTimeout(() => setIsLoading(true), 500);
       const newAccountInfoClone = { ...newAccountInfo };
       newAccountInfoClone.username = newAccountInfoClone.username.toLowerCase();
       await createAccount(newAccountInfoClone);
       enqueueSnackbar('Your create was created!', { variant: 'success' });
+      setIsLoading(false);
       router.push('/login');
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
+      setIsLoading(false);
     }
   };
 
@@ -83,7 +87,11 @@ const Signup = () => {
       </Grid>
       <Grid item xs={12} style={{ textAlign: 'center' }}>
         <Button color="primary" variant="contained" onClick={handleSubmit}>
-          Submit
+          {isLoading ? (
+            <CircularProgress color="secondary" size={25} />
+          ) : (
+            'Submit'
+          )}
         </Button>
       </Grid>
       <Grid item xs={12}>

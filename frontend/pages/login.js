@@ -73,7 +73,7 @@ const LoginPage = () => {
               <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
                 {isLoading ? (
                   <CircularProgress color="secondary" size={25} />
-                ): (
+                ) : (
                     'Submit'
                   )}
               </Button>
