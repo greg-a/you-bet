@@ -68,7 +68,8 @@ const LoginPage = () => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item container xs={6} md={12} spacing={10} justifyContent="center">
+            <Grid item xs={12}>
               <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
                 {isLoading ? (
                   <CircularProgress color="secondary" size={25} />
@@ -77,10 +78,11 @@ const LoginPage = () => {
                   )}
               </Button>
             </Grid>
-            <Grid item md={12} xs={12}>
-              <Button onClick={handleCreateAccount} variant="contained" color="secondary">
+            <Grid item xs={12}>
+              <Button onClick={handleCreateAccount} variant="contained" color="secondary" fullWidth>
                 Create Account
               </Button>
+            </Grid>
             </Grid>
           </Grid>
         </Grid>
