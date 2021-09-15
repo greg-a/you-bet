@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
   const [userInfo, setUserInfo] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  axios.defaults.headers.common['Authorization'] = `JWT ${jwToken}`;
+  axios.defaults.headers.common['Authorization-jwt'] = `JWT ${jwToken}`;
 
   const handleAutoLogin = async () => {
     try {
