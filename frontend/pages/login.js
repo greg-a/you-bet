@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Grid, NoSsr, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Grid, NoSsr, Typography } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import { userLogin } from '../services';
@@ -8,9 +8,10 @@ import useAuth from '../hooks/useAuth';
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setJWToken, userInfo } = useAuth();
+  const { setJWToken, userInfo, setUserInfo } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -24,13 +25,16 @@ const LoginPage = () => {
 
   const handleSubmit = async () => {
     try {
+      setTimeout(() => setIsLoading(true), 500);
       const loginInfoClone = { ...loginInfo };
       loginInfoClone.username = loginInfoClone.username.toLowerCase();
       const { data } = await userLogin(loginInfoClone);
       saveJWToken(data);
+      setIsLoading(false);
       router.push('/');
     } catch (err) {
-      enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })
+      enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true });
+      setIsLoading(false);
     }
   };
 
@@ -64,9 +68,13 @@ const LoginPage = () => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item md={12} xs={12}>
-              <Button onClick={handleSubmit} variant="contained" color="primary">
-                Submit
+            <Grid item md={6} xs={12}>
+              <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
+                {isLoading ? (
+                  <CircularProgress color="secondary" size={25} />
+                ): (
+                    'Submit'
+                  )}
               </Button>
             </Grid>
             <Grid item md={12} xs={12}>
