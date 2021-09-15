@@ -49,6 +49,7 @@ module.exports = function (app) {
         res.json(userInfo);
       } else {
         res.sendStatus(403);
+        console.log('failed at token comparison', userInfo.token, req.token);
       }
     } catch (err) {
       res.sendStatus(500);

@@ -8,7 +8,7 @@ import useAuth from '../hooks/useAuth';
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setJWToken, userInfo } = useAuth();
+  const { setJWToken, userInfo, setUserInfo } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
 
@@ -28,6 +28,7 @@ const LoginPage = () => {
       loginInfoClone.username = loginInfoClone.username.toLowerCase();
       const { data } = await userLogin(loginInfoClone);
       saveJWToken(data);
+      console.log('login data', data)
       router.push('/');
     } catch (err) {
       enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true })

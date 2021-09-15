@@ -26,7 +26,6 @@ function MyApp({ Component, pageProps }) {
     try {
       const { data } = await checkJWToken();
       if (data) {
-        console.log(data)
         setUserInfo(data);
       } else {
         router.push('/login');
