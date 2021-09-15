@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
     } catch (err) {
       router.push('/login');
     }
-    setTimeout(() => setIsLoading(false), 500);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setJWToken(getCookie('JWToken'));
-    setTimeout(() => setIsLoading(false), 500);
+    setIsLoading(false)
   }, []);
 
   if (isLoading) return (

@@ -33,9 +33,10 @@ const User = () => {
   };
 
   useEffect(() => {
-    getUserFeed();
+    if (username) getUserFeed();
   }, [router.query]);
 
+  if (!userProfile) return <p>loading...</p>
   return (
     <div style={{ marginTop: 150 }}>
       <Head>

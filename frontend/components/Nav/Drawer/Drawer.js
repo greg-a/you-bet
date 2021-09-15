@@ -94,9 +94,10 @@ const UserDrawer = ({ open, window, onClose }) => {
                 placeholder="Search..."
                 name="search"
                 onChange={handleSearchInput}
+                value={searchInput}
               />
               {searchInput ? (
-                <SearchResultsFeed userList={searchResults} />
+                <SearchResultsFeed userList={searchResults} onUserClick={() => setSearchInput('')} />
               ) : (
                 <FollowButtons />
               )}
