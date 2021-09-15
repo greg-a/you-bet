@@ -26,6 +26,7 @@ function MyApp({ Component, pageProps }) {
     try {
       const { data } = await checkJWToken();
       if (data) {
+        console.log(data)
         setUserInfo(data);
       } else {
         router.push('/login');
@@ -41,7 +42,6 @@ function MyApp({ Component, pageProps }) {
   }, [jwToken]);
 
   useEffect(() => {
-    handleAutoLogin();
     setJWToken(getCookie('JWToken'));
     setIsLoading(false)
   }, []);
