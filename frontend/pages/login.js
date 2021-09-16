@@ -33,8 +33,8 @@ const LoginPage = () => {
       setIsLoading(false);
       router.push('/');
     } catch (err) {
-      enqueueSnackbar('Username or password is incorrect', { variant: 'error', persist: true });
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 500);
+      enqueueSnackbar('Username or password is incorrect', { variant: 'error' });
     }
   };
 

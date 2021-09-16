@@ -8,6 +8,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { useSnackbar } from 'notistack';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
 import useAuth from '../../../hooks/useAuth';
 import { formatUsername } from '../../../utils/formatters';
@@ -18,6 +19,7 @@ import { userSearch } from '../../../services';
 import SearchResultsFeed from '../../Feed/SearchResults/SearchResults';
 
 const UserDrawer = ({ open, window, onClose }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { userInfo } = useAuth();
   const router = useRouter();
@@ -26,6 +28,7 @@ const UserDrawer = ({ open, window, onClose }) => {
   const [selectedPage, setSelectedPage] = useState('Home');
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [timeoutId, setTimeoutId] = useState();
 
   const handlePageClick = (event) => {
     const pages = {
@@ -38,11 +41,25 @@ const UserDrawer = ({ open, window, onClose }) => {
     onClose();
   };
 
-  const handleSearchInput = async (event) => {
+  const handleSearchInput = async (value) => {
+    try {
+      const { data } = await userSearch(value);
+      setSearchResults(data);
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
+  const handleSearchDebounce = (event) => {
     const { value } = event.target;
     setSearchInput(value);
-    const { data } = await userSearch(value);
-    setSearchResults(data);
+    clearTimeout(timeoutId);
+    if (value.length > 0) {
+      const search = () => setTimeout(() => handleSearchInput(value), 1000);
+      setTimeoutId(search());
+    } else {
+      setSearchResults([]);
+    }
   };
 
   const drawer = (
@@ -93,7 +110,7 @@ const UserDrawer = ({ open, window, onClose }) => {
               <BasicTextInput
                 placeholder="Search..."
                 name="search"
-                onChange={handleSearchInput}
+                onChange={handleSearchDebounce}
                 value={searchInput}
               />
               {searchInput ? (
