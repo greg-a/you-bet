@@ -28,6 +28,7 @@ const FollowButtons = () => {
         body={(
           <SearchResultsFeed 
             userList={modalTitle === 'Followers' ? followerList : followingList}
+            onUserClick={handleModalClose}
           />
           )}
       />
