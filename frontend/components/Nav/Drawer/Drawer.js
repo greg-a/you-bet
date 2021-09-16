@@ -28,6 +28,7 @@ const UserDrawer = ({ open, window, onClose }) => {
   const [selectedPage, setSelectedPage] = useState('Home');
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [timeoutId, setTimeoutId] = useState();
 
   const handlePageClick = (event) => {
     const pages = {
@@ -49,12 +50,16 @@ const UserDrawer = ({ open, window, onClose }) => {
     }
   };
 
-  let search;
   const handleSearchDebounce = (event) => {
     const { value } = event.target;
     setSearchInput(value);
-    clearTimeout(search);
-    search = setTimeout(() => handleSearchInput(value), 1000);
+    clearTimeout(timeoutId);
+    if (value.length > 0) {
+      const search = () => setTimeout(() => handleSearchInput(value), 1000);
+      setTimeoutId(search());
+    } else {
+      setSearchResults([]);
+    }
   };
 
   const drawer = (
