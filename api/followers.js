@@ -1,4 +1,4 @@
-const { followers } = require('../models');
+const { followers, users } = require('../models');
 const { Sequelize } = require('../models');
 const { authenticateToken } = require('../utils/token');
 const Op = Sequelize.Op;
@@ -13,12 +13,18 @@ module.exports = (app) => {
           mainUserId: req.user.id,
         },
         attributes: ['followedUserId'],
+        include: [
+          { model: users, as: 'followed_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+        ],
       });
       const followerList = await followers.findAll({
         where: {
           followedUserId: req.user.id,
         },
         attributes: ['mainUserId'],
+        include: [
+          { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+        ],
       });
       res.json({ followingList, followerList });
     } catch (err) {

@@ -23,7 +23,7 @@ const Signup = () => {
       const newAccountInfoClone = { ...newAccountInfo };
       newAccountInfoClone.username = newAccountInfoClone.username.toLowerCase();
       await createAccount(newAccountInfoClone);
-      enqueueSnackbar('Your create was created!', { variant: 'success' });
+      enqueueSnackbar('Your account was created!', { variant: 'success' });
       setIsLoading(false);
       router.push('/login');
     } catch (err) {
