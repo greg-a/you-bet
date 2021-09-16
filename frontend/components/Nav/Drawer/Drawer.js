@@ -8,6 +8,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { useSnackbar } from 'notistack';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
 import useAuth from '../../../hooks/useAuth';
 import { formatUsername } from '../../../utils/formatters';
@@ -18,6 +19,7 @@ import { userSearch } from '../../../services';
 import SearchResultsFeed from '../../Feed/SearchResults/SearchResults';
 
 const UserDrawer = ({ open, window, onClose }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { userInfo } = useAuth();
   const router = useRouter();
@@ -43,7 +45,7 @@ const UserDrawer = ({ open, window, onClose }) => {
       const { data } = await userSearch(value);
       setSearchResults(data);
     } catch (err) {
-      alert(err.message);
+      enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
 
