@@ -9,9 +9,8 @@ const FollowButtons = () => {
   const [modalTitle, setModalTitle] = useState();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleClick = (event) => {
-    const { textContent } = event.target;
-    setModalTitle(textContent);
+  const handleClick = (title) => {
+    setModalTitle(title);
     setModalOpen(true);
   };
 
@@ -33,12 +32,12 @@ const FollowButtons = () => {
           )}
       />
       <Grid item xs={4}>
-        <Link component="button" color="secondary" onClick={handleClick}>
+        <Link component="button" color="secondary" onClick={() => handleClick('Followers')}>
           <ListItemText primary="Followers" secondary={followerList?.length || 0} secondaryTypographyProps={{ color: "secondary" }} />
         </Link>
       </Grid>
       <Grid item xs={4}>
-        <Link component="button" color="secondary" onClick={handleClick}>
+        <Link component="button" color="secondary" onClick={() => handleClick('Following')}>
           <ListItemText primary="Following" secondary={followingList?.length || 0} secondaryTypographyProps={{ color: "secondary", }} />
         </Link>
       </Grid>
