@@ -12,18 +12,23 @@ const SearchResultsFeed = ({ userList, onUserClick }) => {
   return (
     <List>
       {userList.length > 0 ? (
-        userList.map((user) => (
-          <ListItem
-            key={user.id}
-            button
-            onClick={() => handleUserClick(user)}
-          >
-            <ListItemAvatar>
-              <Avatar alt={user.username} src={user.picURL || '/static/images/avatar/1.jpg'} />
-            </ListItemAvatar>
-            <ListItemText primary={`${user.first_name} ${user.last_name}`} secondary={`@${user.username}`} />
-          </ListItem>
-        ))
+        userList.map((data) => {
+          let user = data;
+          if (user.main_user) user = user.main_user;
+          if (user.followed_user) user = user.followed_user;
+          return (
+            <ListItem
+              key={user.id}
+              button
+              onClick={() => handleUserClick(user)}
+            >
+              <ListItemAvatar>
+                <Avatar alt={user.username} src={user.picURL || '/static/images/avatar/1.jpg'} />
+              </ListItemAvatar>
+              <ListItemText primary={`${user.first_name} ${user.last_name}`} secondary={`@${user.username}`} />
+            </ListItem>
+          )
+        })
       ) : (
         <ListItem>
           <ListItemText primary="no users found" />

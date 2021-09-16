@@ -5,6 +5,7 @@ import CounterButton from '../../Form/Buttons/CounterButton';
 import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
 import useAuth from '../../../hooks/useAuth';
 import EditBetButton from '../../Form/Buttons/EditBetButton';
+import BetDetailsButton from '../../Form/Buttons/BetDetailsButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,11 +41,18 @@ const CounterFeed = ({ betInfo }) => {
                   key={counter.id}
                   modalData={betInfo}
                 >
-                  {counter.main_user.id === userInfo?.id ? (
-                    <EditBetButton betInfo={counter} />
-                  ) : (
-                    <AcceptBetButton betInfo={counter} />
-                  )}
+                  <Grid container justifyContent="space-around">
+                    <Grid item md={3}>
+                      <BetDetailsButton betInfo={counter} />
+                    </Grid>
+                    <Grid item md={3}>
+                      {counter.main_user.id === userInfo?.id ? (
+                        <EditBetButton betInfo={counter} />
+                      ) : (
+                        <AcceptBetButton betInfo={counter} />
+                      )}
+                    </Grid>
+                  </Grid>
                 </BasicFeedItem>
               ))}
             </>

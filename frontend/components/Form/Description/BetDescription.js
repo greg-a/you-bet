@@ -4,7 +4,7 @@ import { formatDate } from '../../../utils/formatters';
 
 const BetDescription = ({ betInfo }) => {
   return (
-    <List>
+    <List style={{ overflowWrap: 'break-word' }}>
       <ListItem>
         <ListItemText primary="Description" secondary={betInfo.description} secondaryTypographyProps={{ color: "secondary" }} />
       </ListItem>

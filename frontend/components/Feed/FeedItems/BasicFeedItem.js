@@ -23,7 +23,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
 
   const handleBetClick = () => {
     setSelectedBet(modalData);
-    router.push(`/${modalData.main_user.username}/bet/${modalData.id}`)
+    router.push(`/${user.username}/bet/${modalData.id}`);
   };
 
   const handleModalClose = () => {
@@ -33,7 +33,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
 
   const handleAvatarClick = (event) => {
     event.stopPropagation();
-    router.push(`/${modalData.main_user.username}`);
+    router.push(`/${user.username}`);
   };
 
   return (
