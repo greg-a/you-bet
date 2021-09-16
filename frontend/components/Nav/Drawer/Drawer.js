@@ -38,11 +38,21 @@ const UserDrawer = ({ open, window, onClose }) => {
     onClose();
   };
 
-  const handleSearchInput = async (event) => {
+  const handleSearchInput = async (value) => {
+    try {
+      const { data } = await userSearch(value);
+      setSearchResults(data);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  let search;
+  const handleSearchDebounce = (event) => {
     const { value } = event.target;
     setSearchInput(value);
-    const { data } = await userSearch(value);
-    setSearchResults(data);
+    clearTimeout(search);
+    search = setTimeout(() => handleSearchInput(value), 1000);
   };
 
   const drawer = (
@@ -93,7 +103,7 @@ const UserDrawer = ({ open, window, onClose }) => {
               <BasicTextInput
                 placeholder="Search..."
                 name="search"
-                onChange={handleSearchInput}
+                onChange={handleSearchDebounce}
                 value={searchInput}
               />
               {searchInput ? (
