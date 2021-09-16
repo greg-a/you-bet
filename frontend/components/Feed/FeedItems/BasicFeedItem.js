@@ -33,7 +33,7 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
 
   const handleAvatarClick = (event) => {
     event.stopPropagation();
-    router.push(`/${modalData.main_user.username}`);
+    router.push(`/${user.username}`);
   };
 
   return (
