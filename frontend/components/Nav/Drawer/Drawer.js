@@ -17,8 +17,10 @@ import useStyles from '../Nav.styles';
 import FollowButtons from './FollowButtons/FollowButtons';
 import { userSearch } from '../../../services';
 import SearchResultsFeed from '../../Feed/SearchResults/SearchResults';
+import useFeedList from '../../../hooks/useFeedList';
 
 const UserDrawer = ({ open, window, onClose }) => {
+  const { refreshFeedList } = useFeedList();
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { userInfo } = useAuth();
@@ -36,6 +38,7 @@ const UserDrawer = ({ open, window, onClose }) => {
       Profile: `/${userInfo.username}`,
     };
     const { textContent } = event.target;
+    if (textContent === 'Home') refreshFeedList();
     setSelectedPage(textContent);
     router.push(pages[textContent]);
     onClose();
@@ -60,6 +63,11 @@ const UserDrawer = ({ open, window, onClose }) => {
     } else {
       setSearchResults([]);
     }
+  };
+
+  const handleUserClick = () => {
+    setSearchInput('');
+    onClose();
   };
 
   const drawer = (
@@ -114,7 +122,7 @@ const UserDrawer = ({ open, window, onClose }) => {
                 value={searchInput}
               />
               {searchInput ? (
-                <SearchResultsFeed userList={searchResults} onUserClick={() => setSearchInput('')} />
+                <SearchResultsFeed userList={searchResults} onUserClick={handleUserClick} />
               ) : (
                 <FollowButtons />
               )}
