@@ -2,7 +2,7 @@ import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-
 import { useRouter } from 'next/router';
 import React from 'react';
 
-const SearchResultsFeed = ({ userList, onUserClick }) => {
+const SearchResultsFeed = ({ userList, onUserClick = () => {} }) => {
   const router = useRouter();
   const handleUserClick = (user) => {
     router.replace(`/${user.username}`);

@@ -7,19 +7,6 @@ const rootURL = '/api/bets/';
 
 module.exports = (app) => {
   app.get(rootURL, authenticateToken, async (req, res) => {
-    // let optionalWhere = {};
-    // if (req.params.username) {
-    //   try {
-    //     const response = await users.findOne({
-    //       where: {
-    //         username: req.params.username
-    //       },
-    //     });
-    //     optionalWhere = { mainUserId: response.id };
-    //   } catch (err) {
-    //     res.sendStatus(400);
-    //   }
-    // }
     let followList = [req.user.id];
     try {
       const results = await followers.findAll({
@@ -43,6 +30,7 @@ module.exports = (app) => {
           { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
           { model: messages, include: [{ model: users }] },
           { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
+          { model: users, as: 'accepted_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
         ],
       });
       res.json(results);

@@ -65,6 +65,11 @@ const UserDrawer = ({ open, window, onClose }) => {
     }
   };
 
+  const handleUserClick = () => {
+    setSearchInput('');
+    onClose();
+  };
+
   const drawer = (
     <div>
       <Grid container justifyContent="space-between" className={classes.headerContainer}>
@@ -117,7 +122,7 @@ const UserDrawer = ({ open, window, onClose }) => {
                 value={searchInput}
               />
               {searchInput ? (
-                <SearchResultsFeed userList={searchResults} onUserClick={() => setSearchInput('')} />
+                <SearchResultsFeed userList={searchResults} onUserClick={handleUserClick} />
               ) : (
                 <FollowButtons />
               )}
