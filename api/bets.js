@@ -24,6 +24,9 @@ module.exports = (app) => {
         where: {
           parent_id: null,
           mainUserId: followList,
+          end_date: {
+            [Op.gt]: new Date(),
+          },
         },
         order: [['createdAt', 'DESC']],
         include: [
@@ -32,6 +35,23 @@ module.exports = (app) => {
           { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
           { model: users, as: 'accepted_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
         ],
+      });
+      res.json(results);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  });
+
+  app.get(`${rootURL}history/:userId`, authenticateToken, async (req, res) => {
+    try {
+      const results = await bets.findAll({
+        where: {
+          parent_id: null,
+          mainUserId: req.params.userId,
+          end_date: {
+            [Op.lte]: new Date(),
+          },
+        },
       });
       res.json(results);
     } catch (err) {
