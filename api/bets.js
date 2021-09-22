@@ -14,7 +14,7 @@ module.exports = (app) => {
           mainUserId: req.user.id,
         },
       });
-      followList = [ ...followList, ...results.map(({ followedUserId }) => followedUserId)];
+      followList = [...followList, ...results.map(({ followedUserId }) => followedUserId)];
     } catch (err) {
       console.log(err);
     }
@@ -25,7 +25,7 @@ module.exports = (app) => {
           parent_id: null,
           mainUserId: followList,
           end_date: {
-            [Op.gt]: new Date(),
+            [Op.gte]: new Date(),
           },
         },
         order: [['createdAt', 'DESC']],
@@ -49,7 +49,7 @@ module.exports = (app) => {
           parent_id: null,
           mainUserId: req.params.userId,
           end_date: {
-            [Op.lte]: new Date(),
+            [Op.lt]: new Date(),
           },
         },
       });
@@ -137,6 +137,23 @@ module.exports = (app) => {
       res.json(results);
     } catch (err) {
       res.sendStatus(500);
+    }
+  });
+
+  app.delete(`${rootURL}delete/:betId`, authenticateToken, async (req, res) => {
+    try {
+      await bets.destroy({
+        where: {
+          [Op.or]: [
+            { id: req.params.betId },
+            { parent_id: req.params.betId },
+          ]
+        },
+      });
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+      console.log(err)
     }
   });
 };
