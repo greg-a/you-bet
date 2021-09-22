@@ -19,7 +19,7 @@ const LoginPage = () => {
   };
 
   const saveJWToken = (token) => {
-    document.cookie = `JWToken=${token}`;
+    document.cookie = `JWToken=${token};secure`;
     setJWToken(token);
   };
 
