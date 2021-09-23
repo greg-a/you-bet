@@ -132,6 +132,7 @@ module.exports = (app) => {
           { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
           { model: messages, include: [{ model: users }] },
           { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
+          { model: users, as: 'accepted_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
         ],
       });
       res.json(results);

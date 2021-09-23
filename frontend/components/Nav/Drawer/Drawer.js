@@ -7,6 +7,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
+import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { useSnackbar } from 'notistack';
 import BasicTextInput from '../../Form/Inputs/BasicTextInput';
@@ -35,12 +36,13 @@ const UserDrawer = ({ open, window, onClose }) => {
   const handlePageClick = (event) => {
     const pages = {
       Home: '/',
-      Profile: `/${userInfo.username}`,
+      My_Bets: `/${userInfo.username}`,
     };
     const { textContent } = event.target;
+    const page = textContent.replace(' ', '_');
     if (textContent === 'Home') refreshFeedList();
     setSelectedPage(textContent);
-    router.push(pages[textContent]);
+    router.push(pages[page]);
     onClose();
   };
 
@@ -92,6 +94,12 @@ const UserDrawer = ({ open, window, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
+          <ListItem button onClick={handlePageClick}>
+            <ListItemIcon>
+              <LibraryBooks color={selectedPage === 'My Bets' ? 'primary' : 'secondary'} />
+            </ListItemIcon>
+            <ListItemText primary="My Bets" />
+          </ListItem>
           <ListItem button onClick={handlePageClick} disabled>
             <ListItemIcon>
               <NotificationsIcon color={selectedPage === 'Notifications' ? 'primary' : 'secondary'} />
@@ -104,7 +112,7 @@ const UserDrawer = ({ open, window, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Messages" />
           </ListItem>
-          <ListItem button onClick={handlePageClick}>
+          <ListItem button onClick={handlePageClick} disabled>
             <ListItemIcon>
               <PersonIcon color={selectedPage === 'Profile' ? 'primary' : 'secondary'} />
             </ListItemIcon>
