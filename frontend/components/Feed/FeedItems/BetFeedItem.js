@@ -7,6 +7,7 @@ import CounterButton from '../../Form/Buttons/CounterButton';
 import EditBetButton from '../../Form/Buttons/EditBetButton';
 import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
 import BetDetailsButton from '../../Form/Buttons/BetDetailsButton';
+import CancelBetButton from '../../Form/Buttons/CancelBetButton';
 
 const BetFeedItem = ({ betInfo }) => {
   const { userInfo } = useAuth();
@@ -29,7 +30,7 @@ const BetFeedItem = ({ betInfo }) => {
         </Grid>
         <Grid item md={3}>
           {userInfo?.id === betInfo.main_user.id ? (
-            <EditBetButton betInfo={betInfo} />
+            <CancelBetButton betInfo={betInfo} />
           ) : (
             <AcceptBetButton betInfo={betInfo} />
           )}

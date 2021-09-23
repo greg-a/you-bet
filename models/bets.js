@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     bets.belongsTo(models.users, { as: 'main_user' });
     bets.belongsTo(models.users, { as: 'accepted_user' });
     bets.belongsTo(models.bets, { as: 'parent_bet', foreignKey: 'parent_id' });
-    bets.hasMany(models.messages);
-    bets.hasMany(models.bets, { as: 'counter_bets', foreignKey: 'parent_id' });
+    bets.hasMany(models.messages, { onDelete: 'cascade' });
+    bets.hasMany(models.bets, { as: 'counter_bets', foreignKey: 'parent_id', onDelete: 'cascade' });
   };
 
   return bets;

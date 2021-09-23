@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   messages.associate = (models) => {
     messages.belongsTo(models.users);
 
-    messages.belongsTo(models.bets);
+    messages.belongsTo(models.bets, { onDelete: 'cascade' });
   };
 
   return messages;

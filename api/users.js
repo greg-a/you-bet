@@ -67,14 +67,17 @@ module.exports = function (app) {
     try {
       const results = await bets.findAll({
         where: {
-          parent_id: null,
-          mainUserId: profile.id,
+          [Op.or]: [
+            { mainUserId: profile.id },
+            { acceptedUserId: profile.id },
+          ]
         },
         order: [['createdAt', 'DESC']],
         include: [
-          { model: users, as: 'main_user', attributes },
-          { model: messages },
-          { model: bets, as: 'counter_bets' },
+          { model: users, as: 'main_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
+          { model: messages, include: [{ model: users }] },
+          { model: bets, as: 'counter_bets', include: [{ model: users, as: 'main_user' }, { model: messages }] },
+          { model: users, as: 'accepted_user', attributes: ['id', 'first_name', 'last_name', 'username'] },
         ],
       });
       res.json({ bets: results, profileInfo: profile });

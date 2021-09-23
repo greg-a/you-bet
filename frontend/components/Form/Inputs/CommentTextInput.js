@@ -36,7 +36,7 @@ const CommentTextInput = ({ betInfo, onSubmit = () => {} }) => {
         />
       </Grid>
       <Grid item xs={12}>
-        <SimpleButton title="Send" onClick={handleComment} />
+        <SimpleButton title="Comment" onClick={handleComment} />
       </Grid>
     </Grid>
   );
