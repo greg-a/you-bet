@@ -4,7 +4,7 @@ import useFollowList from '../../../../hooks/useFollowList';
 import ModalBase from '../../../Modals/ModalBase';
 import SearchResultsFeed from '../../../Feed/SearchResults/SearchResults';
 
-const FollowButtons = () => {
+const FollowButtons = ({ onClose }) => {
   const { followList: { followerList, followingList } } = useFollowList();
   const [modalTitle, setModalTitle] = useState();
   const [modalOpen, setModalOpen] = useState(false);
@@ -16,6 +16,7 @@ const FollowButtons = () => {
 
   const handleModalClose = () => {
     setModalOpen(false);
+    onClose();
   };
 
   return (
