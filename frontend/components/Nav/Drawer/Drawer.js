@@ -132,7 +132,7 @@ const UserDrawer = ({ open, window, onClose }) => {
               {searchInput ? (
                 <SearchResultsFeed userList={searchResults} onUserClick={handleUserClick} />
               ) : (
-                <FollowButtons />
+                <FollowButtons onClose={onClose} />
               )}
             </Grid>
           </Grid>

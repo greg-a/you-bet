@@ -5,10 +5,12 @@ import ModalBase from '../../Modals/ModalBase';
 import SimpleConfirm from '../../Modals/ModalBodies/SimpleConfirm';
 import useFeedList from '../../../hooks/useFeedList';
 import { deleteBet } from '../../../services';
+import useProfileFeed from '../../../hooks/useProfileFeed';
 
 const CancelBetButton = ({ betInfo }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { refreshFeedList } = useFeedList();
+  const { refreshProfileFeed } = useProfileFeed();
   const [open, setOpen] = useState(false);
   
   const handleClose = () => {
@@ -23,7 +25,7 @@ const CancelBetButton = ({ betInfo }) => {
     try {
       await deleteBet(betInfo.id);
       enqueueSnackbar('Bet was deleted', { variant: 'success' });
-      console.log('bet was deleted')
+      refreshProfileFeed();
     } catch {
       enqueueSnackbar('Error: could not delete', { variant: 'error' });
     }
