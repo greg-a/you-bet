@@ -19,13 +19,14 @@ const Bet = () => {
     try {
       const { data } = await getUserBetById(username, betId);
       setBetInfo(data);
+      console.log('render')
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
   };
 
   useEffect(() => {
-    if (feedList.length > 0) return getBet();
+    if (username && betId) getBet();
   }, [feedList]);
 
   return (

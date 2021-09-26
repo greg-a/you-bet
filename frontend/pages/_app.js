@@ -13,6 +13,7 @@ import AppBarLogo from '../components/Nav/AppBar/AppBar';
 import AuthContext from '../contexts/authContext';
 import { SelectedBetProvider } from '../contexts/selectedBetContext';
 import { FollowListProvider } from '../contexts/followListContext';
+import { ProfileFeedProvider } from '../contexts/profileFeedContext';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -63,14 +64,16 @@ function MyApp({ Component, pageProps }) {
         <SnackbarProvider>
           <FollowListProvider>
             <FeedListProvider>
-              <SelectedBetProvider>
-                <AppBarLogo />
-                <div style={{ marginTop: 50 }} />
-                <Component {...pageProps} />
-                {userInfo && (
-                  <ActionButton />
-                )}
-              </SelectedBetProvider>
+              <ProfileFeedProvider>
+                <SelectedBetProvider>
+                  <AppBarLogo />
+                  <div style={{ marginTop: 50 }} />
+                  <Component {...pageProps} />
+                  {userInfo && (
+                    <ActionButton />
+                  )}
+                </SelectedBetProvider>
+              </ProfileFeedProvider>
             </FeedListProvider>
           </FollowListProvider>
         </SnackbarProvider>
