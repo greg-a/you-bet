@@ -46,6 +46,7 @@ module.exports = function (app) {
     try {
       const createUser = await users.create(paramsClone);
       res.send(createUser);
+      console.log({createUser})
     } catch (err) {
       res.send(err);
     }
