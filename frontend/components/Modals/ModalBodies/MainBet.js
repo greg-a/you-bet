@@ -35,7 +35,7 @@ const MainBet = ({ betInfo }) => {
         </Grid>
         <Grid item xs={12}>
           <Grid container justifyContent="center" style={{ textAlign: 'center', marginBottom: 15 }}>
-            <Grid item xs={5} md={3}>
+            <Grid item xs={4} md={3}>
               <Chip
                 label="Comments"
                 name="comments"
@@ -44,7 +44,7 @@ const MainBet = ({ betInfo }) => {
                 onClick={handleChipClick}
               />
             </Grid>
-            <Grid item xs={5} md={3}>
+            <Grid item xs={4} md={3}>
               <Chip
                 label="Counters"
                 name="counters"
@@ -53,7 +53,7 @@ const MainBet = ({ betInfo }) => {
                 onClick={handleChipClick}
               />
             </Grid>
-            <Grid item xs={5} md={3}>
+            <Grid item xs={4} md={3}>
               <Chip
                 label="Accept"
                 name="accept"
