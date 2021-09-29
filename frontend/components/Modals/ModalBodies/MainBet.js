@@ -5,6 +5,7 @@ import CounterFeed from '../../Feed/CounterFeed/CounterFeed';
 import BetDescription from '../../Form/Description/BetDescription';
 import UserHeader from '../../Feed/Header/UserHeader';
 import useStyles from '../ModalBase.style';
+import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
 
 const MainBet = ({ betInfo }) => {
   const classes = useStyles();
@@ -12,6 +13,7 @@ const MainBet = ({ betInfo }) => {
   const bodies = {
     comments: <CommentFeed betInfo={betInfo} />,
     counters: <CounterFeed betInfo={betInfo} />,
+    accept: <AcceptBetButton betInfo={betInfo} variant="contained" color="primary" padding={20} />,
   };
 
   const handleChipClick = (event) => {
@@ -21,7 +23,7 @@ const MainBet = ({ betInfo }) => {
 
   return (
     <Grid container spacing={4} justifyContent="center">
-      <Grid item xs={11} sm={4} className={classes.container}>
+      <Grid item container spacing={4} xs={11} sm={4} className={classes.container}>
         <Grid item xs={12}>
           <UserHeader
             userInfo={betInfo.main_user}
@@ -48,6 +50,15 @@ const MainBet = ({ betInfo }) => {
                 name="counters"
                 clickable
                 color={selectedChip === 'counters' ? 'primary' : 'secondary'}
+                onClick={handleChipClick}
+              />
+            </Grid>
+            <Grid item xs={5} md={3}>
+              <Chip
+                label="Accept"
+                name="accept"
+                clickable
+                color={selectedChip === 'accept' ? 'primary' : 'secondary'}
                 onClick={handleChipClick}
               />
             </Grid>
