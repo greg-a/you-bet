@@ -8,7 +8,7 @@ import ModalBase from '../../Modals/ModalBase';
 import SimpleButton from './SimpleButton';
 import useFeedList from '../../../hooks/useFeedList';
 
-const AcceptBetButton = ({ betInfo }) => {
+const AcceptBetButton = ({ betInfo, variant = 'text', color = 'secondary', padding = 0 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { refreshFeedList } = useFeedList();
   const [open, setOpen] = useState(false);
@@ -35,8 +35,8 @@ const AcceptBetButton = ({ betInfo }) => {
   };
 
   return (
-    <div>
-      <Button size="small" color="secondary" fullWidth onClick={handleClickOpen} disabled={betInfo.acceptedUserId > 0}>
+    <div style={{ padding, paddingTop: padding * .5 }}>
+      <Button size="small" variant={variant} color={color} fullWidth onClick={handleClickOpen} disabled={betInfo.acceptedUserId > 0}>
         {betInfo.acceptedUserId ? 'Accepted' : 'Accept'}
       </Button>
       <ModalBase

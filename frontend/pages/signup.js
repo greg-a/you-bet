@@ -48,7 +48,7 @@ const Signup = () => {
   const validateSignupForm = () => {
     const fieldEntries = Object.entries(newAccountInfo);
     const invalidFieldsArr = fieldEntries.filter(([key, value]) => value.length === 0).map(([key]) => key);
-    const messages = invalidFieldsArr.reduce((a, v) => ({ ...a, [v]: 'field cannot be blank' }), {});
+    const messages = invalidFieldsArr.reduce((a, v) => ({ ...a, [v]: `${v.replace('_', ' ').replace('1', '')} cannot be blank` }), {});
     setInvalidFields({ ...invalidFields, ...messages });
 
     const isValid = invalidFieldsArr.length === 0 && passwordValid;
