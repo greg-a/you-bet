@@ -9,12 +9,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     overflowY: 'auto',
-    display: 'flex',
-    justifyContent: 'center',
     // backgroundColor: theme.palette.background.paper,
   },
   inline: {
     display: 'inline',
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -23,17 +23,19 @@ const BetFeed = ({ betInfo }) => {
   const { selectedBet } = useSelectedBet();
   return (
     <>
-      <List className={classes.root}>
-        {betInfo?.length > 0 ? (
+      {betInfo?.length > 0 ? (
+        <List className={classes.root}>
           <>
             {betInfo.map((bet) => (
               <BetFeedItem betInfo={bet} key={bet.id} />
             ))}
           </>
-        ) : (
+        </List>
+      ) : (
+        <div className={classes.inline}>
           <EmptyBetFeed />
-        )}
-      </List>
+        </div>
+      )}
     </>
   );
 };
