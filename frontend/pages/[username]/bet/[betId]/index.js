@@ -7,6 +7,7 @@ import MainBet from '../../../../components/Modals/ModalBodies/MainBet';
 import { getUserBetById } from '../../../../services';
 import useFeedList from '../../../../hooks/useFeedList';
 import { formatUsername } from '../../../../utils/formatters';
+import EmptyBet from '../../../../components/Common/EmptyState/EmptyBet';
 
 const Bet = () => {
   const { feedList } = useFeedList();
@@ -37,7 +38,7 @@ const Bet = () => {
       {betInfo ? (
         <MainBet betInfo={betInfo} />
       ) : (
-        <div>oops, this bet doesn't exist :(</div>
+          <EmptyBet />
       )}
     </div>
   );

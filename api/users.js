@@ -11,15 +11,18 @@ const attributes = ['id', 'first_name', 'last_name', 'username'];
 
 module.exports = function (app) {
   app.get(rootURL, async (req, res) => {
-    const results = await users.findAll();
+    const results = await users.findAll({
+      attributes,
+    });
     res.json(results);
   });
 
   app.get(`${rootURL}:id`, async (req, res) => {
     const results = await users.findAll({
+      attributes,
       where: {
-        id: req.params.id
-      }
+        id: req.params.id,
+      },
     });
     res.json(results);
   });
@@ -32,7 +35,7 @@ module.exports = function (app) {
           { username: { [Op.iLike]: `%${req.params.input}%` } },
           { first_name: req.params.input },
           { last_name: req.params.input },
-        ]
+        ],
       },
     });
     res.json(results);
