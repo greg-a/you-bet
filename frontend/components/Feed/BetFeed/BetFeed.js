@@ -3,11 +3,14 @@ import { Grid, List, makeStyles } from '@material-ui/core';
 import BetFeedItem from '../FeedItems/BetFeedItem';
 import CounterButton from '../../Form/Buttons/CounterButton';
 import useSelectedBet from '../../../hooks/useSelectedBet';
+import EmptyBetFeed from '../../Common/EmptyState/EmptyBetFeed';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     overflowY: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
     // backgroundColor: theme.palette.background.paper,
   },
   inline: {
@@ -28,7 +31,7 @@ const BetFeed = ({ betInfo }) => {
             ))}
           </>
         ) : (
-          <p>no results</p>
+          <EmptyBetFeed />
         )}
       </List>
     </>
