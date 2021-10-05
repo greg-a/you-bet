@@ -37,6 +37,7 @@ const UserDrawer = ({ open, window, onClose }) => {
     const pages = {
       Home: '/',
       My_Bets: `/${userInfo.username}`,
+      Profile: '/profile'
     };
     const { textContent } = event.target;
     const page = textContent.replace(' ', '_');
@@ -112,7 +113,7 @@ const UserDrawer = ({ open, window, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Messages" />
           </ListItem>
-          <ListItem button onClick={handlePageClick} disabled>
+          <ListItem button onClick={handlePageClick}>
             <ListItemIcon>
               <PersonIcon color={selectedPage === 'Profile' ? 'primary' : 'secondary'} />
             </ListItemIcon>
