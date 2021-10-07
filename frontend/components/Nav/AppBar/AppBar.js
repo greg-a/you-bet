@@ -44,7 +44,7 @@ const AppBarLogo = () => {
         <AppBar position="fixed">
           <Toolbar className={classes.toolbar}>
             <IconButton disabled={!userInfo} onClick={() => setDrawerOpenMobile(true)}>
-              <Avatar alt={userInfo?.username} src="/static/images/avatar/1.jpg" />
+              <Avatar alt={userInfo?.first_name} src="/static/images/avatar/1.jpg" />
             </IconButton>
             <Typography variant="h6" className="logo-font">
               YouBet
