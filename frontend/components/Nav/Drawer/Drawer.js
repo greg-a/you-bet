@@ -37,6 +37,7 @@ const UserDrawer = ({ open, window, onClose }) => {
     const pages = {
       Home: '/',
       My_Bets: `/${userInfo.username}`,
+      Profile: '/profile'
     };
     const { textContent } = event.target;
     const page = textContent.replace(' ', '_');

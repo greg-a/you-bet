@@ -54,8 +54,12 @@ const BasicFeedItem = ({ modalData, body, user, timestamp, children }) => {
           className={classes.body}
           primary={(
             <Grid container justifyContent="space-between">
-              <b>{username}</b>
-              <Typography variant="caption">{formatDate(timestamp)}</Typography>
+              <Grid item xs={6}>
+                <b>{username}</b>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption">{formatDate(timestamp)}</Typography>
+              </Grid>
             </Grid>
           )}
           secondary={<Typography className={classes.title} color="textSecondary" gutterBottom>
