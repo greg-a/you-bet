@@ -55,6 +55,24 @@ module.exports = function (app) {
     }
   });
 
+  app.put(`${rootURL}password-reset`, async (req, res) => {
+    const encryptedPassword = createHmac('sha256', secret)
+      .update(req.body.password)
+      .digest('hex');
+    try {
+      await users.update({
+        password: encryptedPassword,
+      }, {
+        where: {
+          id: req.body.userId,
+        },
+      });
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  });
+
   app.get(`${rootURL}profile/:username`, authenticateToken, async (req, res) => {
     let profile = null;
     try {
