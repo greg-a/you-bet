@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Backdrop, CircularProgress, Grid, ThemeProvider } from '@material-ui/core';
+import { Backdrop, Button, CircularProgress, Grid, ThemeProvider } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
 import axios from 'axios';
 import Theme from '../styles/mui-theme';
@@ -16,12 +16,17 @@ import { FollowListProvider } from '../contexts/followListContext';
 import { ProfileFeedProvider } from '../contexts/profileFeedContext';
 
 function MyApp({ Component, pageProps }) {
+  const notistackRef = createRef();
   const router = useRouter();
   const [jwToken, setJWToken] = useState();
   const [userInfo, setUserInfo] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
+  
   axios.defaults.headers.common['Authorization-jwt'] = `JWT ${jwToken}`;
+  
+  const onClickDismiss = key => () => {
+    notistackRef.current.closeSnackbar(key);
+  };
 
   const handleAutoLogin = async () => {
     try {
@@ -61,7 +66,14 @@ function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider theme={Theme}>
       <AuthContext.Provider value={{ userInfo, setUserInfo, setJWToken }}>
-        <SnackbarProvider>
+        <SnackbarProvider
+          ref={notistackRef}
+          action={(key) => (
+            <Button onClick={onClickDismiss(key)}>
+              Dismiss
+            </Button>
+          )}
+        >
           <FollowListProvider>
             <FeedListProvider>
               <ProfileFeedProvider>
