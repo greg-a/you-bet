@@ -113,7 +113,7 @@ const UserDrawer = ({ open, window, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Messages" />
           </ListItem>
-          <ListItem button onClick={handlePageClick} disabled>
+          <ListItem button onClick={handlePageClick}>
             <ListItemIcon>
               <PersonIcon color={selectedPage === 'Profile' ? 'primary' : 'secondary'} />
             </ListItemIcon>
