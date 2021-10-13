@@ -1,44 +1,122 @@
-import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Button, Divider, Grid, Typography } from '@material-ui/core';
 import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
 import useAuth from '../hooks/useAuth';
+import { changePassword } from '../services';
+import { useSnackbar } from 'notistack';
+
+const defaultInputs = {
+  currentPassword: '',
+  newPassword1: '',
+  newPassword2: '',
+}
 
 const Profile = () => {
-  const { userInfo: { username, first_name, last_name, email } } = useAuth();
+  const { userInfo } = useAuth();
+  const { enqueueSnackbar } = useSnackbar()
+  const [passwordResetInfo, setPasswordResetInfo] = useState(defaultInputs);
+  const [inputErrors, setInputErrors] = useState(defaultInputs);
+  const [passwordsValid, setPasswordsValid] = useState(true);
+
+  const handlePasswordChange = (event) => {
+    const { name, value } = event.target;
+    setPasswordResetInfo({ ...passwordResetInfo, ...{ [name]: value } });
+  };
+
+  const validatePasswords = () => {
+    return passwordResetInfo.password1 === passwordResetInfo.newPassword2;
+  };
+
+  const handlePasswordReset = async () => {
+    if (validatePasswords) {
+      try {
+        await changePassword(passwordResetInfo);
+        enqueueSnackbar('Password was updated!', { variant: 'success' });
+        setPasswordResetInfo(defaultInputs);
+      } catch (err) {
+        enqueueSnackbar('Error: make sure your current password is correct', { variant: 'error' });
+      }
+    } else {
+      setInputErrors({ ...inputErrors, ...{ newPassword2: 'passwords do not match' } });
+    }
+  };
+
+  if (!userInfo) return <p>loading...</p>
   return (
     <Grid container style={{ textAlign: 'center', height: '70vh', paddingTop: '70px' }} justifyContent="center">
       <Grid item xs={12}>
-        <Typography variant="h4">Profile</Typography>
+        <Typography variant="h4" gutterBottom>Profile</Typography>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={10} md={5}>
         <Grid container spacing={6}>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <BasicTextInput
               label="email"
-              value={email} 
+              value={userInfo.email}
               disabled
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <BasicTextInput
               label="username"
-              value={username} 
+              value={userInfo.username}
               disabled
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <BasicTextInput
               name="first_name"
               label="first name"
-              value={first_name}
+              value={userInfo.first_name}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <BasicTextInput
               name="last_name"
               label="last name"
-              value={last_name}
+              value={userInfo.last_name}
             />
+          </Grid>
+          <Grid item xs={12} style={{ textAlign: 'left' }}>
+            <Typography variant="subtitle1">Password Reset</Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <BasicTextInput
+              type="password"
+              name="currentPassword"
+              label="current password"
+              onChange={handlePasswordChange}
+              value={passwordResetInfo.currentPassword}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <BasicTextInput
+              type="password"
+              name="newPassword1"
+              label="new password"
+              onChange={handlePasswordChange}
+              value={passwordResetInfo.newPassword1}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <BasicTextInput
+              type="password"
+              name="newPassword2"
+              label="new password"
+              onChange={handlePasswordChange}
+              value={passwordResetInfo.newPassword2}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Button
+              onClick={handlePasswordReset}
+              variant="contained"
+              color="secondary"
+              size="small"
+              fullWidth
+            >
+              Reset Password
+            </Button>
           </Grid>
         </Grid>
       </Grid>
