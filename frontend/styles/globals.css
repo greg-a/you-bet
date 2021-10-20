@@ -43,3 +43,7 @@ a {
 .MuiListItemText-secondary {
   color: rgba(184, 184, 184, 0.973) !important;
 }
+
+.MuiChip-root {
+  min-width: 90px;
+}
