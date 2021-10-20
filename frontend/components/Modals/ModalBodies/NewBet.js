@@ -18,6 +18,14 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
     setBetInfo((old) => ({ ...old, [name]: value }));
   };
 
+  const handleBetAmountChange = (event) => {
+    const { value } = event.target;
+    let formattedVal = parseInt(value, 10) || 0;
+    if (formattedVal > 0 && value[0] === '0') formattedVal = value.slice(1);
+    if (value.includes('.')) formattedVal = value.split('.')[0];
+    setBetInfo((old) => ({ ...old, betAmount: formattedVal }));
+  };
+
   const handleSubmit = async () => {
     if (!validateBet(betInfo)) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
     try {
@@ -58,7 +66,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
             label="amount"
             type="number"
             name="betAmount"
-            onChange={handleChange}
+            onChange={handleBetAmountChange}
             value={betInfo.betAmount}
             InputProps={{
               startAdornment: (

@@ -23,7 +23,7 @@ module.exports = function (app) {
             password: hashedPassword
           }
         });
-        if (!loggedIn) return res.sendStatus(403);
+        if (!loggedIn) return res.sendStatus(409);
         const token = generateAccessToken(loggedIn.id);
         await users.update({ token }, {
           where: {
