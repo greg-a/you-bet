@@ -14,6 +14,7 @@ export const ProfileFeedProvider = ({ children }) => {
   const [profileInfo, setProfileInfo] = useState();
 
   const refreshProfileFeed = async () => {
+    if (!username) return null;
     try {
       const { data: { bets, profileInfo } } = await getProfileBets(username);
       setProfileFeed(bets);

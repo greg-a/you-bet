@@ -36,7 +36,7 @@ const UserDrawer = ({ open, window, onClose }) => {
   const handlePageClick = (event) => {
     const pages = {
       Home: '/',
-      My_Bets: `/${userInfo.username}`,
+      My_Bets: `/${userInfo?.username}`,
       Profile: '/profile'
     };
     const { textContent } = event.target;
