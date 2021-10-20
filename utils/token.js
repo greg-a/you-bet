@@ -11,7 +11,7 @@ exports.authenticateToken = (req, res, next) => {
   jwt.verify(token, tokenSecret, (err, userId) => {
     console.log('error verifying token', err);
 
-    if (err) return res.sendStatus(403);
+    if (err) return res.sendStatus(412);
 
     req.user = userId;
     req.token = token;
