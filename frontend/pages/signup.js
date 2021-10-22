@@ -30,12 +30,17 @@ const Signup = () => {
     return passwordsMatch;
   };
 
+  const validateUsername = (username = newAccountInfo.username) => {
+    return !username.includes(' ');
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setNewAccountInfo((old) => ({ ...old, [name]: value }));
 
     let updateValidField = {};
     if (value.length > 0) updateValidField = { [name]: '' };
+    if (!validateUsername(value) && name === 'username') updateValidField = { username: 'cannot contain spaces' };
     setInvalidFields({ ...invalidFields, ...updateValidField }); 
   };
 
@@ -51,7 +56,7 @@ const Signup = () => {
     const messages = invalidFieldsArr.reduce((a, v) => ({ ...a, [v]: `${v.replace('_', ' ').replace('1', '')} cannot be blank` }), {});
     setInvalidFields({ ...invalidFields, ...messages });
 
-    const isValid = invalidFieldsArr.length === 0 && passwordValid;
+    const isValid = invalidFieldsArr.length === 0 && passwordValid && validateUsername();
     return isValid;
   };
 
@@ -89,6 +94,8 @@ const Signup = () => {
         enqueueSnackbar(err.message, { variant: 'error' });
         setIsLoading(false);
       }
+    } else {
+      enqueueSnackbar('Something is wrong on the form', { variant: 'error' });
     }
   };
 

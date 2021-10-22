@@ -32,9 +32,9 @@ module.exports = function (app) {
       attributes,
       where: {
         [Op.or]: [
-          { username: { [Op.iLike]: `%${req.params.input}%` } },
-          { first_name: req.params.input },
-          { last_name: req.params.input },
+          { username: { [Op.iLike]: `%${req.params.input.replace(' ', '_')}%` } },
+          { first_name: `%${req.params.input}%` },
+          { last_name: `%${req.params.input}%` },
         ],
       },
     });
@@ -42,7 +42,9 @@ module.exports = function (app) {
   });
 
   app.post(rootURL, async (req, res) => {
+    if (req.body.username.includes(' ')) return res.sendStatus(500);
     const paramsClone = { ...req.body };
+    paramsClone.username = paramsClone.username.trim();
     paramsClone.password = createHmac('sha256', secret)
       .update(req.body.password)
       .digest('hex');
@@ -71,7 +73,6 @@ module.exports = function (app) {
           password: currentPasswordHashed,
         },
       });
-      console.log(results[0])
       if (results[0] === 1) res.sendStatus(200);
       if (results[0] === 0) res.sendStatus(401);
     } catch (err) {
