@@ -1,7 +1,7 @@
-import http from './http-service';
+import http from "./http-service";
 
-const rootURL = '/api/followers/';
+const rootURL = "/api/followers/";
 
 export const getFollowList = () => http.get(rootURL);
-export const followUser = (id) => http.post(rootURL, { id });
-export const unfollowUser = (id) => http.delete(`${rootURL}${id}`);
+export const followUser = (userId) => http.post(rootURL, { userId });
+export const unfollowUser = (userId) => http.delete(`${rootURL}${userId}`);
