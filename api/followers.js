@@ -1,6 +1,7 @@
 const { followers, users } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
+const QueryHelpers = require("./queryHelpers");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/followers/";
@@ -13,26 +14,14 @@ module.exports = (app) => {
           mainUserId: req.user.id,
         },
         attributes: ["followedUserId"],
-        include: [
-          {
-            model: users,
-            as: "followed_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
-        ],
+        include: [QueryHelpers.includes.followedUser],
       });
       const followerList = await followers.findAll({
         where: {
           followedUserId: req.user.id,
         },
         attributes: ["mainUserId"],
-        include: [
-          {
-            model: users,
-            as: "main_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
-        ],
+        include: [QueryHelpers.includes.mainUser],
       });
       res.json({ followingList, followerList });
     } catch (err) {
@@ -51,7 +40,7 @@ module.exports = (app) => {
         where: {
           id: results.dataValues.followedUserId,
         },
-        attributes: ["id", "first_name", "last_name", "username"],
+        attributes: QueryHelpers.attributes.user,
       });
 
       res.json(followedUser);

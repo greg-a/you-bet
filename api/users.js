@@ -1,25 +1,24 @@
 const { createHmac } = require("crypto");
-const dotenv = require("dotenv");
 const { users, bets, messages } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
+const QueryHelpers = require("./queryHelpers");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/users/";
 const secret = process.env.TOKEN_SECRET;
-const attributes = ["id", "first_name", "last_name", "username"];
 
 module.exports = function (app) {
   app.get(rootURL, async (req, res) => {
     const results = await users.findAll({
-      attributes,
+      attributes: QueryHelpers.attributes.user,
     });
     res.json(results);
   });
 
   app.get(`${rootURL}:id`, async (req, res) => {
     const results = await users.findAll({
-      attributes,
+      attributes: QueryHelpers.attributes.user,
       where: {
         id: req.params.id,
       },
@@ -29,7 +28,7 @@ module.exports = function (app) {
 
   app.get(`${rootURL}search/:input`, authenticateToken, async (req, res) => {
     const results = await users.findAll({
-      attributes,
+      attributes: QueryHelpers.attributes.user,
       where: {
         [Op.or]: [
           {
@@ -112,22 +111,10 @@ module.exports = function (app) {
           },
           order: [["createdAt", "DESC"]],
           include: [
-            {
-              model: users,
-              as: "main_user",
-              attributes: ["id", "first_name", "last_name", "username"],
-            },
-            { model: messages, include: [{ model: users }] },
-            {
-              model: bets,
-              as: "counter_bets",
-              include: [{ model: users, as: "main_user" }, { model: messages }],
-            },
-            {
-              model: users,
-              as: "accepted_user",
-              attributes: ["id", "first_name", "last_name", "username"],
-            },
+            QueryHelpers.includes.acceptedUser,
+            QueryHelpers.includes.mainUser,
+            QueryHelpers.includes.messages,
+            QueryHelpers.includes.counterBets,
           ],
         });
         res.json({ bets: results, profileInfo: profile });

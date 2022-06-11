@@ -1,13 +1,13 @@
-const { bets, users, messages, counters, followers } = require("../models");
+const { bets, users, messages, followers } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
+const QueryHelpers = require("./queryHelpers");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/bets/";
 
 module.exports = (app) => {
   app.get(rootURL, authenticateToken, async (req, res) => {
-    let followList = [req.user.id];
     try {
       const results = await followers.findAll({
         where: {
@@ -15,7 +15,7 @@ module.exports = (app) => {
         },
       });
       followList = [
-        ...followList,
+        req.user.id,
         ...results.map(({ followedUserId }) => followedUserId),
       ];
     } catch (err) {
@@ -36,25 +36,10 @@ module.exports = (app) => {
           [messages, "createdAt", "DESC"],
         ],
         include: [
-          {
-            model: users,
-            as: "main_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
-          {
-            model: messages,
-            include: [{ model: users }],
-          },
-          {
-            model: bets,
-            as: "counter_bets",
-            include: [{ model: users, as: "main_user" }, { model: messages }],
-          },
-          {
-            model: users,
-            as: "accepted_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
+          QueryHelpers.includes.mainUser,
+          QueryHelpers.includes.messages,
+          QueryHelpers.includes.bets,
+          QueryHelpers.includes.acceptedUser,
         ],
       });
       res.json(results);
@@ -75,25 +60,10 @@ module.exports = (app) => {
           [messages, "createdAt", "DESC"],
         ],
         include: [
-          {
-            model: users,
-            as: "main_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
-          {
-            model: messages,
-            include: [{ model: users }],
-          },
-          {
-            model: bets,
-            as: "counter_bets",
-            include: [{ model: users, as: "main_user" }, { model: messages }],
-          },
-          {
-            model: users,
-            as: "accepted_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
+          QueryHelpers.includes.mainUser,
+          QueryHelpers.includes.messages,
+          QueryHelpers.includes.bets,
+          QueryHelpers.includes.acceptedUser,
         ],
       });
       res.json(results);
@@ -191,25 +161,10 @@ module.exports = (app) => {
           id: req.params.betId,
         },
         include: [
-          {
-            model: users,
-            as: "main_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
-          {
-            model: messages,
-            include: [{ model: users }],
-          },
-          {
-            model: bets,
-            as: "counter_bets",
-            include: [{ model: users, as: "main_user" }, { model: messages }],
-          },
-          {
-            model: users,
-            as: "accepted_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
+          QueryHelpers.includes.mainUser,
+          QueryHelpers.includes.messages,
+          QueryHelpers.includes.bets,
+          QueryHelpers.includes.acceptedUser,
         ],
         order: [[messages, "createdAt", "DESC"]],
       });
@@ -242,25 +197,10 @@ module.exports = (app) => {
           mainUserId: userId,
         },
         include: [
-          {
-            model: users,
-            as: "main_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
-          {
-            model: messages,
-            include: [{ model: users }],
-          },
-          {
-            model: bets,
-            as: "counter_bets",
-            include: [{ model: users, as: "main_user" }, { model: messages }],
-          },
-          {
-            model: users,
-            as: "accepted_user",
-            attributes: ["id", "first_name", "last_name", "username"],
-          },
+          QueryHelpers.includes.mainUser,
+          QueryHelpers.includes.messages,
+          QueryHelpers.includes.bets,
+          QueryHelpers.includes.acceptedUser,
         ],
         order: [
           [messages, "createdAt", "DESC"],
