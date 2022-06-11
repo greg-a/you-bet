@@ -21,6 +21,7 @@ exports.authenticateToken = (req, res, next) => {
   });
 };
 
-exports.generateAccessToken = (id) => {
-  return jwt.sign({ id }, tokenSecret, { expiresIn: "1d" });
+exports.generateAccessToken = (payload, expiresIn = "1d") => {
+  const token = jwt.sign(payload, tokenSecret, { expiresIn });
+  return token;
 };

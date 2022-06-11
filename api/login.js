@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const { users } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken, generateAccessToken } = require("../utils/token");
+const queryHelpers = require("./queryHelpers");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/login/";
@@ -17,35 +18,23 @@ module.exports = function (app) {
         const hashedPassword = createHmac("sha256", secret)
           .update(password)
           .digest("hex");
-        const loggedIn = await users.findOne({
+        const loggedInUser = await users.findOne({
           where: {
             username: username.toLowerCase(),
             password: hashedPassword,
           },
+          attributes: queryHelpers.attributes.user,
         });
-        if (!loggedIn)
+        const userData = loggedInUser.dataValues;
+        if (!userData)
           return res.status(409).send("username or password is incorrect");
-        const token = generateAccessToken(loggedIn.id);
-        await users.update(
-          { token },
-          {
-            where: {
-              username: loggedIn.username,
-            },
-          }
-        );
+        const token = generateAccessToken(JSON.stringify(userData));
         res.json({
           token,
-          userData: {
-            id: loggedIn.id,
-            username: loggedIn.username,
-            first_name: loggedIn.first_name,
-            last_name: loggedIn.last_name,
-            email: loggedIn.email,
-          },
+          userData: userData,
         });
       } catch (err) {
-        res.json(err);
+        res.sendStatus(500);
         console.log(err);
       }
     } else res.status(400).send("username or password is missing");
