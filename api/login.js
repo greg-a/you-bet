@@ -12,23 +12,24 @@ const secret = process.env.TOKEN_SECRET;
 module.exports = function (app) {
   app.post(rootURL, async (req, res) => {
     const { username, password } = req.body;
-
     if (username && password) {
       try {
         const hashedPassword = createHmac("sha256", secret)
           .update(password)
           .digest("hex");
         const loggedInUser = await users.findOne({
+          logging: false,
           where: {
             username: username.toLowerCase(),
             password: hashedPassword,
           },
           attributes: queryHelpers.attributes.user,
         });
-        const userData = loggedInUser.dataValues;
+        const userData = loggedInUser?.dataValues;
         if (!userData)
           return res.status(409).send("username or password is incorrect");
-        const token = generateAccessToken(JSON.stringify(userData));
+        console.log(userData);
+        const token = generateAccessToken(userData);
         res.json({
           token,
           userData: userData,
@@ -43,6 +44,7 @@ module.exports = function (app) {
   app.get(`${rootURL}token/`, authenticateToken, async (req, res) => {
     try {
       const userInfo = await users.findOne({
+        logging: false,
         where: {
           id: req.user.id,
         },
@@ -69,6 +71,7 @@ module.exports = function (app) {
       await users.update(
         { token: null },
         {
+          logging: false,
           where: {
             id: req.user.id,
           },
