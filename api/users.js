@@ -1,5 +1,5 @@
 const { createHmac } = require("crypto");
-const { users, bets, messages } = require("../models");
+const { users, bets } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
 const QueryHelpers = require("./queryHelpers");
@@ -53,6 +53,7 @@ module.exports = function (app) {
       const createUser = await users.create(paramsClone);
       res.send(createUser);
     } catch (e) {
+      console.log({ error: e });
       if (e.name === "SequelizeUniqueConstraintError")
         return res.status(400).send(e.errors[0].message);
       return res.status(500).send("server error, try again shortly");
