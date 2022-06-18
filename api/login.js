@@ -48,14 +48,13 @@ module.exports = function (app) {
         where: {
           id: req.user.id,
         },
-        // attributes: ["id", "username", "first_name", "last_name", "email"], does not work properly with the attributes
+        // attributes: ["id", "username", "name", "email"], does not work properly with the attributes
       });
       if (userInfo.token === req.token) {
         res.json({
           id: userInfo.id,
           username: userInfo.username,
-          first_name: userInfo.first_name,
-          last_name: userInfo.last_name,
+          name: userInfo.name,
           email: userInfo.email,
         });
       } else {

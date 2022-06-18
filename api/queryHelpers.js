@@ -1,7 +1,15 @@
-const { bets, users, messages, followers } = require("../models");
+const { users, messages } = require("../models");
 
 const attributes = {
-  user: ["id", "first_name", "last_name", "username"],
+  user: [
+    "id",
+    "name",
+    "username",
+    "notification_token",
+    "notifyOnAccept",
+    "notifyOnMessage",
+    "notifyOnFollow",
+  ],
 };
 
 module.exports = {
@@ -16,11 +24,6 @@ module.exports = {
       model: messages,
       include: [{ model: users }],
     },
-    bets: {
-      model: bets,
-      as: "counter_bets",
-      include: [{ model: users, as: "main_user" }, { model: messages }],
-    },
     acceptedUser: {
       model: users,
       as: "accepted_user",
@@ -30,11 +33,6 @@ module.exports = {
       model: users,
       as: "followed_user",
       attributes: attributes.user,
-    },
-    counterBets: {
-      model: bets,
-      as: "counter_bets",
-      include: [{ model: users, as: "main_user" }, { model: messages }],
     },
   },
 };

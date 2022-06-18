@@ -34,8 +34,7 @@ module.exports = function (app) {
           {
             username: { [Op.iLike]: `%${req.params.input.replace(" ", "_")}%` },
           },
-          { first_name: `%${req.params.input}%` },
-          { last_name: `%${req.params.input}%` },
+          { name: `%${req.params.input}%` },
         ],
       },
     });
@@ -62,11 +61,7 @@ module.exports = function (app) {
   });
 
   app.put(rootURL, authenticateToken, async (req, res) => {
-    if (
-      Object.keys(req.body).some(
-        (key) => !["first_name", "last_name"].includes(key)
-      )
-    )
+    if (Object.keys(req.body).some((key) => !["name"].includes(key)))
       return res.sendStatus(400);
     try {
       const results = await users.update(
@@ -83,8 +78,8 @@ module.exports = function (app) {
       const [affectedRows, updatedUserInfo] = results;
 
       if (affectedRows === 0) return res.sendStatus(500);
-      const { first_name, last_name } = updatedUserInfo[0];
-      res.json({ first_name, last_name });
+      const { name } = updatedUserInfo[0];
+      res.json({ name });
     } catch (error) {
       console.log({ error });
       if (e.name === "SequelizeUniqueConstraintError")
@@ -148,7 +143,6 @@ module.exports = function (app) {
             QueryHelpers.includes.acceptedUser,
             QueryHelpers.includes.mainUser,
             QueryHelpers.includes.messages,
-            QueryHelpers.includes.counterBets,
           ],
         });
         res.json({ bets: results, profileInfo: profile });

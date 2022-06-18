@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { Button, CircularProgress, Grid, Typography } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
-import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
-import { createAccount } from '../services';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { Button, CircularProgress, Grid, Typography } from "@material-ui/core";
+import { useSnackbar } from "notistack";
+import BasicTextInput from "../components/Form/Inputs/BasicTextInput";
+import { createAccount } from "../services";
 
 const initialForm = {
-  first_name: '',
-  last_name: '',
-  username: '',
-  email: '',
-  password1: '',
-  password2: '',
-}
+  name: "",
+  username: "",
+  email: "",
+  password1: "",
+  password2: "",
+};
 
 const Signup = () => {
   const router = useRouter();
@@ -24,14 +23,16 @@ const Signup = () => {
 
   const validatePasswords = (name, value) => {
     let passwordsMatch;
-    if (name === 'password1') passwordsMatch = value === newAccountInfo.password2;
-    if (name === 'password2') passwordsMatch = value === newAccountInfo.password1;
+    if (name === "password1")
+      passwordsMatch = value === newAccountInfo.password2;
+    if (name === "password2")
+      passwordsMatch = value === newAccountInfo.password1;
     setPasswordValid(passwordsMatch);
     return passwordsMatch;
   };
 
   const validateUsername = (username = newAccountInfo.username) => {
-    return !username.includes(' ');
+    return !username.includes(" ");
   };
 
   const handleChange = (event) => {
@@ -39,24 +40,34 @@ const Signup = () => {
     setNewAccountInfo((old) => ({ ...old, [name]: value }));
 
     let updateValidField = {};
-    if (value.length > 0) updateValidField = { [name]: '' };
-    if (!validateUsername(value) && name === 'username') updateValidField = { username: 'cannot contain spaces' };
-    setInvalidFields({ ...invalidFields, ...updateValidField }); 
+    if (value.length > 0) updateValidField = { [name]: "" };
+    if (!validateUsername(value) && name === "username")
+      updateValidField = { username: "cannot contain spaces" };
+    setInvalidFields({ ...invalidFields, ...updateValidField });
   };
 
   const handlePasswordChange = (event) => {
     const { name, value } = event.target;
     handleChange(event);
-    validatePasswords(name, value)
-  }
+    validatePasswords(name, value);
+  };
 
   const validateSignupForm = () => {
     const fieldEntries = Object.entries(newAccountInfo);
-    const invalidFieldsArr = fieldEntries.filter(([key, value]) => value.length === 0).map(([key]) => key);
-    const messages = invalidFieldsArr.reduce((a, v) => ({ ...a, [v]: `${v.replace('_', ' ').replace('1', '')} cannot be blank` }), {});
+    const invalidFieldsArr = fieldEntries
+      .filter(([key, value]) => value.length === 0)
+      .map(([key]) => key);
+    const messages = invalidFieldsArr.reduce(
+      (a, v) => ({
+        ...a,
+        [v]: `${v.replace("_", " ").replace("1", "")} cannot be blank`,
+      }),
+      {}
+    );
     setInvalidFields({ ...invalidFields, ...messages });
 
-    const isValid = invalidFieldsArr.length === 0 && passwordValid && validateUsername();
+    const isValid =
+      invalidFieldsArr.length === 0 && passwordValid && validateUsername();
     return isValid;
   };
 
@@ -72,7 +83,7 @@ const Signup = () => {
   const handleServerErrors = (errors) => {
     const updatedInvalidFields = {};
     errors.forEach(({ message, path }) => {
-      enqueueSnackbar(message, { variant: 'error' });
+      enqueueSnackbar(message, { variant: "error" });
       updatedInvalidFields[path] = message;
     });
     setInvalidFields({ ...invalidFields, ...updatedInvalidFields });
@@ -88,44 +99,40 @@ const Signup = () => {
         setIsLoading(false);
         if (data.errors) return handleServerErrors(data.errors);
 
-        enqueueSnackbar('Your account was created!', { variant: 'success' });
-        router.push('/login');
+        enqueueSnackbar("Your account was created!", { variant: "success" });
+        router.push("/login");
       } catch (err) {
-        enqueueSnackbar(err.message, { variant: 'error' });
+        enqueueSnackbar(err.message, { variant: "error" });
         setIsLoading(false);
       }
     } else {
-      enqueueSnackbar('Something is wrong on the form', { variant: 'error' });
+      enqueueSnackbar("Something is wrong on the form", { variant: "error" });
     }
   };
 
   const handleBackButton = () => {
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
-    <Grid container alignContent="center" direction="column" spacing={6} style={{ paddingTop: '100px' }}>
-      <Grid item md={12} xs={8} style={{ textAlign: 'initial' }}>
+    <Grid
+      container
+      alignContent="center"
+      direction="column"
+      spacing={6}
+      style={{ paddingTop: "100px" }}
+    >
+      <Grid item md={12} xs={8} style={{ textAlign: "initial" }}>
         <Typography variant="h5">Sign Up</Typography>
       </Grid>
       <Grid item md={12}>
         <BasicTextInput
           type="text"
-          placeholder="first name"
-          name="first_name"
+          placeholder="name"
+          name="name"
           onChange={handleChange}
-          error={invalidFields.first_name.length > 0}
-          helperText={invalidFields.first_name}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <BasicTextInput
-          type="text"
-          placeholder="last name"
-          name="last_name"
-          onChange={handleChange}
-          error={invalidFields.last_name.length > 0}
-          helperText={invalidFields.last_name}
+          error={invalidFields.name.length > 0}
+          helperText={invalidFields.name}
         />
       </Grid>
       <Grid item xs={12}>
@@ -163,20 +170,25 @@ const Signup = () => {
           placeholder="password"
           onChange={handlePasswordChange}
           error={!passwordValid}
-          helperText={!passwordValid && 'Passwords do not match'}
+          helperText={!passwordValid && "Passwords do not match"}
         />
       </Grid>
-      <Grid item xs={12} style={{ textAlign: 'center' }}>
+      <Grid item xs={12} style={{ textAlign: "center" }}>
         <Button color="primary" variant="contained" onClick={handleSubmit}>
           {isLoading ? (
             <CircularProgress color="secondary" size={25} />
           ) : (
-            'Submit'
+            "Submit"
           )}
         </Button>
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" color="secondary" onClick={handleBackButton}>
+        <Button
+          fullWidth
+          variant="contained"
+          color="secondary"
+          onClick={handleBackButton}
+        >
           Back to login
         </Button>
       </Grid>

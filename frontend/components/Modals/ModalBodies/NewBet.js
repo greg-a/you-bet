@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, InputAdornment, NoSsr, Typography } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import BasicTextInput from '../../Form/Inputs/BasicTextInput';
-import SimpleButton from '../../Form/Buttons/SimpleButton';
-import { validateBet } from '../../../utils/validateForms';
-import useFeedList from '../../../hooks/useFeedList';
+import React, { useEffect, useState } from "react";
+import { Grid, InputAdornment, NoSsr, Typography } from "@material-ui/core";
+import { useSnackbar } from "notistack";
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
+import BasicTextInput from "../../Form/Inputs/BasicTextInput";
+import SimpleButton from "../../Form/Buttons/SimpleButton";
+import { validateBet } from "../../../utils/validateForms";
+import useFeedList from "../../../hooks/useFeedList";
 
 const NewBetModal = ({ onSubmit, description, editBet }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { refreshFeedList } = useFeedList();
   const today = new Date();
-  const [betInfo, setBetInfo] = useState({ description: '', betAmount: 0, endDate: today.toISOString().substring(0, 10) });
+  const [betInfo, setBetInfo] = useState({
+    description: "",
+    betAmount: 0,
+    endDate: today.toISOString().substring(0, 10),
+  });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,37 +25,32 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
   const handleBetAmountChange = (event) => {
     const { value } = event.target;
     let formattedVal = parseInt(value, 10) || 0;
-    if (formattedVal > 0 && value[0] === '0') formattedVal = value.slice(1);
-    if (value.includes('.')) formattedVal = value.split('.')[0];
+    if (formattedVal > 0 && value[0] === "0") formattedVal = value.slice(1);
+    if (value.includes(".")) formattedVal = value.split(".")[0];
     setBetInfo((old) => ({ ...old, betAmount: formattedVal }));
   };
 
   const handleSubmit = async () => {
-    if (!validateBet(betInfo)) return enqueueSnackbar('Form is incomplete', { variant: 'error' });
+    if (!validateBet(betInfo))
+      return enqueueSnackbar("Form is incomplete", { variant: "error" });
     try {
       await onSubmit(betInfo);
       refreshFeedList();
     } catch (err) {
-      enqueueSnackbar(err.message, 'error')
+      enqueueSnackbar(err.message, "error");
     }
   };
 
   useEffect(() => {
     if (editBet) {
       const { description, bet_amount: betAmount, end_date: endDate } = editBet;
-      setBetInfo({ description, betAmount, endDate })
+      setBetInfo({ description, betAmount, endDate });
     }
   }, []);
 
   return (
     <NoSsr>
       <Grid container spacing={6}>
-        {description && (
-          <Grid item md={12}>
-            {description}
-            <Typography>Your Counter Offer</Typography>
-          </Grid>
-        )}
         <Grid item xs={12}>
           <BasicTextInput
             label="description"
@@ -90,10 +89,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <SimpleButton
-            title="Submit"
-            onClick={handleSubmit}
-          />
+          <SimpleButton title="Submit" onClick={handleSubmit} />
         </Grid>
       </Grid>
     </NoSsr>

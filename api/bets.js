@@ -25,7 +25,6 @@ module.exports = (app) => {
     try {
       const results = await bets.findAll({
         where: {
-          parent_id: null,
           mainUserId: followList,
           end_date: {
             [Op.gte]: new Date(),
@@ -76,7 +75,6 @@ module.exports = (app) => {
     try {
       const results = await bets.findAll({
         where: {
-          parent_id: null,
           mainUserId: req.params.userId,
           end_date: {
             [Op.lt]: new Date(),
@@ -96,7 +94,6 @@ module.exports = (app) => {
         description: req.body.description,
         bet_amount: req.body.betAmount,
         end_date: req.body.endDate,
-        parent_id: req.body.betId || null,
       });
       res.sendStatus(200);
     } catch (err) {
@@ -201,10 +198,7 @@ module.exports = (app) => {
           QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
-        order: [
-          [messages, "createdAt", "DESC"],
-          ["counter_bets", "createdAt", "DESC"],
-        ],
+        order: [[messages, "createdAt", "DESC"]],
       });
       res.json(results);
     } catch (err) {
@@ -216,7 +210,7 @@ module.exports = (app) => {
     try {
       await bets.destroy({
         where: {
-          [Op.or]: [{ id: req.params.betId }, { parent_id: req.params.betId }],
+          id: req.params.betId,
         },
       });
       res.sendStatus(200);

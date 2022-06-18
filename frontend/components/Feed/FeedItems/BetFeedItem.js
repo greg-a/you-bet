@@ -1,13 +1,11 @@
-import React from 'react';
-import { Grid } from '@material-ui/core';
-import useAuth from '../../../hooks/useAuth';
-import BasicFeedItem from './BasicFeedItem';
-import CommentButton from '../../Form/Buttons/CommentButton';
-import CounterButton from '../../Form/Buttons/CounterButton';
-import EditBetButton from '../../Form/Buttons/EditBetButton';
-import AcceptBetButton from '../../Form/Buttons/AcceptBetButton';
-import BetDetailsButton from '../../Form/Buttons/BetDetailsButton';
-import CancelBetButton from '../../Form/Buttons/CancelBetButton';
+import React from "react";
+import { Grid } from "@material-ui/core";
+import useAuth from "../../../hooks/useAuth";
+import BasicFeedItem from "./BasicFeedItem";
+import CommentButton from "../../Form/Buttons/CommentButton";
+import AcceptBetButton from "../../Form/Buttons/AcceptBetButton";
+import BetDetailsButton from "../../Form/Buttons/BetDetailsButton";
+import CancelBetButton from "../../Form/Buttons/CancelBetButton";
 
 const BetFeedItem = ({ betInfo }) => {
   const { userInfo } = useAuth();
@@ -24,9 +22,6 @@ const BetFeedItem = ({ betInfo }) => {
         </Grid>
         <Grid item md={3}>
           <CommentButton betInfo={betInfo} />
-        </Grid>
-        <Grid item md={3}>
-          <CounterButton betInfo={betInfo} />
         </Grid>
         <Grid item md={3}>
           {userInfo?.id === betInfo.main_user.id ? (

@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
-  AppBar, Avatar, Button, IconButton, makeStyles, NoSsr, Toolbar, Typography, useMediaQuery, useTheme,
-} from '@material-ui/core';
-import useAuth from '../../../hooks/useAuth';
-import UserDrawer from '../Drawer/Drawer';
+  AppBar,
+  Avatar,
+  Button,
+  IconButton,
+  makeStyles,
+  NoSsr,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
+import useAuth from "../../../hooks/useAuth";
+import UserDrawer from "../Drawer/Drawer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,21 +26,21 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   toolbar: {
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
 }));
 
 const AppBarLogo = () => {
   const theme = useTheme();
   const router = useRouter();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
   const { userInfo } = useAuth();
   const [drawerOpenMobile, setDrawerOpenMobile] = useState(false);
 
   const handleLoginClick = () => {
-    window.location.href = '/login';
-    document.cookie = 'JWToken=';
+    window.location.href = "/login";
+    document.cookie = "JWToken=";
   };
 
   useEffect(() => {
@@ -43,16 +52,27 @@ const AppBarLogo = () => {
       <div className={classes.root}>
         <AppBar position="fixed">
           <Toolbar className={classes.toolbar}>
-            <IconButton disabled={!userInfo} onClick={() => setDrawerOpenMobile(true)}>
-              <Avatar alt={userInfo?.first_name} src="/static/images/avatar/1.jpg" />
+            <IconButton
+              disabled={!userInfo}
+              onClick={() => setDrawerOpenMobile(true)}
+            >
+              <Avatar
+                alt={userInfo?.name[0]}
+                src="/static/images/avatar/1.jpg"
+              />
             </IconButton>
             <Typography variant="h6" className="logo-font">
               YouBet
             </Typography>
-            <Button color="inherit" onClick={handleLoginClick}>{userInfo?.username ? 'Logout' : 'Login'}</Button>
+            <Button color="inherit" onClick={handleLoginClick}>
+              {userInfo?.username ? "Logout" : "Login"}
+            </Button>
           </Toolbar>
         </AppBar>
-        <UserDrawer open={drawerOpenMobile} onClose={() => setDrawerOpenMobile(false)} />
+        <UserDrawer
+          open={drawerOpenMobile}
+          onClose={() => setDrawerOpenMobile(false)}
+        />
       </div>
     </NoSsr>
   );
