@@ -126,7 +126,6 @@ module.exports = (app) => {
           .send(
             "Could not accept bet, it's possible the bet is already accepted"
           );
-      console.log(JSON.stringify(acceptedBet));
       res.json(acceptedBet[0]);
     } catch (err) {
       console.log({ err });

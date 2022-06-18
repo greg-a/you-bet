@@ -51,9 +51,42 @@ module.exports = function (app) {
       .digest("hex");
     try {
       const createUser = await users.create(paramsClone);
+      console.log(createUser);
       res.send(createUser);
     } catch (e) {
       console.log({ error: e });
+      if (e.name === "SequelizeUniqueConstraintError")
+        return res.status(400).send(e.errors[0].message);
+      return res.status(500).send("server error, try again shortly");
+    }
+  });
+
+  app.put(rootURL, authenticateToken, async (req, res) => {
+    if (
+      Object.keys(req.body).some(
+        (key) => !["first_name", "last_name"].includes(key)
+      )
+    )
+      return res.sendStatus(400);
+    try {
+      const results = await users.update(
+        {
+          ...req.body,
+        },
+        {
+          where: {
+            id: req.user.id,
+          },
+          returning: true,
+        }
+      );
+      const [affectedRows, updatedUserInfo] = results;
+
+      if (affectedRows === 0) return res.sendStatus(500);
+      const { first_name, last_name } = updatedUserInfo[0];
+      res.json({ first_name, last_name });
+    } catch (error) {
+      console.log({ error });
       if (e.name === "SequelizeUniqueConstraintError")
         return res.status(400).send(e.errors[0].message);
       return res.status(500).send("server error, try again shortly");
