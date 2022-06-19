@@ -42,8 +42,11 @@ module.exports = (app) => {
         ],
       });
       res.json(results);
-    } catch (err) {
-      res.sendStatus(500);
+    } catch (e) {
+      console.log({ error: e });
+      if (e.name === "SequelizeUniqueConstraintError")
+        return res.status(400).send(e.errors[0].message);
+      return res.status(500).send("server error, try again shortly");
     }
   });
 

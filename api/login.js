@@ -50,25 +50,23 @@ module.exports = function (app) {
         },
         // attributes: ["id", "username", "name", "email"], does not work properly with the attributes
       });
-      if (userInfo.token === req.token) {
-        res.json({
-          id: userInfo.id,
-          username: userInfo.username,
-          name: userInfo.name,
-          email: userInfo.email,
-        });
-      } else {
-        res.sendStatus(403);
-      }
-    } catch (err) {
-      res.sendStatus(500);
+      res.json({
+        id: userInfo.id,
+        username: userInfo.username,
+        name: userInfo.name,
+        email: userInfo.email,
+      });
+    } catch (e) {
+      if (e.name === "SequelizeUniqueConstraintError")
+        return res.status(400).send(e.errors[0].message);
+      return res.status(500).send("server error, try again shortly");
     }
   });
 
   app.get("/api/logout", authenticateToken, async (req, res) => {
     try {
       await users.update(
-        { token: null },
+        { notification_token: null },
         {
           logging: false,
           where: {

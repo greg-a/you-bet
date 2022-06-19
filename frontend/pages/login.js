@@ -14,7 +14,7 @@ import useAuth from "../hooks/useAuth";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setJWToken, userInfo, setUserInfo } = useAuth();
+  const { setJWToken, userInfo } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
   const [isLoading, setIsLoading] = useState(false);
