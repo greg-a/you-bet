@@ -3,14 +3,12 @@ const { users, messages } = require("../models");
 const attributes = {
   user: [
     "id",
-    "first_name",
-    "last_name",
     "username",
-//    "name",
-//    "notification_token",
-//    "notifyOnAccept",
-//    "notifyOnMessage",
-//    "notifyOnFollow",
+    "name",
+    "notification_token",
+    "notifyOnAccept",
+    "notifyOnMessage",
+    "notifyOnFollow",
   ],
 };
 
