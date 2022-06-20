@@ -9,7 +9,7 @@ const handle = app.getRequestHandler();
 
 const apiPaths = {
   "/api": {
-    target: "http://localhost:8080",
+    target: "https://youbet-backend-staging.herokuapp.com",
     pathRewrite: {
       "^/api": "/api",
     },

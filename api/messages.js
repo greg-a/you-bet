@@ -1,6 +1,7 @@
 const { bets, users, messages } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
+const { sendError } = require("./utils");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/messages/";
@@ -21,9 +22,7 @@ module.exports = (app) => {
       res.json(results);
     } catch (err) {
       console.log({ err });
-      res
-        .status(500)
-        .send("Server error: could not save message. Try again shortly.");
+      sendError(err, res);
     }
   });
 };

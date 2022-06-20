@@ -2,6 +2,7 @@ const { followers, users } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
 const QueryHelpers = require("./queryHelpers");
+const { sendError } = require("./utils");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/followers/";
@@ -25,7 +26,7 @@ module.exports = (app) => {
       });
       res.json({ followingList, followerList });
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -45,7 +46,7 @@ module.exports = (app) => {
 
       res.json(followedUser);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -61,7 +62,7 @@ module.exports = (app) => {
       res.sendStatus(200);
     } catch (err) {
       console.log(err);
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 };

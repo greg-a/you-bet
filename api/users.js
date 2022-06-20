@@ -3,6 +3,7 @@ const { users, bets } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
 const QueryHelpers = require("./queryHelpers");
+const { sendError } = require("./utils");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/users/";
@@ -54,9 +55,7 @@ module.exports = function (app) {
       res.send(createUser);
     } catch (e) {
       console.log({ error: e });
-      if (e.name === "SequelizeUniqueConstraintError")
-        return res.status(400).send(e.errors[0].message);
-      return res.status(500).send("server error, try again shortly");
+      sendError(e, res);
     }
   });
 
@@ -82,9 +81,7 @@ module.exports = function (app) {
       res.json({ name });
     } catch (error) {
       console.log({ error });
-      if (e.name === "SequelizeUniqueConstraintError")
-        return res.status(400).send(e.errors[0].message);
-      return res.status(500).send("server error, try again shortly");
+      sendError(error, res);
     }
   });
 
@@ -110,7 +107,7 @@ module.exports = function (app) {
       if (results[0] === 1) res.sendStatus(200);
       if (results[0] === 0) res.sendStatus(401);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -127,7 +124,7 @@ module.exports = function (app) {
         });
         profile = response;
       } catch (err) {
-        res.sendStatus(500);
+        sendError(err, res);
       }
 
       try {
@@ -147,7 +144,7 @@ module.exports = function (app) {
         });
         res.json({ bets: results, profileInfo: profile });
       } catch (err) {
-        res.sendStatus(500);
+        sendError(err, res);
       }
     }
   );

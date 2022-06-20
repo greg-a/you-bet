@@ -2,6 +2,7 @@ const { bets, users, messages, followers } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
 const QueryHelpers = require("./queryHelpers");
+const { sendError } = require("./utils");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/bets/";
@@ -63,7 +64,6 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
       });
@@ -85,7 +85,7 @@ module.exports = (app) => {
       });
       res.json(results);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -99,7 +99,7 @@ module.exports = (app) => {
       });
       res.sendStatus(200);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -128,7 +128,7 @@ module.exports = (app) => {
       res.json(acceptedBet[0]);
     } catch (err) {
       console.log({ err });
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -148,7 +148,7 @@ module.exports = (app) => {
       );
       res.sendStatus(200);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -161,7 +161,6 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
         order: [[messages, "createdAt", "DESC"]],
@@ -197,14 +196,13 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
         order: [[messages, "createdAt", "DESC"]],
       });
       res.json(results);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
     }
   });
 
@@ -217,7 +215,7 @@ module.exports = (app) => {
       });
       res.sendStatus(200);
     } catch (err) {
-      res.sendStatus(500);
+      sendError(err, res);
       console.log(err);
     }
   });
