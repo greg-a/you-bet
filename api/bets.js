@@ -37,7 +37,6 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
       });

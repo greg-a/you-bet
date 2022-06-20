@@ -3,7 +3,9 @@ module.exports = (sequelize) => {
 
   followers.associate = (models) => {
     followers.belongsTo(models.users, { as: "main_user" });
-    followers.belongsTo(models.users, { as: "followed_user" });
+    followers.belongsTo(models.users, {
+      as: "followed_user",
+    });
   };
 
   return followers;

@@ -14,12 +14,9 @@ require("./api/bets")(app);
 require("./api/messages")(app);
 require("./api/followers")(app);
 
-const syncOptions = { force: false };
+const syncOptions = { force: true };
 
-if (process.env.NODE_ENV === "test") syncOptions.force = true;
-
-// { force: true }
-db.sequelize.sync().then(function () {
+db.sequelize.sync(syncOptions).then(function () {
   app.listen(PORT, function () {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",

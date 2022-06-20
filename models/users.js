@@ -26,6 +26,24 @@ module.exports = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.STRING,
     },
+    // name: {
+    //   type: DataTypes.STRING,
+    // },
+    // notification_token: {
+    //   type: DataTypes.STRING,
+    // },
+    // notifyOnAccept: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
+    // notifyOnMessage: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
+    // notifyOnFollow: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
   });
 
   users.associate = (models) => {
