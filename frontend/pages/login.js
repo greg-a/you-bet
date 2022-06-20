@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { Button, CircularProgress, Grid, NoSsr, Typography } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
-import BasicTextInput from '../components/Form/Inputs/BasicTextInput';
-import { userLogin } from '../services';
-import useAuth from '../hooks/useAuth';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  NoSsr,
+  Typography,
+} from "@material-ui/core";
+import { useSnackbar } from "notistack";
+import BasicTextInput from "../components/Form/Inputs/BasicTextInput";
+import { userLogin } from "../services";
+import useAuth from "../hooks/useAuth";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setJWToken, userInfo, setUserInfo } = useAuth();
+  const { setJWToken, userInfo } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [loginInfo, setLoginInfo] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,29 +35,35 @@ const LoginPage = () => {
       const loginInfoClone = { ...loginInfo };
       loginInfoClone.username = loginInfoClone.username.toLowerCase();
       const { data } = await userLogin(loginInfoClone);
-      saveJWToken(data);
+      saveJWToken(data.token);
       setIsLoading(false);
-      router.push('/');
+      router.push("/");
     } catch (err) {
       setTimeout(() => setIsLoading(false), 500);
-      enqueueSnackbar('Username or password is incorrect', { variant: 'error' });
+      enqueueSnackbar("Username or password is incorrect", {
+        variant: "error",
+      });
     }
   };
 
   const handleCreateAccount = () => {
-    router.push('/signup');
+    router.push("/signup");
   };
 
   useEffect(() => {
-    if (userInfo) router.push('/');
+    if (userInfo) router.push("/");
   }, []);
 
   return (
-    <Grid container style={{ textAlign: 'center', height: '70vh', paddingTop: '150px' }} justifyContent="center">
+    <Grid
+      container
+      style={{ textAlign: "center", height: "70vh", paddingTop: "150px" }}
+      justifyContent="center"
+    >
       <NoSsr>
         <Grid item md={2}>
           <Grid container spacing={5} justifyContent="center">
-            <Grid item md={12} xs={8} style={{ textAlign: 'initial' }}>
+            <Grid item md={12} xs={8} style={{ textAlign: "initial" }}>
               <Typography variant="h5">Login</Typography>
             </Grid>
             <Grid item md={12} xs={8}>
@@ -68,21 +80,38 @@ const LoginPage = () => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item container xs={6} md={12} spacing={10} justifyContent="center">
-            <Grid item xs={12}>
-              <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
-                {isLoading ? (
-                  <CircularProgress color="secondary" size={25} />
-                ) : (
-                    'Submit'
+            <Grid
+              item
+              container
+              xs={6}
+              md={12}
+              spacing={10}
+              justifyContent="center"
+            >
+              <Grid item xs={12}>
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  {isLoading ? (
+                    <CircularProgress color="secondary" size={25} />
+                  ) : (
+                    "Submit"
                   )}
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button onClick={handleCreateAccount} variant="contained" color="secondary" fullWidth>
-                Create Account
-              </Button>
-            </Grid>
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  onClick={handleCreateAccount}
+                  variant="contained"
+                  color="secondary"
+                  fullWidth
+                >
+                  Create Account
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

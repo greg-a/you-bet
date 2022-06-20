@@ -1,20 +1,19 @@
-import React from 'react';
-import { Grid, List, makeStyles } from '@material-ui/core';
-import BetFeedItem from '../FeedItems/BetFeedItem';
-import CounterButton from '../../Form/Buttons/CounterButton';
-import useSelectedBet from '../../../hooks/useSelectedBet';
-import EmptyBetFeed from '../../Common/EmptyState/EmptyBetFeed';
+import React from "react";
+import { List, makeStyles } from "@material-ui/core";
+import BetFeedItem from "../FeedItems/BetFeedItem";
+import useSelectedBet from "../../../hooks/useSelectedBet";
+import EmptyBetFeed from "../../Common/EmptyState/EmptyBetFeed";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
-    overflowY: 'auto',
+    width: "100%",
+    overflowY: "auto",
     // backgroundColor: theme.palette.background.paper,
   },
   inline: {
-    display: 'inline',
-    display: 'flex',
-    justifyContent: 'center',
+    display: "inline",
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 

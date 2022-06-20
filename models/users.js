@@ -26,12 +26,32 @@ module.exports = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.STRING,
     },
+    // name: {
+    //   type: DataTypes.STRING,
+    // },
+    // notification_token: {
+    //   type: DataTypes.STRING,
+    // },
+    // notifyOnAccept: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
+    // notifyOnMessage: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
+    // notifyOnFollow: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // },
   });
 
   users.associate = (models) => {
-    users.hasMany(models.bets);
+    users.hasMany(models.bets, { foreignKey: "mainUserId" });
+    users.hasMany(models.bets, { foreignKey: "acceptedUserId" });
     users.hasMany(models.messages);
-    users.hasMany(models.followers);
+    users.hasMany(models.followers, { foreignKey: "mainUserId" });
+    users.hasMany(models.followers, { foreignKey: "followedUserId" });
   };
 
   return users;

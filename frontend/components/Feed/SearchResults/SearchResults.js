@@ -1,6 +1,12 @@
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import React from 'react';
+import {
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from "@material-ui/core";
+import { useRouter } from "next/router";
+import React from "react";
 
 const SearchResultsFeed = ({ userList, onUserClick = () => {} }) => {
   const router = useRouter();
@@ -23,11 +29,17 @@ const SearchResultsFeed = ({ userList, onUserClick = () => {} }) => {
               onClick={() => handleUserClick(user)}
             >
               <ListItemAvatar>
-                <Avatar alt={user.username} src={user.picURL || '/static/images/avatar/1.jpg'} />
+                <Avatar
+                  alt={user.username}
+                  src={user.picURL || "/static/images/avatar/1.jpg"}
+                />
               </ListItemAvatar>
-              <ListItemText primary={`${user.first_name} ${user.last_name}`} secondary={`@${user.username}`} />
+              <ListItemText
+                primary={user.name}
+                secondary={`@${user.username}`}
+              />
             </ListItem>
-          )
+          );
         })
       ) : (
         <ListItem>
