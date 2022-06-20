@@ -35,8 +35,8 @@ module.exports = function (app) {
           userData,
         });
       } catch (err) {
-        res.sendStatus(500);
         console.log(err);
+        sendError(err, res);
       }
     } else res.status(400).send("username or password is missing");
   });
@@ -76,8 +76,8 @@ module.exports = function (app) {
       );
       res.sendStatus(200);
     } catch (err) {
-      console.log(err.message);
-      res.sendStatus(500);
+      console.log(err);
+      sendError(err, res);
     }
   });
 };
