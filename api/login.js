@@ -4,6 +4,7 @@ const { users } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken, generateAccessToken } = require("../utils/token");
 const queryHelpers = require("./queryHelpers");
+const { sendError } = require("./utils");
 const Op = Sequelize.Op;
 
 const rootURL = "/api/login/";
@@ -28,11 +29,10 @@ module.exports = function (app) {
         const userData = loggedInUser?.dataValues;
         if (!userData)
           return res.status(409).send("username or password is incorrect");
-        console.log(userData);
         const token = generateAccessToken(userData);
         res.json({
           token,
-          userData: userData,
+          userData,
         });
       } catch (err) {
         res.sendStatus(500);
@@ -53,13 +53,13 @@ module.exports = function (app) {
       res.json({
         id: userInfo.id,
         username: userInfo.username,
-        name: userInfo.name,
+        name: userInfo.name ?? "fake",
         email: userInfo.email,
       });
+      console.log("token cool");
     } catch (e) {
-      if (e.name === "SequelizeUniqueConstraintError")
-        return res.status(400).send(e.errors[0].message);
-      return res.status(500).send("server error, try again shortly");
+      console.log(e);
+      sendError(e, res);
     }
   });
 

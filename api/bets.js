@@ -63,7 +63,6 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
       });
@@ -161,7 +160,6 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
         order: [[messages, "createdAt", "DESC"]],
@@ -197,7 +195,6 @@ module.exports = (app) => {
         include: [
           QueryHelpers.includes.mainUser,
           QueryHelpers.includes.messages,
-          QueryHelpers.includes.bets,
           QueryHelpers.includes.acceptedUser,
         ],
         order: [[messages, "createdAt", "DESC"]],

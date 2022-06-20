@@ -17,33 +17,33 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true,
       },
     },
-    first_name: {
-      type: DataTypes.STRING,
-    },
-    last_name: {
-      type: DataTypes.STRING,
-    },
-    token: {
-      type: DataTypes.STRING,
-    },
-    // name: {
+    // first_name: {
     //   type: DataTypes.STRING,
     // },
-    // notification_token: {
+    // last_name: {
     //   type: DataTypes.STRING,
     // },
-    // notifyOnAccept: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: true,
+    // token: {
+    //   type: DataTypes.STRING,
     // },
-    // notifyOnMessage: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: true,
-    // },
-    // notifyOnFollow: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: true,
-    // },
+    name: {
+      type: DataTypes.STRING,
+    },
+    notification_token: {
+      type: DataTypes.STRING,
+    },
+    notifyOnAccept: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    notifyOnMessage: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    notifyOnFollow: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   });
 
   users.associate = (models) => {
