@@ -14,7 +14,7 @@ require("./api/bets")(app);
 require("./api/messages")(app);
 require("./api/followers")(app);
 
-const syncOptions = { force: true };
+const syncOptions = { force: false };
 
 db.sequelize.sync(syncOptions).then(function () {
   app.listen(PORT, function () {
