@@ -1,5 +1,4 @@
 const { createHmac } = require("crypto");
-const dotenv = require("dotenv");
 const { users } = require("../models");
 const { Sequelize } = require("../models");
 const { authenticateToken, generateAccessToken } = require("../utils/token");
@@ -24,7 +23,10 @@ module.exports = function (app) {
             username: username.toLowerCase(),
             password: hashedPassword,
           },
-          attributes: queryHelpers.attributes.user,
+          attributes: [
+            ...queryHelpers.attributes.user,
+            ...queryHelpers.attributes.myNotifications,
+          ],
         });
         const userData = loggedInUser?.dataValues;
         if (!userData)
@@ -48,15 +50,12 @@ module.exports = function (app) {
         where: {
           id: req.user.id,
         },
-        // attributes: ["id", "username", "name", "email"], does not work properly with the attributes
+        attributes: [
+          ...queryHelpers.attributes.user,
+          ...queryHelpers.attributes.myNotifications,
+        ],
       });
-      res.json({
-        id: userInfo.id,
-        username: userInfo.username,
-        name: userInfo.name ?? "fake",
-        email: userInfo.email,
-      });
-      console.log("token cool");
+      res.json(userInfo);
     } catch (e) {
       console.log(e);
       sendError(e, res);

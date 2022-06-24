@@ -14,7 +14,7 @@ module.exports = (app) => {
         where: {
           mainUserId: req.user.id,
         },
-        attributes: ["followedUserId"],
+        attributes: ["followedUserId", "notificationsOn"],
         include: [QueryHelpers.includes.followedUser],
       });
       const followerList = await followers.findAll({
@@ -33,19 +33,46 @@ module.exports = (app) => {
   app.post(rootURL, authenticateToken, async (req, res) => {
     try {
       if (!req.body.userId) throw "Error finding user";
-      const results = await followers.create({
-        mainUserId: req.user.id,
-        followedUserId: req.body.userId,
-      });
-      const followedUser = await users.findOne({
+      const results = await followers.create(
+        {
+          mainUserId: req.user.id,
+          followedUserId: req.body.userId,
+        },
+        { returning: true }
+      );
+      const followed_user = await users.findOne({
         where: {
           id: results.dataValues.followedUserId,
         },
         attributes: QueryHelpers.attributes.user,
       });
 
-      res.json(followedUser);
+      res.json({ ...results.dataValues, followed_user });
     } catch (err) {
+      sendError(err, res);
+    }
+  });
+
+  app.put(`${rootURL}notifications`, authenticateToken, async (req, res) => {
+    try {
+      const { followedUserId, notificationsOn } = req.body;
+      const results = await followers.update(
+        {
+          notificationsOn,
+        },
+        {
+          where: {
+            mainUserId: req.user.id,
+            followedUserId,
+          },
+          returning: true,
+        }
+      );
+      const [affectedRows, updatedFollow] = results;
+      if (affectedRows === 0) return res.sendStatus(500);
+      res.json(updatedFollow[0]);
+    } catch (err) {
+      console.log({ err });
       sendError(err, res);
     }
   });

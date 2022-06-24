@@ -10,14 +10,14 @@ const rootURL = "/api/users/";
 const secret = process.env.TOKEN_SECRET;
 
 module.exports = function (app) {
-  app.get(rootURL, async (req, res) => {
+  app.get(rootURL, authenticateToken, async (req, res) => {
     const results = await users.findAll({
       attributes: QueryHelpers.attributes.user,
     });
     res.json(results);
   });
 
-  app.get(`${rootURL}:id`, async (req, res) => {
+  app.get(`${rootURL}:id`, authenticateToken, async (req, res) => {
     const results = await users.findAll({
       attributes: QueryHelpers.attributes.user,
       where: {
@@ -60,7 +60,17 @@ module.exports = function (app) {
   });
 
   app.put(rootURL, authenticateToken, async (req, res) => {
-    if (Object.keys(req.body).some((key) => !["name"].includes(key)))
+    if (
+      Object.keys(req.body).some(
+        (key) =>
+          ![
+            "name",
+            "notifyOnAccept",
+            "notifyOnMessage",
+            "notifyOnFollow",
+          ].includes(key)
+      )
+    )
       return res.sendStatus(400);
     try {
       const results = await users.update(
