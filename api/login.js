@@ -1,10 +1,8 @@
 const { createHmac } = require("crypto");
 const { users } = require("../models");
-const { Sequelize } = require("../models");
 const { authenticateToken, generateAccessToken } = require("../utils/token");
-const queryHelpers = require("./queryHelpers");
+const queryHelpers = require("../controller/queryHelpers");
 const { sendError } = require("./utils");
-const Op = Sequelize.Op;
 
 const rootURL = "/api/login/";
 const secret = process.env.TOKEN_SECRET;

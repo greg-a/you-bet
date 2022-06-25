@@ -17,15 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true,
       },
     },
-    // first_name: {
-    //   type: DataTypes.STRING,
-    // },
-    // last_name: {
-    //   type: DataTypes.STRING,
-    // },
-    // token: {
-    //   type: DataTypes.STRING,
-    // },
     name: {
       type: DataTypes.STRING,
     },

@@ -1,5 +1,8 @@
 exports.sendError = (error, response) => {
-  if (error.name === "SequelizeUniqueConstraintError")
+  if (error.name.includes("Sequelize"))
     return response.status(400).send(error.errors[0].message);
-  return response.status(500).send("server error, try again shortly");
+  if (error.code && error.message)
+    return response.status(error.code).send(error.message);
+  if (typeof error === "string") return response.status(500).send(error);
+  return response.status(500).send("Server error, try again shortly");
 };

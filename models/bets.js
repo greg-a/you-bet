@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const bets = sequelize.define("bets", {
-    bet_amount: {
+    betAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    end_date: {
+    endDate: {
       type: DataTypes.DATEONLY,
     },
   });
