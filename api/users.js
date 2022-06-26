@@ -37,8 +37,17 @@ module.exports = function (app) {
     }
   });
 
-  app.put(rootURL, authenticateToken, async (req, res) => {
+  app.patch(rootURL, authenticateToken, async (req, res) => {
     try {
+      if (
+        Object.keys(req.body).some((key) =>
+          ["id", "username", "password"].includes(key)
+        )
+      ) {
+        const error = new Error("Cannot update username or password");
+        error.code = 403;
+        throw error;
+      }
       const results = await Users.updateUserInfo(req.user.id, req.body);
       res.json(results);
     } catch (error) {
@@ -47,7 +56,7 @@ module.exports = function (app) {
   });
 
   //TODO
-  app.put(`${rootURL}password-reset`, authenticateToken, async (req, res) => {
+  app.patch(`${rootURL}password-reset`, authenticateToken, async (req, res) => {
     const newPasswordHashed = createHmac("sha256", secret)
       .update(req.body.newPassword1)
       .digest("hex");
