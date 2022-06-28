@@ -6,12 +6,12 @@ const { Op } = Sequelize;
 const secret = process.env.TOKEN_SECRET;
 
 module.exports = {
-  getUser: async (userId) => {
+  getUser: async (userId, attributes) => {
     const results = await users.findOne({
       where: {
         id: userId,
       },
-      attributes: QueryHelpers.attributes.user,
+      attributes: attributes ?? QueryHelpers.attributes.user,
     });
     return results;
   },
@@ -63,7 +63,6 @@ module.exports = {
     });
   },
   updateUserInfo: async (userId, userInfo) => {
-    console.log({ userInfo });
     const results = await users.update(
       {
         ...userInfo,
@@ -83,5 +82,17 @@ module.exports = {
       notifyOnMessage: updatedUserInfo[0].dataValues.notifyOnMessage,
       notifyOnFollow: updatedUserInfo[0].dataValues.notifyOnFollow,
     };
+  },
+  deleteNotificationToken: async (notification_token) => {
+    await users.update(
+      {
+        notification_token: null,
+      },
+      {
+        where: {
+          notification_token,
+        },
+      }
+    );
   },
 };

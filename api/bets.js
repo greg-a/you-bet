@@ -1,5 +1,9 @@
 const Bets = require("../controller/bets");
 const Followers = require("../controller/followers");
+const {
+  generatePushNotifications,
+} = require("../controller/pushNotifications");
+const queryHelpers = require("../controller/queryHelpers");
 const Users = require("../controller/users");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
@@ -44,23 +48,67 @@ module.exports = (app) => {
   });
 
   app.post(rootURL, authenticateToken, async (req, res) => {
+    let betResponse = {
+      main_user: {
+        id: req.user.id,
+        username: req.user.username,
+        name: req.user.name,
+      },
+      messages: [],
+    };
     try {
       const results = await Bets.createBet({
         mainUserId: req.user.id,
         ...req.body,
       });
+      betResponse = { ...betResponse, ...results.dataValues };
       res.json(results);
     } catch (error) {
       sendError(error, res);
     }
+    if (betResponse.id) {
+      const notifyUsers = await Followers.getFollowerNotificationTokens(
+        req.user.id
+      );
+      generatePushNotifications(
+        notifyUsers,
+        `New bet from @${req.user.username}`,
+        betResponse
+      );
+    }
   });
 
   app.put(`${rootURL}accept/:id`, authenticateToken, async (req, res) => {
+    let acceptedBet = {
+      accepted_user: {
+        id: req.user.id,
+        username: req.user.username,
+        name: req.user.name,
+      },
+      messages: [],
+    };
     try {
       const results = await Bets.acceptBet(req.user.id, req.params.id);
+      acceptedBet = { ...acceptedBet, ...results.dataValues };
       res.json(results);
     } catch (error) {
       sendError(error, res);
+    }
+    console.log({ acceptedBet });
+    const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
+      ...queryHelpers.attributes.user,
+      "notification_token",
+      "notifyOnAccept",
+    ]);
+    if (notifyUser.notifyOnAccept) {
+      generatePushNotifications(
+        [notifyUser.notification_token],
+        `@${req.user.username} accepted one of your bets!`,
+        {
+          ...acceptedBet,
+          main_user: notifyUser.dataValues,
+        }
+      );
     }
   });
 

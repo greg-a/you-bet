@@ -31,6 +31,16 @@ module.exports = {
       followerList,
     };
   },
+  getFollowerNotificationTokens: async (userId) => {
+    const notifyUsers = await followers.findAll({
+      where: {
+        followedUserId: userId,
+        notificationsOn: true,
+      },
+      include: [QueryHelpers.includes.mainUser],
+    });
+    return notifyUsers.map(({ main_user }) => main_user.notification_token);
+  },
   newFollower: async (userId, followUserId) => {
     const follow = await followers.create(
       {

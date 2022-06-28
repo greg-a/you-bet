@@ -1,7 +1,7 @@
 const { users, messages } = require("../models");
 
 const attributes = {
-  user: ["id", "name", "username"],
+  user: ["id", "name", "username", "notification_token"],
   myNotifications: [
     "notification_token",
     "notifyOnAccept",
