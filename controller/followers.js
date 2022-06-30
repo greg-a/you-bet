@@ -17,14 +17,14 @@ module.exports = {
         mainUserId: userId,
       },
       attributes: ["followedUserId", "notificationsOn"],
-      include: [QueryHelpers.includes.followedUser],
+      include: [QueryHelpers.includes.followedUser()],
     });
     const followerList = await followers.findAll({
       where: {
         followedUserId: userId,
       },
       attributes: ["mainUserId"],
-      include: [QueryHelpers.includes.mainUser],
+      include: [QueryHelpers.includes.mainUser()],
     });
     return {
       followingList,
@@ -37,7 +37,12 @@ module.exports = {
         followedUserId: userId,
         notificationsOn: true,
       },
-      include: [QueryHelpers.includes.mainUser],
+      include: [
+        {
+          ...QueryHelpers.includes.mainUser(),
+          attributes: ["notification_token"],
+        },
+      ],
     });
     return notifyUsers.map(({ main_user }) => main_user.notification_token);
   },

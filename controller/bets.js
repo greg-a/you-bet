@@ -21,9 +21,9 @@ module.exports = {
         [messages, "createdAt", "DESC"],
       ],
       include: [
-        QueryHelpers.includes.mainUser,
-        QueryHelpers.includes.messages,
-        QueryHelpers.includes.acceptedUser,
+        QueryHelpers.includes.mainUser(),
+        QueryHelpers.includes.messages(),
+        QueryHelpers.includes.acceptedUser(),
       ],
     });
     return results;
@@ -38,22 +38,22 @@ module.exports = {
         [messages, "createdAt", "DESC"],
       ],
       include: [
-        QueryHelpers.includes.mainUser,
-        QueryHelpers.includes.messages,
-        QueryHelpers.includes.acceptedUser,
+        QueryHelpers.includes.mainUser(),
+        QueryHelpers.includes.messages(),
+        QueryHelpers.includes.acceptedUser(),
       ],
     });
     return results;
   },
-  getBet: async (betId) => {
+  getBet: async (betId, userAttributes) => {
     const response = await bets.findOne({
       where: {
         id: betId,
       },
       include: [
-        QueryHelpers.includes.mainUser,
-        QueryHelpers.includes.messages,
-        QueryHelpers.includes.acceptedUser,
+        QueryHelpers.includes.mainUser(userAttributes),
+        QueryHelpers.includes.messages(),
+        QueryHelpers.includes.acceptedUser(),
       ],
       order: [[messages, "createdAt", "DESC"]],
     });

@@ -63,18 +63,19 @@ module.exports = (app) => {
       });
       betResponse = { ...betResponse, ...results.dataValues };
       res.json(results);
-    } catch (error) {
-      sendError(error, res);
-    }
-    if (betResponse.id) {
+
+      // send push notification
       const notifyUsers = await Followers.getFollowerNotificationTokens(
         req.user.id
       );
-      generatePushNotifications(
-        notifyUsers,
-        `New bet from @${req.user.username}`,
-        betResponse
-      );
+      generatePushNotifications(notifyUsers, {
+        title: "New Bet",
+        subtitle: `@${req.user.username}`,
+        body: betResponse.description,
+        data: betResponse,
+      });
+    } catch (error) {
+      sendError(error, res);
     }
   });
 
@@ -91,24 +92,23 @@ module.exports = (app) => {
       const results = await Bets.acceptBet(req.user.id, req.params.id);
       acceptedBet = { ...acceptedBet, ...results.dataValues };
       res.json(results);
+
+      // send push notification
+      const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
+        ...queryHelpers.attributes.user,
+        "notification_token",
+        "notifyOnAccept",
+      ]);
+      if (notifyUser.notifyOnAccept) {
+        generatePushNotifications([notifyUser.notification_token], {
+          title: "Bet Accepted",
+          subtitle: `@${req.user.username}`,
+          body: acceptedBet.description,
+          data: { ...acceptedBet, main_user: notifyUser.dataValues },
+        });
+      }
     } catch (error) {
       sendError(error, res);
-    }
-    console.log({ acceptedBet });
-    const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
-      ...queryHelpers.attributes.user,
-      "notification_token",
-      "notifyOnAccept",
-    ]);
-    if (notifyUser.notifyOnAccept) {
-      generatePushNotifications(
-        [notifyUser.notification_token],
-        `@${req.user.username} accepted one of your bets!`,
-        {
-          ...acceptedBet,
-          main_user: notifyUser.dataValues,
-        }
-      );
     }
   });
 

@@ -1,6 +1,11 @@
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 const Followers = require("../controller/followers");
+const Users = require("../controller/users");
+const QueryHelpers = require("../controller/queryHelpers");
+const {
+  generatePushNotifications,
+} = require("../controller/pushNotifications");
 
 const rootURL = "/api/followers/";
 
@@ -21,6 +26,19 @@ module.exports = (app) => {
         req.params.userId
       );
       res.json(results);
+
+      // send push notification
+      const followedUser = await Users.getUser(
+        req.params.userId,
+        QueryHelpers.attributes.userWithNotificationToken
+      );
+      if (followedUser.notifyOnFollow) {
+        generatePushNotifications([followedUser.notification_token], {
+          title: "New Follower",
+          subtitle: `@${req.user.username}`,
+          data: req.user,
+        });
+      }
     } catch (error) {
       sendError(error, res);
     }

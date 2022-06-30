@@ -1,7 +1,7 @@
 const { Expo } = require("expo-server-sdk");
 const Users = require("./users");
 
-exports.generatePushNotifications = (pushTokens, messageTitle, messageData) => {
+exports.generatePushNotifications = (pushTokens, message) => {
   let expo = new Expo();
 
   let messages = [];
@@ -13,9 +13,7 @@ exports.generatePushNotifications = (pushTokens, messageTitle, messageData) => {
 
     messages.push({
       to: pushToken,
-      title: messageTitle,
-      body: messageData.description,
-      data: messageData,
+      ...message,
     });
   }
   let chunks = expo.chunkPushNotifications(messages);

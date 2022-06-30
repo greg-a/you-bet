@@ -1,7 +1,8 @@
 const { users, messages } = require("../models");
 
-const attributes = {
-  user: ["id", "name", "username", "notification_token"],
+const attr = {
+  user: { exclude: ["password", "email", "notification_token"] },
+  userWithNotificationToken: { exclude: ["password", "email"] },
   myNotifications: [
     "notification_token",
     "notifyOnAccept",
@@ -11,26 +12,26 @@ const attributes = {
 };
 
 module.exports = {
-  attributes,
+  attributes: attr,
   includes: {
-    mainUser: {
+    mainUser: (attributes = attr.user) => ({
       model: users,
       as: "main_user",
-      attributes: attributes.user,
-    },
-    messages: {
+      attributes,
+    }),
+    messages: (userAttributes = attr.user) => ({
       model: messages,
-      include: [{ model: users }],
-    },
-    acceptedUser: {
+      include: [{ model: users, attributes: userAttributes }],
+    }),
+    acceptedUser: (attributes = attr.user) => ({
       model: users,
       as: "accepted_user",
-      attributes: attributes.user,
-    },
-    followedUser: {
+      attributes,
+    }),
+    followedUser: (attributes = attr.user) => ({
       model: users,
       as: "followed_user",
-      attributes: attributes.user,
-    },
+      attributes,
+    }),
   },
 };

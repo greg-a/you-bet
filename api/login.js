@@ -21,18 +21,19 @@ module.exports = function (app) {
             username: username.toLowerCase(),
             password: hashedPassword,
           },
-          attributes: [
-            ...queryHelpers.attributes.user,
-            ...queryHelpers.attributes.myNotifications,
-          ],
+          attributes: queryHelpers.attributes.userWithNotificationToken,
         });
-        const userData = loggedInUser?.dataValues;
-        if (!userData)
+        if (!loggedInUser?.dataValues)
           return res.status(409).send("username or password is incorrect");
+        const { notification_token, ...userData } = loggedInUser.dataValues;
+
         const token = generateAccessToken(userData);
         res.json({
           token,
-          userData,
+          userData: {
+            ...userData,
+            hasNotificationToken: !!notification_token,
+          },
         });
       } catch (err) {
         console.log(err);
@@ -48,12 +49,13 @@ module.exports = function (app) {
         where: {
           id: req.user.id,
         },
-        attributes: [
-          ...queryHelpers.attributes.user,
-          ...queryHelpers.attributes.myNotifications,
-        ],
+        attributes: queryHelpers.attributes.userWithNotificationToken,
       });
-      res.json(userInfo);
+      const { notification_token, ...data } = userInfo.dataValues;
+      res.json({
+        ...data,
+        hasNotificationToken: !!notification_token,
+      });
     } catch (e) {
       console.log(e);
       sendError(e, res);
