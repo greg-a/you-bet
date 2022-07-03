@@ -39,8 +39,8 @@ module.exports = (app) => {
     try {
       const response = await Users.getUserByUsername(req.params.username);
       const results = await Bets.getBet(req.params.betId);
-      if (results.dataValues.mainUserId !== response.dataValues.id)
-        throw new Error();
+      console.log({ response, results });
+      if (results.mainUserId !== response.id) throw new Error();
       res.json(results);
     } catch (err) {
       sendError(err, res);
@@ -104,7 +104,7 @@ module.exports = (app) => {
           title: "Bet Accepted",
           subtitle: `@${req.user.username}`,
           body: acceptedBet.description,
-          data: { ...acceptedBet, main_user: notifyUser.dataValues },
+          data: { ...acceptedBet, main_user: notifyUser },
         });
       }
     } catch (error) {

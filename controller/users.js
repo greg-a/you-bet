@@ -1,9 +1,10 @@
-const { createHmac } = require("crypto");
 const { users, Sequelize } = require("../models");
+const {
+  generateAccessToken,
+  generateHashedPassword,
+} = require("../utils/token");
 const QueryHelpers = require("./queryHelpers");
 const { Op } = Sequelize;
-
-const secret = process.env.TOKEN_SECRET;
 
 module.exports = {
   getUser: async (userId, attributes) => {
@@ -12,6 +13,7 @@ module.exports = {
         id: userId,
       },
       attributes: attributes ?? QueryHelpers.attributes.user,
+      raw: true,
     });
     return results;
   },
@@ -21,6 +23,7 @@ module.exports = {
         username,
       },
       attributes: QueryHelpers.attributes.user,
+      raw: true,
     });
     return results;
   },
@@ -54,9 +57,7 @@ module.exports = {
       error.code = 400;
       throw error;
     }
-    const password = createHmac("sha256", secret)
-      .update(user.password)
-      .digest("hex");
+    const password = generateHashedPassword(user.password);
     await users.create({
       ...user,
       password,
@@ -91,6 +92,44 @@ module.exports = {
       {
         where: {
           notification_token,
+        },
+      }
+    );
+  },
+  login: async (data) => {
+    const { username, password } = data;
+    const hashedPassword = generateHashedPassword(password);
+    const loggedInUser = await users.findOne({
+      logging: false,
+      where: {
+        username: username.toLowerCase(),
+        password: hashedPassword,
+      },
+      attributes: QueryHelpers.attributes.userWithNotificationToken,
+    });
+    if (!loggedInUser?.dataValues) {
+      const error = new Error("username or password is incorrect");
+      error.code = 409;
+      throw error;
+    }
+    const { notification_token, ...userData } = loggedInUser.dataValues;
+    const token = generateAccessToken(userData);
+
+    return {
+      token,
+      userData: {
+        ...userData,
+        hasNotificationToken: !!notification_token,
+      },
+    };
+  },
+  logout: async (userId) => {
+    await users.update(
+      { notification_token: null },
+      {
+        logging: false,
+        where: {
+          id: userId,
         },
       }
     );

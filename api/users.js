@@ -88,8 +88,7 @@ module.exports = function (app) {
     async (req, res) => {
       try {
         const user = await Users.getUserByUsername(req.params.username);
-        const { id } = user.dataValues;
-        const results = await Bets.getAllBetsByUserId(id);
+        const results = await Bets.getAllBetsByUserId(user.id);
         res.json({ bets: results, profileInfo: user });
       } catch (error) {
         console.log({ error });

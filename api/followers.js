@@ -34,8 +34,7 @@ module.exports = (app) => {
       );
       if (followedUser.notifyOnFollow) {
         generatePushNotifications([followedUser.notification_token], {
-          title: "New Follower",
-          subtitle: `@${req.user.username}`,
+          title: `@${req.user.username} followed you`,
           data: req.user,
         });
       }
