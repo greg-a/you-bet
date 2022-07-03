@@ -94,11 +94,9 @@ const Signup = () => {
       try {
         setIsLoading(true);
         const formattedAccountInfo = formatAccountInfo();
-        const { data } = await createAccount(formattedAccountInfo);
+        await createAccount(formattedAccountInfo);
 
         setIsLoading(false);
-        if (data.errors) return handleServerErrors(data.errors);
-
         enqueueSnackbar("Your account was created!", { variant: "success" });
         router.push("/login");
       } catch (err) {

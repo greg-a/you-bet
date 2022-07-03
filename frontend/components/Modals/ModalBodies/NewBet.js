@@ -43,7 +43,7 @@ const NewBetModal = ({ onSubmit, description, editBet }) => {
 
   useEffect(() => {
     if (editBet) {
-      const { description, bet_amount: betAmount, end_date: endDate } = editBet;
+      const { description, betAmount, endDate } = editBet;
       setBetInfo({ description, betAmount, endDate });
     }
   }, []);

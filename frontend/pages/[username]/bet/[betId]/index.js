@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import { useSnackbar } from 'notistack';
-import styles from '../../../../styles/Home.module.css';
-import MainBet from '../../../../components/Modals/ModalBodies/MainBet';
-import { getUserBetById } from '../../../../services';
-import useFeedList from '../../../../hooks/useFeedList';
-import { formatUsername } from '../../../../utils/formatters';
-import EmptyBet from '../../../../components/Common/EmptyState/EmptyBet';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import { useSnackbar } from "notistack";
+import styles from "../../../../styles/Home.module.css";
+import MainBet from "../../../../components/Modals/ModalBodies/MainBet";
+import { getUserBetById } from "../../../../services";
+import useFeedList from "../../../../hooks/useFeedList";
+import { formatUsername } from "../../../../utils/formatters";
+import EmptyBet from "../../../../components/Common/EmptyState/EmptyBet";
 
 const Bet = () => {
   const { feedList } = useFeedList();
@@ -20,9 +20,8 @@ const Bet = () => {
     try {
       const { data } = await getUserBetById(username, betId);
       setBetInfo(data);
-      console.log('render')
     } catch (err) {
-      enqueueSnackbar(err.message, { variant: 'error' });
+      enqueueSnackbar(err.message, { variant: "error" });
     }
   };
 
@@ -35,11 +34,7 @@ const Bet = () => {
       <Head>
         <title>{`${formatUsername(betInfo?.main_user)} Bet`}</title>
       </Head>
-      {betInfo ? (
-        <MainBet betInfo={betInfo} />
-      ) : (
-          <EmptyBet />
-      )}
+      {betInfo ? <MainBet betInfo={betInfo} /> : <EmptyBet />}
     </div>
   );
 };

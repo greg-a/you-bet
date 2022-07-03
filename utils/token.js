@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { createHmac } = require("crypto");
 
 const tokenSecret = process.env.TOKEN_SECRET;
 
@@ -21,7 +22,14 @@ exports.authenticateToken = (req, res, next) => {
   });
 };
 
-exports.generateAccessToken = (payload, expiresIn = "1d") => {
-  const token = jwt.sign(payload, tokenSecret, { expiresIn });
+exports.generateHashedPassword = (password) => {
+  const hashedPassword = createHmac("sha256", tokenSecret)
+    .update(password)
+    .digest("hex");
+  return hashedPassword;
+};
+
+exports.generateAccessToken = (payload) => {
+  const token = jwt.sign(payload, tokenSecret);
   return token;
 };

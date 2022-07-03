@@ -1,68 +1,69 @@
-const { followers, users } = require("../models");
-const { Sequelize } = require("../models");
 const { authenticateToken } = require("../utils/token");
-const QueryHelpers = require("./queryHelpers");
 const { sendError } = require("./utils");
-const Op = Sequelize.Op;
+const Followers = require("../controller/followers");
+const Users = require("../controller/users");
+const QueryHelpers = require("../controller/queryHelpers");
+const {
+  generatePushNotifications,
+} = require("../controller/pushNotifications");
 
 const rootURL = "/api/followers/";
 
 module.exports = (app) => {
   app.get(rootURL, authenticateToken, async (req, res) => {
     try {
-      const followingList = await followers.findAll({
-        where: {
-          mainUserId: req.user.id,
-        },
-        attributes: ["followedUserId"],
-        include: [QueryHelpers.includes.followedUser],
-      });
-      const followerList = await followers.findAll({
-        where: {
-          followedUserId: req.user.id,
-        },
-        attributes: ["mainUserId"],
-        include: [QueryHelpers.includes.mainUser],
-      });
-      res.json({ followingList, followerList });
+      const results = await Followers.getFollowLists(req.user.id);
+      res.json(results);
     } catch (err) {
       sendError(err, res);
     }
   });
 
-  app.post(rootURL, authenticateToken, async (req, res) => {
+  app.post(`${rootURL}:userId`, authenticateToken, async (req, res) => {
     try {
-      if (!req.body.userId) throw "Error finding user";
-      const results = await followers.create({
-        mainUserId: req.user.id,
-        followedUserId: req.body.userId,
-      });
-      const followedUser = await users.findOne({
-        where: {
-          id: results.dataValues.followedUserId,
-        },
-        attributes: QueryHelpers.attributes.user,
-      });
+      const results = await Followers.newFollower(
+        req.user.id,
+        req.params.userId
+      );
+      res.json(results);
 
-      res.json(followedUser);
+      // send push notification
+      const followedUser = await Users.getUser(
+        req.params.userId,
+        QueryHelpers.attributes.userWithNotificationToken
+      );
+      if (followedUser.notifyOnFollow) {
+        generatePushNotifications([followedUser.notification_token], {
+          title: `@${req.user.username} followed you`,
+          data: req.user,
+        });
+      }
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
+
+  app.put(`${rootURL}notifications`, authenticateToken, async (req, res) => {
+    try {
+      const results = await Followers.updateNotificationForUser(
+        req.user.id,
+        req.body.followedUserId,
+        req.body.notificationsOn
+      );
+      res.json(results);
     } catch (err) {
+      console.log({ err });
       sendError(err, res);
     }
   });
 
   app.delete(`${rootURL}:userId`, authenticateToken, async (req, res) => {
     try {
-      if (!req.params.userId) throw "Error finding user";
-      await followers.destroy({
-        where: {
-          mainUserId: req.user.id,
-          followedUserId: req.params.userId,
-        },
-      });
+      await Followers.unFollowUser(req.user.id, req.params.userId);
       res.sendStatus(200);
-    } catch (err) {
-      console.log(err);
-      sendError(err, res);
+    } catch (error) {
+      console.log({ error });
+      sendError(error, res);
     }
   });
 };

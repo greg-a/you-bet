@@ -1,88 +1,46 @@
-const { bets, users, messages, followers } = require("../models");
-const { Sequelize } = require("../models");
+const Bets = require("../controller/bets");
+const Followers = require("../controller/followers");
+const {
+  generatePushNotifications,
+} = require("../controller/pushNotifications");
+const queryHelpers = require("../controller/queryHelpers");
+const Users = require("../controller/users");
 const { authenticateToken } = require("../utils/token");
-const QueryHelpers = require("./queryHelpers");
 const { sendError } = require("./utils");
-const Op = Sequelize.Op;
 
 const rootURL = "/api/bets/";
 
 module.exports = (app) => {
   app.get(rootURL, authenticateToken, async (req, res) => {
     try {
-      const results = await followers.findAll({
-        where: {
-          mainUserId: req.user.id,
-        },
-      });
-      followList = [
-        req.user.id,
-        ...results.map(({ followedUserId }) => followedUserId),
-      ];
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
-      const results = await bets.findAll({
-        where: {
-          mainUserId: followList,
-          end_date: {
-            [Op.gte]: new Date(),
-          },
-        },
-        order: [
-          ["createdAt", "DESC"],
-          [messages, "createdAt", "DESC"],
-        ],
-        include: [
-          QueryHelpers.includes.mainUser,
-          QueryHelpers.includes.messages,
-          QueryHelpers.includes.acceptedUser,
-        ],
-      });
+      const followList = await Followers.getFollowerIds(req.user.id);
+      const results = await Bets.getBetsByUserId(
+        [...followList, req.user.id],
+        true
+      );
       res.json(results);
-    } catch (e) {
-      console.log({ error: e });
-      if (e.name === "SequelizeUniqueConstraintError")
-        return res.status(400).send(e.errors[0].message);
-      return res.status(500).send("server error, try again shortly");
+    } catch (error) {
+      console.log({ error });
+      sendError(error, res);
     }
   });
 
   app.get(`${rootURL}profile/:userId?`, authenticateToken, async (req, res) => {
     try {
       const profileId = Number(req.params?.userId) || req.user.id;
-      const results = await bets.findAll({
-        where: {
-          mainUserId: profileId,
-        },
-        order: [
-          ["createdAt", "DESC"],
-          [messages, "createdAt", "DESC"],
-        ],
-        include: [
-          QueryHelpers.includes.mainUser,
-          QueryHelpers.includes.messages,
-          QueryHelpers.includes.acceptedUser,
-        ],
-      });
+      const results = await Bets.getBetsByUserId(profileId);
       res.json(results);
     } catch (error) {
-      console.log({ error });
+      sendError(error, res);
     }
   });
 
-  app.get(`${rootURL}history/:userId`, authenticateToken, async (req, res) => {
+  app.get(`${rootURL}:username/bet/:betId`, async (req, res) => {
     try {
-      const results = await bets.findAll({
-        where: {
-          mainUserId: req.params.userId,
-          end_date: {
-            [Op.lt]: new Date(),
-          },
-        },
-      });
+      const response = await Users.getUserByUsername(req.params.username);
+      const results = await Bets.getBet(req.params.betId);
+      console.log({ response, results });
+      if (results.mainUserId !== response.id) throw new Error();
       res.json(results);
     } catch (err) {
       sendError(err, res);
@@ -90,133 +48,86 @@ module.exports = (app) => {
   });
 
   app.post(rootURL, authenticateToken, async (req, res) => {
+    let betResponse = {
+      main_user: {
+        id: req.user.id,
+        username: req.user.username,
+        name: req.user.name,
+      },
+      messages: [],
+    };
     try {
-      await bets.create({
+      const results = await Bets.createBet({
         mainUserId: req.user.id,
-        description: req.body.description,
-        bet_amount: req.body.betAmount,
-        end_date: req.body.endDate,
+        ...req.body,
       });
-      res.sendStatus(200);
-    } catch (err) {
-      sendError(err, res);
+      betResponse = { ...betResponse, ...results.dataValues };
+      res.json(results);
+
+      // send push notification
+      const notifyUsers = await Followers.getFollowerNotificationTokens(
+        req.user.id
+      );
+      generatePushNotifications(notifyUsers, {
+        title: "New Bet",
+        subtitle: `@${req.user.username}`,
+        body: betResponse.description,
+        data: betResponse,
+      });
+    } catch (error) {
+      sendError(error, res);
     }
   });
 
   app.put(`${rootURL}accept/:id`, authenticateToken, async (req, res) => {
+    let acceptedBet = {
+      accepted_user: {
+        id: req.user.id,
+        username: req.user.username,
+        name: req.user.name,
+      },
+      messages: [],
+    };
     try {
-      const results = await bets.update(
-        {
-          acceptedUserId: req.user.id,
-        },
-        {
-          where: {
-            id: req.params.id,
-            acceptedUserId: null,
-          },
-          returning: true,
-        }
-      );
-      const [affectedRows, acceptedBet] = results;
+      const results = await Bets.acceptBet(req.user.id, req.params.id);
+      acceptedBet = { ...acceptedBet, ...results.dataValues };
+      res.json(results);
 
-      if (affectedRows === 0)
-        return res
-          .status(409)
-          .send(
-            "Could not accept bet, it's possible the bet is already accepted"
-          );
-      res.json(acceptedBet[0]);
-    } catch (err) {
-      console.log({ err });
-      sendError(err, res);
-    }
-  });
-
-  app.put(`${rootURL}:id`, authenticateToken, async (req, res) => {
-    try {
-      await bets.update(
-        {
-          description: req.body.description,
-          bet_amount: req.body.betAmount,
-          end_date: req.body.endDate,
-        },
-        {
-          where: {
-            id: req.params.id,
-          },
-        }
-      );
-      res.sendStatus(200);
-    } catch (err) {
-      sendError(err, res);
+      // send push notification
+      const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
+        ...queryHelpers.attributes.user,
+        "notification_token",
+        "notifyOnAccept",
+      ]);
+      if (notifyUser.notifyOnAccept) {
+        generatePushNotifications([notifyUser.notification_token], {
+          title: "Bet Accepted",
+          subtitle: `@${req.user.username}`,
+          body: acceptedBet.description,
+          data: { ...acceptedBet, main_user: notifyUser },
+        });
+      }
+    } catch (error) {
+      sendError(error, res);
     }
   });
 
   app.get(`${rootURL}:betId`, async (req, res) => {
     try {
-      const response = await bets.findOne({
-        where: {
-          id: req.params.betId,
-        },
-        include: [
-          QueryHelpers.includes.mainUser,
-          QueryHelpers.includes.messages,
-          QueryHelpers.includes.acceptedUser,
-        ],
-        order: [[messages, "createdAt", "DESC"]],
-      });
+      const response = await Bets.getBet(req.params.betId);
       if (!response) return res.status(404).send("Bet not found");
       res.json(response);
-    } catch (e) {
-      console.log({ e });
-      res.status(500).send("Could not find bet. Try again shortly");
-    }
-  });
-
-  app.get(`${rootURL}:username/bet/:betId`, async (req, res) => {
-    let userId;
-    if (req.params.username) {
-      try {
-        const response = await users.findOne({
-          where: {
-            username: req.params.username,
-          },
-        });
-        userId = response.id;
-      } catch (err) {
-        res.sendStatus(400);
-      }
-    }
-    try {
-      const results = await bets.findOne({
-        where: {
-          id: req.params.betId,
-          mainUserId: userId,
-        },
-        include: [
-          QueryHelpers.includes.mainUser,
-          QueryHelpers.includes.messages,
-          QueryHelpers.includes.acceptedUser,
-        ],
-        order: [[messages, "createdAt", "DESC"]],
-      });
-      res.json(results);
-    } catch (err) {
-      sendError(err, res);
+    } catch (error) {
+      sendError(error, res);
     }
   });
 
   app.delete(`${rootURL}delete/:betId`, authenticateToken, async (req, res) => {
     try {
-      await bets.destroy({
-        where: {
-          id: req.params.betId,
-        },
-      });
+      await Bets.deleteBet(req.params.betId);
       res.sendStatus(200);
-    } catch (err) {
-      sendError(err, res);
-      console.log(err);
+    } catch (error) {
+      sendError(error, res);
     }
   });
 };
