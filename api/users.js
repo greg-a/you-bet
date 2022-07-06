@@ -57,13 +57,17 @@ module.exports = function (app) {
 
   //TODO
   app.patch(`${rootURL}password-reset`, authenticateToken, async (req, res) => {
-    const newPasswordHashed = createHmac("sha256", secret)
-      .update(req.body.newPassword1)
-      .digest("hex");
-    const currentPasswordHashed = createHmac("sha256", secret)
-      .update(req.body.currentPassword)
-      .digest("hex");
+    if (!req.body.password1 || !req.body.password2)
+      return res.status(400).send("bad request");
+    if (req.body.password1 !== req.body.password2)
+      return res.status(400).send("new passwords do not match");
     try {
+      const newPasswordHashed = createHmac("sha256", secret)
+        .update(req.body.password1)
+        .digest("hex");
+      const currentPasswordHashed = createHmac("sha256", secret)
+        .update(req.body.currentPassword)
+        .digest("hex");
       const results = await users.update(
         {
           password: newPasswordHashed,
@@ -75,9 +79,11 @@ module.exports = function (app) {
           },
         }
       );
-      if (results[0] === 1) res.sendStatus(200);
-      if (results[0] === 0) res.sendStatus(401);
+      if (results[0] === 0)
+        res.status(401).send("current password is incorrect");
+      res.sendStatus(200);
     } catch (err) {
+      console.log({ err });
       sendError(err, res);
     }
   });

@@ -12,9 +12,9 @@ module.exports = function (app) {
       try {
         const results = await Users.login(req.body);
         res.json(results);
-      } catch (err) {
-        console.log(err);
-        sendError(err, res);
+      } catch (error) {
+        console.log({ error });
+        sendError(error, res);
       }
     } else res.status(400).send("username or password is missing");
   });
@@ -30,9 +30,9 @@ module.exports = function (app) {
         ...data,
         hasNotificationToken: !!notification_token,
       });
-    } catch (e) {
-      console.log(e);
-      sendError(e, res);
+    } catch (error) {
+      console.log({ error });
+      sendError(error, res);
     }
   });
 
@@ -40,9 +40,9 @@ module.exports = function (app) {
     try {
       await Users.logout(req.user.id);
       res.sendStatus(200);
-    } catch (err) {
-      console.log(err);
-      sendError(err, res);
+    } catch (error) {
+      console.log({ error });
+      sendError(error, res);
     }
   });
 };
