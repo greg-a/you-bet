@@ -69,6 +69,12 @@ module.exports = {
         where: {
           id: betId,
           acceptedUserId: null,
+          endDate: {
+            [Op.gte]: new Date(),
+          },
+          mainUserId: {
+            [Op.not]: userId,
+          },
         },
         returning: true,
       }
@@ -76,7 +82,7 @@ module.exports = {
     const [affectedRows, acceptedBet] = results;
 
     if (affectedRows === 0)
-      throw "Could not accept bet, it's possible the bet is already accepted";
+      throw "Could not accept bet, chances are the bet was already accepted, expired, or you somehow tried to accept your own bet";
     return acceptedBet[0];
   },
   deleteBet: async (betId) => await bets.destroy({ where: { id: betId } }),

@@ -34,19 +34,5 @@ module.exports = (app) => {
     } catch (error) {
       sendError(error, res);
     }
-
-    // if (newMessage.id) {
-    //   const bet = await Bets.getBet(
-    //     req.body.betId,
-    //     QueryHelpers.attributes.userWithNotificationToken
-    //   );
-    //   if (bet.main_user.notifyOnMessage && bet.main_user.id !== req.user.id)
-    //     generatePushNotifications([bet.main_user.notification_token], {
-    //       title: "New Message",
-    //       subtitle: `@${req.user.username}`,
-    //       body: req.body.message,
-    //       data: bet,
-    //     });
-    // }
   });
 };

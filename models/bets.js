@@ -3,13 +3,25 @@ module.exports = (sequelize, DataTypes) => {
     betAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        max: 100000,
+      },
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "description cannot be empty",
+        },
+      },
     },
     endDate: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        isDate: true,
+      },
     },
   });
 
