@@ -47,21 +47,8 @@ module.exports = {
     });
     return results;
   },
-  createUser: async (user) => {
-    const usernameRegex = /[\W]+/g;
-    const invalidUsernameChars = user.username.match(usernameRegex) ?? [];
-    if (invalidUsernameChars.length > 0) {
-      const error = new Error(
-        `These characters are not allowed in your username: ${invalidUsernameChars}`
-      );
-      error.code = 400;
-      throw error;
-    }
-    const password = generateHashedPassword(user.password);
-    await users.create({
-      ...user,
-      password,
-    });
+  createUser: async (userInfo) => {
+    await users.create(userInfo);
   },
   updateUserInfo: async (userId, userInfo) => {
     const results = await users.update(

@@ -75,7 +75,11 @@ module.exports = (app) => {
         data: betResponse,
       });
     } catch (error) {
-      sendError(error, res);
+      sendError(
+        error,
+        res,
+        "Server error, failed to save your bet. Try again shortly."
+      );
     }
   });
 

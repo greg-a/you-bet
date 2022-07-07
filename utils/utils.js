@@ -1,0 +1,1 @@
+exports.usernameRegex = /[\W]+/g;
