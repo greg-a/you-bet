@@ -1,0 +1,32 @@
+{
+  "name": "you-bet-backend",
+  "version": "1.0.0",
+  "description": "## Getting Started 1. Install npm packages:",
+  "main": "server.js",
+  "scripts": {
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "nodemon server.js",
+    "start:prod": "node server.js",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^6.5.1",
+    "dotenv": "^8.6.0",
+    "expo-server-sdk": "^3.6.0",
+    "express": "^4.18.1",
+    "if-env": "^1.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.20.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.18.0",
+    "sequelize-cli": "^6.4.1"
+  }
+}
