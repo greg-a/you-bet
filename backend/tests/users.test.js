@@ -2,7 +2,7 @@ const request = require("supertest");
 const { faker } = require("@faker-js/faker");
 const app = require("../app");
 const db = require("../models");
-const { login } = require("./helpers");
+const { login, containsForbiddenField } = require("./helpers");
 const { user } = require("./constants");
 
 let auth = {};
@@ -61,9 +61,8 @@ describe("get all users", () => {
     const response = await request(app)
       .get("/api/users")
       .set("authorization-jwt", `jwt ${auth.token}`);
+    expect(containsForbiddenField(response.body[0])).toBeFalsy();
     expect(response.body.length).toBe(2);
-    expect(response.body[0]).not.toHaveProperty("password");
-    expect(response.body[0]).not.toHaveProperty("notification_token");
     expect(response.body[0]).toHaveProperty("id");
     expect(response.body[0]).toHaveProperty("name");
     expect(response.body[0]).toHaveProperty("username");

@@ -13,7 +13,6 @@ module.exports = function (app) {
         const results = await Users.login(req.body);
         res.json(results);
       } catch (error) {
-        console.log({ error });
         sendError(error, res);
       }
     } else res.status(400).send("username or password is missing");
@@ -31,7 +30,6 @@ module.exports = function (app) {
         hasNotificationToken: !!notification_token,
       });
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });
@@ -41,7 +39,6 @@ module.exports = function (app) {
       await Users.logout(req.user.id);
       res.sendStatus(200);
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });

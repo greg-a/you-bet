@@ -52,7 +52,6 @@ module.exports = (app) => {
       );
       res.json(results);
     } catch (err) {
-      console.log({ err });
       sendError(err, res);
     }
   });
@@ -62,7 +61,6 @@ module.exports = (app) => {
       await Followers.unFollowUser(req.user.id, req.params.userId);
       res.sendStatus(200);
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });

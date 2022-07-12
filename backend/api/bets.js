@@ -20,7 +20,6 @@ module.exports = (app) => {
       );
       res.json(results);
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });
@@ -39,7 +38,6 @@ module.exports = (app) => {
     try {
       const response = await Users.getUserByUsername(req.params.username);
       const results = await Bets.getBet(req.params.betId);
-      console.log({ response, results });
       if (results.mainUserId !== response.id) throw new Error();
       res.json(results);
     } catch (err) {

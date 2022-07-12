@@ -14,7 +14,6 @@ module.exports = function (app) {
       const results = await Users.getAllUsers();
       res.json(results);
     } catch (error) {
-      console.log({ error });
       sendError(error);
     }
   });
@@ -83,7 +82,6 @@ module.exports = function (app) {
         res.status(401).send("current password is incorrect");
       res.sendStatus(200);
     } catch (err) {
-      console.log({ err });
       sendError(err, res);
     }
   });
@@ -97,7 +95,6 @@ module.exports = function (app) {
         const results = await Bets.getAllBetsByUserId(user.id);
         res.json({ bets: results, profileInfo: user });
       } catch (error) {
-        console.log({ error });
         sendError(error, res);
       }
     }
