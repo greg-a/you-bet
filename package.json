@@ -11,7 +11,7 @@
     "start:dev:web": "cd frontend && npm run dev",
     "db:migrate": "cd backend && npm run db:migrate",
     "db:migrate:undo": "cd backend && npm run db:migrate:undo",
-    "install": "npm run install:server && npm run install:web",
+    "install": "npm run install:server",
     "install:server": "cd backend && npm install",
     "install:web": "cd frontend && npm install",
     "lint": "npm run lint:server",
