@@ -10,7 +10,7 @@
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
     "lint": "eslint",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

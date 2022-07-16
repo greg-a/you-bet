@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("../app");
 const db = require("../models");
 const { login, containsForbiddenField } = require("./helpers");
-const { user } = require("./constants");
+const { user, userResponse } = require("./constants");
 
 let auth = {};
 
@@ -12,7 +12,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  db.sequelize.close();
+  await db.sequelize.close();
 });
 
 describe("login", () => {
@@ -21,15 +21,7 @@ describe("login", () => {
     auth = response.body;
     expect(containsForbiddenField(response.body)).toBeFalsy();
     expect(response.body).toHaveProperty("token", expect.any(String));
-    expect(response.body.userData).toMatchObject({
-      id: expect.any(Number),
-      username: user.username,
-      name: user.name,
-      notifyOnAccept: true,
-      notifyOnMessage: true,
-      notifyOnFollow: true,
-      hasNotificationToken: false,
-    });
+    expect(response.body.userData).toMatchObject(userResponse);
     expect(response.statusCode).toBe(200);
   });
   test("It should fail login", async () => {
