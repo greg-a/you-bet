@@ -5,28 +5,28 @@ const db = require("../models");
 const { login, containsForbiddenField } = require("./helpers");
 const { user, userResponse } = require("./constants");
 
-let auth = {};
+describe("User endpoint", () => {
+  const rootURL = "/api/users";
+  let auth = {};
 
-beforeAll(async () => {
-  try {
-    await db.sequelize.sync({ force: true });
-    await db.users.create(user);
-    const loginResponse = await login(user.username, user.password);
-    auth = loginResponse.body;
-  } catch (err) {
-    console.log({ err });
-  }
-});
+  beforeAll(async () => {
+    try {
+      await db.sequelize.sync({ force: true });
+      await db.users.create(user);
+      const loginResponse = await login(user.username, user.password);
+      auth = loginResponse.body;
+    } catch (err) {
+      console.log({ err });
+    }
+  });
 
-afterAll(async () => {
-  await db.sequelize.close();
-});
-
-describe("Create new user", () => {
-  test("It should successfully create a user", async () => {
+  afterAll(async () => {
+    await db.sequelize.close();
+  });
+  test("successfully create a user", async () => {
     try {
       const newUser = await request(app)
-        .post("/api/users")
+        .post(rootURL)
         .send({
           username: `${faker.name.firstName()}_${faker.name.lastName()}`,
           name: faker.name.findName(),
@@ -40,7 +40,7 @@ describe("Create new user", () => {
   });
   test("Username with spaces should fail", async () => {
     const newUser = await request(app)
-      .post("/api/users")
+      .post(rootURL)
       .send({
         username: "test user",
         name: faker.name.findName(),
@@ -49,16 +49,13 @@ describe("Create new user", () => {
       });
     expect(newUser.statusCode).toBe(400);
   });
-});
-
-describe("get all users", () => {
   test("fails without jwt", async () => {
     const response = await request(app).get("/api/users");
     expect(response.statusCode).toBe(412);
   });
   test("It should respond with an array of users", async () => {
     const response = await request(app)
-      .get("/api/users")
+      .get(rootURL)
       .set("authorization-jwt", `jwt ${auth.token}`);
     expect(response.body.length).toBe(2);
     expect(containsForbiddenField(response.body[0])).toBeFalsy();

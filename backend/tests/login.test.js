@@ -4,18 +4,18 @@ const db = require("../models");
 const { login, containsForbiddenField } = require("./helpers");
 const { user, userResponse } = require("./constants");
 
-let auth = {};
-
-beforeAll(async () => {
-  await db.sequelize.sync({ force: true });
-  await db.users.create(user);
-});
-
-afterAll(async () => {
-  await db.sequelize.close();
-});
-
 describe("login", () => {
+  const rootURL = "/api/login";
+  let auth = {};
+
+  beforeAll(async () => {
+    await db.sequelize.sync({ force: true });
+    await db.users.create(user);
+  });
+
+  afterAll(async () => {
+    await db.sequelize.close();
+  });
   test("successfully login", async () => {
     const response = await login(user.username, user.password);
     auth = response.body;
@@ -26,14 +26,14 @@ describe("login", () => {
   });
   test("It should fail login", async () => {
     const response = await request(app)
-      .post("/api/login")
+      .post(rootURL)
       .send({ username: "test", password: "test321" });
     expect(response.text).toBe("username or password is incorrect");
     expect(response.statusCode).toBe(409);
   });
   test("should successfully authenticate by token", async () => {
     const response = await request(app)
-      .get("/api/login/token")
+      .get(`${rootURL}/token`)
       .set("authorization-jwt", `jwt ${auth.token}`);
     expect(containsForbiddenField(response.body)).toBeFalsy();
     expect(response.body).toMatchObject({
