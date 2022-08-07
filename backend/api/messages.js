@@ -12,6 +12,7 @@ const {
 const rootURL = "/api/messages/";
 
 module.exports = (app) => {
+  let errorMain = false;
   app.post(rootURL, authenticateToken, async (req, res) => {
     try {
       const results = await Messages.newMessage(
@@ -21,9 +22,11 @@ module.exports = (app) => {
       );
       res.json(results);
     } catch (error) {
+      errorMain = true;
       sendError(error, res);
     }
 
+    if (errorMain) return;
     // send push notification
     const bet = await Bets.getBet(
       req.body.betId,

@@ -25,7 +25,7 @@ describe("Bets endpoint", () => {
   });
 
   afterAll(async () => {
-    // wait for backend to complete push notification task before closing
+    // wait for backend to complete push notification tasks before closing
     await new Promise((r) => setTimeout(r, 2000));
     await db.sequelize.close();
   });
@@ -85,11 +85,36 @@ describe("Bets endpoint", () => {
     }
   );
 
-  test("user can accept bet", async () => {
+  test("you cannot accept your own bet", async () => {
+    const betId = 1;
     const response = await request(app)
-      .put(`${rootURL}/accept/1`)
+      .put(`${rootURL}/accept/${betId}`)
+      .set("authorization-jwt", `jwt ${auth1.token}`);
+
+    expect(response.statusCode).toBe(500);
+  });
+
+  test("user can accept bet", async () => {
+    const betId = 1;
+    const response = await request(app)
+      .put(`${rootURL}/accept/${betId}`)
       .set("authorization-jwt", `jwt ${auth2.token}`);
-    console.log(response.statusCode);
+
+    expect(response.body).toMatchObject({
+      id: betId,
+      betAmount: expect.any(Number),
+      mainUserId: expect.any(Number),
+      acceptedUserId: auth2.userData.id,
+    });
     expect(response.statusCode).toBe(200);
+  });
+
+  test("user cannot accept bet that was already accepted", async () => {
+    const betId = 1;
+    const response = await request(app)
+      .put(`${rootURL}/accept/${betId}`)
+      .set("authorization-jwt", `jwt ${auth2.token}`);
+
+    expect(response.statusCode).toBe(500);
   });
 });

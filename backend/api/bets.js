@@ -45,6 +45,7 @@ module.exports = (app) => {
   });
 
   app.post(rootURL, authenticateToken, async (req, res) => {
+    let errorMain = false;
     let betResponse = {
       main_user: {
         id: req.user.id,
@@ -61,6 +62,7 @@ module.exports = (app) => {
       betResponse = { ...betResponse, ...results.dataValues };
       res.json(results);
     } catch (error) {
+      errorMain = true;
       sendError(
         error,
         res,
@@ -68,6 +70,7 @@ module.exports = (app) => {
       );
     }
 
+    if (errorMain) return;
     // send push notification
     const notifyUsers = await Followers.getFollowerNotificationTokens(
       req.user.id
@@ -81,6 +84,7 @@ module.exports = (app) => {
   });
 
   app.put(`${rootURL}accept/:id`, authenticateToken, async (req, res) => {
+    let errorMain = false;
     let acceptedBet = {
       accepted_user: {
         id: req.user.id,
@@ -94,9 +98,11 @@ module.exports = (app) => {
       acceptedBet = { ...acceptedBet, ...results.dataValues };
       res.json(results);
     } catch (error) {
+      errorMain = true;
       sendError(error, res);
     }
 
+    if (errorMain) return;
     // send push notification
     const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
       "id",

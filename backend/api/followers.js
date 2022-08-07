@@ -22,6 +22,7 @@ module.exports = (app) => {
   });
 
   app.post(`${rootURL}:userId`, authenticateToken, async (req, res) => {
+    let errorMain = false;
     try {
       if (req.user.id == req.params.userId) {
         const error = new Error("You cannot follow yourself");
@@ -34,9 +35,11 @@ module.exports = (app) => {
       );
       res.json(results);
     } catch (error) {
+      errorMain = true;
       sendError(error, res);
     }
 
+    if (errorMain) return;
     // send push notification
     const followedUser = await Users.getUser(
       req.params.userId,
