@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 const Followers = require("../controller/followers");
@@ -31,20 +33,20 @@ module.exports = (app) => {
         req.params.userId
       );
       res.json(results);
-
-      // send push notification
-      const followedUser = await Users.getUser(
-        req.params.userId,
-        QueryHelpers.attributes.userWithNotificationToken
-      );
-      if (followedUser.notifyOnFollow) {
-        generatePushNotifications([followedUser.notification_token], {
-          title: `@${req.user.username} followed you`,
-          data: req.user,
-        });
-      }
     } catch (error) {
       sendError(error, res);
+    }
+
+    // send push notification
+    const followedUser = await Users.getUser(
+      req.params.userId,
+      QueryHelpers.attributes.userWithNotificationToken
+    );
+    if (followedUser.notifyOnFollow) {
+      generatePushNotifications([followedUser.notification_token], {
+        title: `@${req.user.username} followed you`,
+        data: req.user,
+      });
     }
   });
 

@@ -25,6 +25,8 @@ describe("Bets endpoint", () => {
   });
 
   afterAll(async () => {
+    // wait for backend to complete push notification task before closing
+    await new Promise((r) => setTimeout(r, 2000));
     await db.sequelize.close();
   });
   const newBet = {

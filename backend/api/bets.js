@@ -3,7 +3,6 @@ const Followers = require("../controller/followers");
 const {
   generatePushNotifications,
 } = require("../controller/pushNotifications");
-const queryHelpers = require("../controller/queryHelpers");
 const Users = require("../controller/users");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
@@ -61,17 +60,6 @@ module.exports = (app) => {
       });
       betResponse = { ...betResponse, ...results.dataValues };
       res.json(results);
-
-      // send push notification
-      const notifyUsers = await Followers.getFollowerNotificationTokens(
-        req.user.id
-      );
-      generatePushNotifications(notifyUsers, {
-        title: "New Bet",
-        subtitle: `@${req.user.username}`,
-        body: betResponse.description,
-        data: betResponse,
-      });
     } catch (error) {
       sendError(
         error,
@@ -79,6 +67,17 @@ module.exports = (app) => {
         "Server error, failed to save your bet. Try again shortly."
       );
     }
+
+    // send push notification
+    const notifyUsers = await Followers.getFollowerNotificationTokens(
+      req.user.id
+    );
+    generatePushNotifications(notifyUsers, {
+      title: "New Bet",
+      subtitle: `@${req.user.username}`,
+      body: betResponse.description,
+      data: betResponse,
+    });
   });
 
   app.put(`${rootURL}accept/:id`, authenticateToken, async (req, res) => {
@@ -94,23 +93,32 @@ module.exports = (app) => {
       const results = await Bets.acceptBet(req.user.id, req.params.id);
       acceptedBet = { ...acceptedBet, ...results.dataValues };
       res.json(results);
-
-      // send push notification
-      const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
-        ...queryHelpers.attributes.user,
-        "notification_token",
-        "notifyOnAccept",
-      ]);
-      if (notifyUser.notifyOnAccept) {
-        generatePushNotifications([notifyUser.notification_token], {
-          title: "Bet Accepted",
-          subtitle: `@${req.user.username}`,
-          body: acceptedBet.description,
-          data: { ...acceptedBet, main_user: notifyUser },
-        });
-      }
     } catch (error) {
       sendError(error, res);
+    }
+
+    // send push notification
+    const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
+      "id",
+      "username",
+      "name",
+      "notification_token",
+      "notifyOnAccept",
+    ]);
+    if (notifyUser.notifyOnAccept) {
+      generatePushNotifications([notifyUser.notification_token], {
+        title: "Bet Accepted",
+        subtitle: `@${req.user.username}`,
+        body: acceptedBet.description,
+        data: {
+          ...acceptedBet,
+          main_user: {
+            id: notifyUser.id,
+            username: notifyUser.username,
+            name: notifyUser.name,
+          },
+        },
+      });
     }
   });
 
