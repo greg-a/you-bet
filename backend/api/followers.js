@@ -21,6 +21,11 @@ module.exports = (app) => {
 
   app.post(`${rootURL}:userId`, authenticateToken, async (req, res) => {
     try {
+      if (req.user.id == req.params.userId) {
+        const error = new Error("You cannot follow yourself");
+        error.code = 400;
+        throw error;
+      }
       const results = await Followers.newFollower(
         req.user.id,
         req.params.userId

@@ -7,15 +7,18 @@ const { bet, expiredBet, user, betResponse, user2 } = require("./constants");
 
 describe("Bets endpoint", () => {
   const rootURL = "/api/bets";
-  let auth = {};
+  let auth1 = {};
+  let auth2 = {};
 
   beforeAll(async () => {
     try {
       await db.sequelize.sync({ force: true });
       await db.users.bulkCreate([user, user2]);
       await db.bets.bulkCreate([bet, expiredBet]);
-      const loginResponse = await login(user.username, user.password);
-      auth = loginResponse.body;
+      const loginResponse1 = await login(user.username, user.password);
+      const loginResponse2 = await login(user2.username, user2.password);
+      auth1 = loginResponse1.body;
+      auth2 = loginResponse2.body;
     } catch (err) {
       console.log({ err });
     }
@@ -38,10 +41,10 @@ describe("Bets endpoint", () => {
     const response = await request(app)
       .post("/api/bets")
       .send(newBet)
-      .set("authorization-jwt", `jwt ${auth.token}`);
+      .set("authorization-jwt", `jwt ${auth1.token}`);
     expect(response.body).toMatchObject({
       id: expect.any(Number),
-      mainUserId: auth.userData.id,
+      mainUserId: auth1.userData.id,
       ...newBet,
     });
     expect(response.statusCode).toBe(200);
@@ -54,25 +57,37 @@ describe("Bets endpoint", () => {
   test("get all current bets", async () => {
     const response = await request(app)
       .get(rootURL)
-      .set("authorization-jwt", `jwt ${auth.token}`);
+      .set("authorization-jwt", `jwt ${auth1.token}`);
     expect(response.body.length).toBe(2);
     expect(containsForbiddenField(response.body[0].main_user)).toBeFalsy();
-    expect(response.body[response.body.length - 1]).toMatchObject(betResponse);
+    expect(response.body[response.body.length - 1]).toMatchObject({
+      ...betResponse,
+      createdAt: expect.any(String),
+    });
     expect(response.statusCode).toBe(200);
   });
 
   const userBetCases = [
     [1, 3],
     [2, 0],
+    [10, 0],
   ];
   test.each(userBetCases)(
     "get bets by user id %p should return %p bets",
     async (userId, expectedNumberOfBets) => {
       const response = await request(app)
         .get(`${rootURL}/profile/${userId}`)
-        .set("authorization-jwt", `jwt ${auth.token}`);
+        .set("authorization-jwt", `jwt ${auth1.token}`);
       expect(response.body.length).toBe(expectedNumberOfBets);
       expect(response.statusCode).toBe(200);
     }
   );
+
+  test("user can accept bet", async () => {
+    const response = await request(app)
+      .put(`${rootURL}/accept/1`)
+      .set("authorization-jwt", `jwt ${auth2.token}`);
+    console.log(response.statusCode);
+    expect(response.statusCode).toBe(200);
+  });
 });
