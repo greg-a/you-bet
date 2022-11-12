@@ -9,7 +9,7 @@ const rootURL = "/api/users/";
 const secret = process.env.TOKEN_SECRET;
 
 module.exports = function (app) {
-  app.get(rootURL, authenticateToken, async (req, res) => {
+  app.get(rootURL, authenticateToken, async (_, res) => {
     try {
       const results = await Users.getAllUsers();
       res.json(results);
@@ -18,11 +18,19 @@ module.exports = function (app) {
     }
   });
 
-  app.get(`${rootURL}search/:input`, authenticateToken, async (req, res) => {
+  app.get(`${rootURL}search/`, authenticateToken, async (req, res) => {
+    const limit = isNaN(Number(req.query.limit))
+      ? undefined
+      : Number(req.query.limit);
     try {
-      const results = await Users.userSearch(req.params.input);
+      const results = await Users.userSearch(
+        req.query.search ?? "",
+        limit,
+        req.user.id
+      );
       res.json(results);
     } catch (error) {
+      console.log({ error });
       sendError(error, res);
     }
   });
