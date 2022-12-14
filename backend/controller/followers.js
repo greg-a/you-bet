@@ -1,91 +1,77 @@
-const { followers } = require("../models");
-const QueryHelpers = require("../controller/queryHelpers");
-const Users = require("./users");
+require("dotenv").config();
 
-module.exports = {
-  getFollowerIds: async (userId) => {
-    const results = await followers.findAll({
-      where: {
-        mainUserId: userId,
-      },
-    });
-    return results.map(({ followedUserId }) => followedUserId);
-  },
-  getFollowLists: async (userId) => {
-    const followingList = await followers.findAll({
-      where: {
-        mainUserId: userId,
-      },
-      attributes: ["followedUserId", "notificationsOn"],
-      include: [QueryHelpers.includes.followedUser()],
-    });
-    const followerList = await followers.findAll({
-      where: {
-        followedUserId: userId,
-      },
-      attributes: ["mainUserId"],
-      include: [QueryHelpers.includes.mainUser()],
-    });
-    return {
-      followingList,
-      followerList,
-    };
-  },
-  getFollowerNotificationTokens: async (userId) => {
-    const notifyUsers = await followers.findAll({
-      where: {
-        followedUserId: userId,
-        notificationsOn: true,
-      },
-      include: [
-        {
-          ...QueryHelpers.includes.mainUser(),
-          attributes: ["notification_token"],
-        },
-      ],
-    });
-    return notifyUsers.map(({ main_user }) => main_user.notification_token);
-  },
-  newFollower: async (userId, followUserId) => {
-    const follow = await followers.create(
-      {
-        mainUserId: userId,
-        followedUserId: followUserId,
-      },
-      { returning: true }
-    );
-    const followed_user = await Users.getUser(follow.dataValues.followedUserId);
-    return {
-      ...follow.dataValues,
-      followed_user,
-    };
-  },
-  unFollowUser: async (mainUserId, followedUserId) => {
-    await followers.destroy({ where: { mainUserId, followedUserId } });
-  },
-  updateNotificationForUser: async (
-    userId,
-    followedUserId,
-    notificationsOn
-  ) => {
-    const results = await followers.update(
-      {
-        notificationsOn,
-      },
-      {
-        where: {
-          mainUserId: userId,
-          followedUserId,
-        },
-        returning: true,
-      }
-    );
-    const [affectedRows, updatedFollow] = results;
-    if (affectedRows === 0) {
-      const error = new Error("Could not find user");
-      error.code = 404;
-      throw error;
+const { authenticateToken } = require("../utils/token");
+const { sendError } = require("./utils");
+const Followers = require("./followers");
+const Users = require("./users");
+const QueryHelpers = require("../controller/queryHelpers");
+const {
+  generatePushNotifications,
+} = require("../controller/pushNotifications");
+
+const rootURL = "/api/followers/";
+
+module.exports = (app) => {
+  app.get(rootURL, authenticateToken, async (req, res) => {
+    try {
+      const results = await Followers.getFollowLists(req.user.id);
+      res.json(results);
+    } catch (err) {
+      sendError(err, res);
     }
-    return updatedFollow[0];
-  },
+  });
+
+  app.post(`${rootURL}:userId`, authenticateToken, async (req, res) => {
+    let errorMain = false;
+    try {
+      if (req.user.id == req.params.userId) {
+        const error = new Error("You cannot follow yourself");
+        error.code = 400;
+        throw error;
+      }
+      const results = await Followers.newFollower(
+        req.user.id,
+        req.params.userId
+      );
+      res.json(results);
+    } catch (error) {
+      errorMain = true;
+      sendError(error, res);
+    }
+
+    if (errorMain) return;
+    // send push notification
+    const followedUser = await Users.getUser(
+      req.params.userId,
+      QueryHelpers.attributes.userWithNotificationToken
+    );
+    if (followedUser.notifyOnFollow) {
+      generatePushNotifications([followedUser.notification_token], {
+        title: `@${req.user.username} followed you`,
+        data: req.user,
+      });
+    }
+  });
+
+  app.put(`${rootURL}notifications`, authenticateToken, async (req, res) => {
+    try {
+      const results = await Followers.updateNotificationForUser(
+        req.user.id,
+        req.body.followedUserId,
+        req.body.notificationsOn
+      );
+      res.json(results);
+    } catch (err) {
+      sendError(err, res);
+    }
+  });
+
+  app.delete(`${rootURL}:userId`, authenticateToken, async (req, res) => {
+    try {
+      await Followers.unFollowUser(req.user.id, req.params.userId);
+      res.sendStatus(200);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
 };

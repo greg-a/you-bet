@@ -4,7 +4,7 @@ const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 const Followers = require("../controller/followers");
 const Users = require("../controller/users");
-const QueryHelpers = require("../controller/queryHelpers");
+const QueryHelpers = require("./queryHelpers");
 const {
   generatePushNotifications,
 } = require("../controller/pushNotifications");

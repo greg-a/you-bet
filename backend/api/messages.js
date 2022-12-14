@@ -4,7 +4,7 @@ const Messages = require("../controller/messages");
 const Bets = require("../controller/bets");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
-const QueryHelpers = require("../controller/queryHelpers");
+const QueryHelpers = require("./queryHelpers");
 const {
   generatePushNotifications,
 } = require("../controller/pushNotifications");

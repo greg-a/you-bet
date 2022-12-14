@@ -1,135 +1,110 @@
-const { users, Sequelize } = require("../models");
-const {
-  generateAccessToken,
-  generateHashedPassword,
-} = require("../utils/token");
-const QueryHelpers = require("./queryHelpers");
-const { Op } = Sequelize;
+const { createHmac } = require("crypto");
+const { users } = require("../models");
+const Users = require("./users");
+const Bets = require("./bets");
+const { authenticateToken } = require("../utils/token");
+const { sendError } = require("./utils");
 
-module.exports = {
-  getUser: async (userId, attributes) => {
-    const results = await users.findOne({
-      where: {
-        id: userId,
-      },
-      attributes: attributes ?? QueryHelpers.attributes.user,
-      raw: true,
-    });
-    return results;
-  },
-  getUserByUsername: async (username) => {
-    const results = await users.findOne({
-      where: {
-        username,
-      },
-      attributes: QueryHelpers.attributes.user,
-      raw: true,
-    });
-    return results;
-  },
-  getAllUsers: async () => {
-    const results = await users.findAll({
-      attributes: QueryHelpers.attributes.user,
-    });
-    return results;
-  },
-  userSearch: async (input, limit, currentUserId) => {
-    const optionalLimit = limit ? { limit } : {};
-    const conditionalWhere =
-      input && input.length > 0
-        ? {
-            [Op.or]: [
-              {
-                username: { [Op.iLike]: `${input.replace(" ", "_")}%` },
-              },
-              { name: { [Op.iLike]: `%${input}%` } },
-            ],
-          }
-        : {};
-    const results = await users.findAll({
-      attributes: QueryHelpers.attributes.user,
-      where: {
-        ...conditionalWhere,
-        id: {
-          [Op.not]: currentUserId,
-        },
-      },
-      ...optionalLimit,
-    });
-    return results;
-  },
-  createUser: async (userInfo) => {
-    await users.create(userInfo);
-  },
-  updateUserInfo: async (userId, userInfo) => {
-    const results = await users.update(
-      {
-        ...userInfo,
-      },
-      {
-        where: {
-          id: userId,
-        },
-        returning: true,
-      }
-    );
-    const [affectedRows, updatedUserInfo] = results;
-    if (affectedRows === 0) throw new Error();
-    return {
-      name: updatedUserInfo[0].dataValues.name,
-      notifyOnAccept: updatedUserInfo[0].dataValues.notifyOnAccept,
-      notifyOnMessage: updatedUserInfo[0].dataValues.notifyOnMessage,
-      notifyOnFollow: updatedUserInfo[0].dataValues.notifyOnFollow,
-    };
-  },
-  deleteNotificationToken: async (notification_token) => {
-    await users.update(
-      {
-        notification_token: null,
-      },
-      {
-        where: {
-          notification_token,
-        },
-      }
-    );
-  },
-  login: async (data) => {
-    const { username, password } = data;
-    const hashedPassword = generateHashedPassword(password);
-    const loggedInUser = await users.findOne({
-      logging: false,
-      where: {
-        username: username.toLowerCase(),
-        password: hashedPassword,
-      },
-      attributes: QueryHelpers.attributes.userWithNotificationToken,
-    });
-    if (!loggedInUser?.dataValues) {
-      const error = new Error("username or password is incorrect");
-      error.code = 409;
-      throw error;
+const rootURL = "/api/users/";
+const secret = process.env.TOKEN_SECRET;
+
+module.exports = function (app) {
+  app.get(rootURL, authenticateToken, async (_, res) => {
+    try {
+      const results = await Users.getAllUsers();
+      res.json(results);
+    } catch (error) {
+      sendError(error);
     }
-    const { notification_token, ...userData } = loggedInUser.dataValues;
-    const token = generateAccessToken(userData);
+  });
 
-    return {
-      token,
-      userData: {
-        ...userData,
-        hasNotificationToken: !!notification_token,
-      },
-    };
-  },
-  logout: async (userId) => {
-    await users.update(
-      { notification_token: null },
-      {
-        logging: false,
-        where: {
-          id: userId,
-        },
+  app.get(`${rootURL}search/`, authenticateToken, async (req, res) => {
+    const limit = isNaN(Number(req.query.limit))
+      ? undefined
+      : Number(req.query.limit);
+    try {
+      const results = await Users.userSearch(
+        req.query.search ?? "",
+        limit,
+        req.user.id
+      );
+      res.json(results);
+    } catch (error) {
+      console.log({ error });
+      sendError(error, res);
+    }
+  });
+
+  app.post(rootURL, async (req, res) => {
+    try {
+      await Users.createUser(req.body);
+      res.sendStatus(200);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
+
+  app.patch(rootURL, authenticateToken, async (req, res) => {
+    try {
+      if (
+        Object.keys(req.body).some((key) =>
+          ["id", "username", "password"].includes(key)
+        )
+      ) {
+        const error = new Error("Cannot update username or password");
+        error.code = 403;
+        throw error;
       }
-    );
-  },
+      const results = await Users.updateUserInfo(req.user.id, req.body);
+      res.json(results);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
+
+  //TODO
+  app.patch(`${rootURL}password-reset`, authenticateToken, async (req, res) => {
+    if (!req.body.password1 || !req.body.password2)
+      return res.status(400).send("bad request");
+    if (req.body.password1 !== req.body.password2)
+      return res.status(400).send("new passwords do not match");
+    try {
+      const newPasswordHashed = createHmac("sha256", secret)
+        .update(req.body.password1)
+        .digest("hex");
+      const currentPasswordHashed = createHmac("sha256", secret)
+        .update(req.body.currentPassword)
+        .digest("hex");
+      const results = await users.update(
+        {
+          password: newPasswordHashed,
+        },
+        {
+          where: {
+            id: req.user.id,
+            password: currentPasswordHashed,
+          },
+        }
+      );
+      if (results[0] === 0)
+        res.status(401).send("current password is incorrect");
+      res.sendStatus(200);
+    } catch (err) {
+      sendError(err, res);
+    }
+  });
+
+  app.get(
+    `${rootURL}profile/:username`,
+    authenticateToken,
+    async (req, res) => {
+      try {
+        const user = await Users.getUserByUsername(req.params.username);
+        const results = await Bets.getAllBetsByUserId(user.id);
+        res.json({ bets: results, profileInfo: user });
+      } catch (error) {
+        sendError(error, res);
+      }
+    }
+  );
 };

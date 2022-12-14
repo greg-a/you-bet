@@ -1,5 +1,5 @@
-const Users = require("../controller/users");
-const queryHelpers = require("./queryHelpers");
+const Users = require("./users");
+const queryHelpers = require("../controller/queryHelpers");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 

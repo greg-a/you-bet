@@ -1,89 +1,149 @@
-const { bets, messages, Sequelize } = require("../models");
-const QueryHelpers = require("./queryHelpers");
-const { Op } = Sequelize;
+const Bets = require("./bets");
+const Followers = require("./followers");
+const {
+  generatePushNotifications,
+} = require("../controller/pushNotifications");
+const Users = require("./users");
+const { authenticateToken } = require("../utils/token");
+const { sendError } = require("./utils");
 
-module.exports = {
-  getBetsByUserId: async (userIds, current = false) => {
-    const endDateConstraint = current
-      ? {
-          endDate: {
-            [Op.gte]: new Date(),
-          },
-        }
-      : {};
-    const results = await bets.findAll({
-      where: {
-        mainUserId: userIds,
-        ...endDateConstraint,
+const rootURL = "/api/bets/";
+
+module.exports = (app) => {
+  app.get(rootURL, authenticateToken, async (req, res) => {
+    try {
+      const followList = await Followers.getFollowerIds(req.user.id);
+      const results = await Bets.getBetsByUserId(
+        [...followList, req.user.id],
+        true
+      );
+      res.json(results);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
+
+  app.get(`${rootURL}profile/:userId?`, authenticateToken, async (req, res) => {
+    try {
+      const profileId = Number(req.params?.userId) || req.user.id;
+      const results = await Bets.getBetsByUserId(profileId);
+      res.json(results);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
+
+  app.get(`${rootURL}:username/bet/:betId`, async (req, res) => {
+    try {
+      const response = await Users.getUserByUsername(req.params.username);
+      const results = await Bets.getBet(req.params.betId);
+      if (results.mainUserId !== response.id) throw new Error();
+      res.json(results);
+    } catch (err) {
+      sendError(err, res);
+    }
+  });
+
+  app.post(rootURL, authenticateToken, async (req, res) => {
+    let errorMain = false;
+    let betResponse = {
+      main_user: {
+        id: req.user.id,
+        username: req.user.username,
+        name: req.user.name,
       },
-      order: [
-        ["createdAt", "DESC"],
-        [messages, "createdAt", "DESC"],
-      ],
-      include: [
-        QueryHelpers.includes.mainUser(),
-        QueryHelpers.includes.messages(),
-        QueryHelpers.includes.acceptedUser(),
-      ],
+      messages: [],
+    };
+    try {
+      const results = await Bets.createBet({
+        mainUserId: req.user.id,
+        ...req.body,
+      });
+      betResponse = { ...betResponse, ...results.dataValues };
+      res.json(results);
+    } catch (error) {
+      errorMain = true;
+      sendError(
+        error,
+        res,
+        "Server error, failed to save your bet. Try again shortly."
+      );
+    }
+
+    if (errorMain) return;
+    // send push notification
+    const notifyUsers = await Followers.getFollowerNotificationTokens(
+      req.user.id
+    );
+    generatePushNotifications(notifyUsers, {
+      title: "New Bet",
+      subtitle: `@${req.user.username}`,
+      body: betResponse.description,
+      data: betResponse,
     });
-    return results;
-  },
-  getAllBetsByUserId: async (userId) => {
-    const results = await bets.findAll({
-      where: {
-        [Op.or]: [{ mainUserId: userId }, { acceptedUserId: userId }],
+  });
+
+  app.put(`${rootURL}accept/:id`, authenticateToken, async (req, res) => {
+    let errorMain = false;
+    let acceptedBet = {
+      accepted_user: {
+        id: req.user.id,
+        username: req.user.username,
+        name: req.user.name,
       },
-      order: [
-        ["createdAt", "DESC"],
-        [messages, "createdAt", "DESC"],
-      ],
-      include: [
-        QueryHelpers.includes.mainUser(),
-        QueryHelpers.includes.messages(),
-        QueryHelpers.includes.acceptedUser(),
-      ],
-    });
-    return results;
-  },
-  getBet: async (betId, userAttributes) => {
-    const response = await bets.findOne({
-      where: {
-        id: betId,
-      },
-      include: [
-        QueryHelpers.includes.mainUser(userAttributes),
-        QueryHelpers.includes.messages(),
-        QueryHelpers.includes.acceptedUser(),
-      ],
-      order: [[messages, "createdAt", "DESC"]],
-    });
-    return response;
-  },
-  createBet: async (data) => await bets.create(data, { returning: true }),
-  acceptBet: async (userId, betId) => {
-    const results = await bets.update(
-      {
-        acceptedUserId: userId,
-      },
-      {
-        where: {
-          id: betId,
-          acceptedUserId: null,
-          endDate: {
-            [Op.gte]: new Date(),
-          },
-          mainUserId: {
-            [Op.not]: userId,
+      messages: [],
+    };
+    try {
+      const results = await Bets.acceptBet(req.user.id, req.params.id);
+      acceptedBet = { ...acceptedBet, ...results.dataValues };
+      res.json(results);
+    } catch (error) {
+      errorMain = true;
+      sendError(error, res);
+    }
+
+    if (errorMain) return;
+    // send push notification
+    const notifyUser = await Users.getUser(acceptedBet.mainUserId, [
+      "id",
+      "username",
+      "name",
+      "notification_token",
+      "notifyOnAccept",
+    ]);
+    if (notifyUser.notifyOnAccept) {
+      generatePushNotifications([notifyUser.notification_token], {
+        title: "Bet Accepted",
+        subtitle: `@${req.user.username}`,
+        body: acceptedBet.description,
+        data: {
+          ...acceptedBet,
+          main_user: {
+            id: notifyUser.id,
+            username: notifyUser.username,
+            name: notifyUser.name,
           },
         },
-        returning: true,
-      }
-    );
-    const [affectedRows, acceptedBet] = results;
+      });
+    }
+  });
 
-    if (affectedRows === 0)
-      throw "Could not accept bet, chances are the bet was already accepted, expired, or you somehow tried to accept your own bet";
-    return acceptedBet[0];
-  },
-  deleteBet: async (betId) => await bets.destroy({ where: { id: betId } }),
+  app.get(`${rootURL}:betId`, async (req, res) => {
+    try {
+      const response = await Bets.getBet(req.params.betId);
+      if (!response) return res.status(404).send("Bet not found");
+      res.json(response);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
+
+  app.delete(`${rootURL}delete/:betId`, authenticateToken, async (req, res) => {
+    try {
+      await Bets.deleteBet(req.params.betId);
+      res.sendStatus(200);
+    } catch (error) {
+      sendError(error, res);
+    }
+  });
 };
