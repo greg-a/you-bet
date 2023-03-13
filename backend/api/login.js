@@ -1,5 +1,5 @@
 const Users = require("../controller/users");
-const queryHelpers = require("./queryHelpers");
+const queryHelpers = require("../repository/queryHelpers");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 
@@ -15,7 +15,9 @@ module.exports = function (app) {
       } catch (error) {
         sendError(error, res);
       }
-    } else res.status(400).send("username or password is missing");
+    } else {
+      res.status(400).send("username or password is missing");
+    }
   });
 
   app.get(`${rootURL}token/`, authenticateToken, async (req, res) => {

@@ -1,9 +1,9 @@
-const Bets = require("./bets");
-const Followers = require("./followers");
+const Bets = require("../repository/bets");
+const Followers = require("../repository/followers");
 const {
   generatePushNotifications,
-} = require("../controller/pushNotifications");
-const Users = require("./users");
+} = require("../repository/pushNotifications");
+const Users = require("../repository/users");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 

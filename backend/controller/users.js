@@ -1,7 +1,7 @@
 const { createHmac } = require("crypto");
 const { users } = require("../models");
-const Users = require("./users");
-const Bets = require("./bets");
+const Users = require("../repository/users");
+const Bets = require("../repository/bets");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 

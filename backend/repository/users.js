@@ -3,7 +3,7 @@ const {
   generateAccessToken,
   generateHashedPassword,
 } = require("../utils/token");
-const QueryHelpers = require("./queryHelpers");
+const QueryHelpers = require("../repository/queryHelpers");
 const { Op } = Sequelize;
 
 module.exports = {

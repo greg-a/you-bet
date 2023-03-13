@@ -1,13 +1,13 @@
 require("dotenv").config();
 
-const Messages = require("./messages");
-const Bets = require("./bets");
+const Messages = require("../repository/messages");
+const Bets = require("../repository/bets");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
-const QueryHelpers = require("../controller/queryHelpers");
+const QueryHelpers = require("../repository/queryHelpers");
 const {
   generatePushNotifications,
-} = require("../controller/pushNotifications");
+} = require("../repository/pushNotifications");
 
 const rootURL = "/api/messages/";
 

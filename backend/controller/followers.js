@@ -2,12 +2,12 @@ require("dotenv").config();
 
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
-const Followers = require("./followers");
-const Users = require("./users");
-const QueryHelpers = require("../controller/queryHelpers");
+const Followers = require("../repository/followers");
+const Users = require("../repository/users");
+const QueryHelpers = require("../repository/queryHelpers");
 const {
   generatePushNotifications,
-} = require("../controller/pushNotifications");
+} = require("../repository/pushNotifications");
 
 const rootURL = "/api/followers/";
 

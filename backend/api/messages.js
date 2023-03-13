@@ -4,10 +4,10 @@ const Messages = require("../controller/messages");
 const Bets = require("../controller/bets");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
-const QueryHelpers = require("./queryHelpers");
+const QueryHelpers = require("../repository/queryHelpers");
 const {
   generatePushNotifications,
-} = require("../controller/pushNotifications");
+} = require("../repository/pushNotifications");
 
 const rootURL = "/api/messages/";
 
