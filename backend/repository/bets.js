@@ -1,5 +1,5 @@
 const { bets, messages, Sequelize } = require("../models");
-const QueryHelpers = require("./queryHelpers");
+const QueryHelpers = require("../repository/queryHelpers");
 const { Op } = Sequelize;
 
 module.exports = {

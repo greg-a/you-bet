@@ -1,7 +1,7 @@
 const { createHmac } = require("crypto");
 const { users } = require("../models");
-const Users = require("../controller/users");
-const Bets = require("../controller/bets");
+const Users = require("../repository/users");
+const Bets = require("../repository/bets");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 
@@ -9,21 +9,28 @@ const rootURL = "/api/users/";
 const secret = process.env.TOKEN_SECRET;
 
 module.exports = function (app) {
-  app.get(rootURL, authenticateToken, async (req, res) => {
+  app.get(rootURL, authenticateToken, async (_, res) => {
     try {
       const results = await Users.getAllUsers();
       res.json(results);
     } catch (error) {
-      console.log({ error });
       sendError(error);
     }
   });
 
-  app.get(`${rootURL}search/:input`, authenticateToken, async (req, res) => {
+  app.get(`${rootURL}search/`, authenticateToken, async (req, res) => {
+    const limit = isNaN(Number(req.query.limit))
+      ? undefined
+      : Number(req.query.limit);
     try {
-      const results = await Users.userSearch(req.params.input);
+      const results = await Users.userSearch(
+        req.query.search ?? "",
+        limit,
+        req.user.id
+      );
       res.json(results);
     } catch (error) {
+      console.log({ error });
       sendError(error, res);
     }
   });
@@ -83,7 +90,6 @@ module.exports = function (app) {
         res.status(401).send("current password is incorrect");
       res.sendStatus(200);
     } catch (err) {
-      console.log({ err });
       sendError(err, res);
     }
   });
@@ -97,7 +103,6 @@ module.exports = function (app) {
         const results = await Bets.getAllBetsByUserId(user.id);
         res.json({ bets: results, profileInfo: user });
       } catch (error) {
-        console.log({ error });
         sendError(error, res);
       }
     }

@@ -1,11 +1,13 @@
+require("dotenv").config();
+
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
-const Followers = require("../controller/followers");
-const Users = require("../controller/users");
-const QueryHelpers = require("../controller/queryHelpers");
+const Followers = require("../repository/followers");
+const Users = require("../repository/users");
+const QueryHelpers = require("../repository/queryHelpers");
 const {
   generatePushNotifications,
-} = require("../controller/pushNotifications");
+} = require("../repository/pushNotifications");
 
 const rootURL = "/api/followers/";
 
@@ -20,26 +22,34 @@ module.exports = (app) => {
   });
 
   app.post(`${rootURL}:userId`, authenticateToken, async (req, res) => {
+    let errorMain = false;
     try {
+      if (req.user.id == req.params.userId) {
+        const error = new Error("You cannot follow yourself");
+        error.code = 400;
+        throw error;
+      }
       const results = await Followers.newFollower(
         req.user.id,
         req.params.userId
       );
       res.json(results);
-
-      // send push notification
-      const followedUser = await Users.getUser(
-        req.params.userId,
-        QueryHelpers.attributes.userWithNotificationToken
-      );
-      if (followedUser.notifyOnFollow) {
-        generatePushNotifications([followedUser.notification_token], {
-          title: `@${req.user.username} followed you`,
-          data: req.user,
-        });
-      }
     } catch (error) {
+      errorMain = true;
       sendError(error, res);
+    }
+
+    if (errorMain) return;
+    // send push notification
+    const followedUser = await Users.getUser(
+      req.params.userId,
+      QueryHelpers.attributes.userWithNotificationToken
+    );
+    if (followedUser.notifyOnFollow) {
+      generatePushNotifications([followedUser.notification_token], {
+        title: `@${req.user.username} followed you`,
+        data: req.user,
+      });
     }
   });
 
@@ -52,7 +62,6 @@ module.exports = (app) => {
       );
       res.json(results);
     } catch (err) {
-      console.log({ err });
       sendError(err, res);
     }
   });
@@ -62,7 +71,6 @@ module.exports = (app) => {
       await Followers.unFollowUser(req.user.id, req.params.userId);
       res.sendStatus(200);
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });

@@ -1,5 +1,5 @@
 const Users = require("../controller/users");
-const queryHelpers = require("../controller/queryHelpers");
+const queryHelpers = require("../repository/queryHelpers");
 const { authenticateToken } = require("../utils/token");
 const { sendError } = require("./utils");
 
@@ -13,10 +13,11 @@ module.exports = function (app) {
         const results = await Users.login(req.body);
         res.json(results);
       } catch (error) {
-        console.log({ error });
         sendError(error, res);
       }
-    } else res.status(400).send("username or password is missing");
+    } else {
+      res.status(400).send("username or password is missing");
+    }
   });
 
   app.get(`${rootURL}token/`, authenticateToken, async (req, res) => {
@@ -31,7 +32,6 @@ module.exports = function (app) {
         hasNotificationToken: !!notification_token,
       });
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });
@@ -41,7 +41,6 @@ module.exports = function (app) {
       await Users.logout(req.user.id);
       res.sendStatus(200);
     } catch (error) {
-      console.log({ error });
       sendError(error, res);
     }
   });

@@ -1,18 +1,8 @@
 require("dotenv").config();
-const express = require("express");
-const app = express();
+const app = require("./app");
 const db = require("./models");
 
 const PORT = process.env.PORT || 8080;
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-require("./api/users")(app);
-require("./api/login")(app);
-require("./api/bets")(app);
-require("./api/messages")(app);
-require("./api/followers")(app);
 
 const syncOptions = { force: false };
 
@@ -25,5 +15,3 @@ db.sequelize.sync(syncOptions).then(function () {
     );
   });
 });
-
-module.exports = app;

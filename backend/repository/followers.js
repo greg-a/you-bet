@@ -1,5 +1,5 @@
 const { followers } = require("../models");
-const QueryHelpers = require("../controller/queryHelpers");
+const QueryHelpers = require("../repository/queryHelpers");
 const Users = require("./users");
 
 module.exports = {

@@ -11,8 +11,7 @@ exports.authenticateToken = (req, res, next) => {
 
   jwt.verify(token, tokenSecret, (err, userId) => {
     if (err) {
-      console.log({ err });
-      return res.sendStatus(412);
+      return res.status(412).send(err.message);
     }
 
     req.user = userId;

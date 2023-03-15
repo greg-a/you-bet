@@ -3,7 +3,7 @@ const {
   generateAccessToken,
   generateHashedPassword,
 } = require("../utils/token");
-const QueryHelpers = require("./queryHelpers");
+const QueryHelpers = require("../repository/queryHelpers");
 const { Op } = Sequelize;
 
 module.exports = {
@@ -33,17 +33,28 @@ module.exports = {
     });
     return results;
   },
-  userSearch: async (input) => {
+  userSearch: async (input, limit, currentUserId) => {
+    const optionalLimit = limit ? { limit } : {};
+    const conditionalWhere =
+      input && input.length > 0
+        ? {
+            [Op.or]: [
+              {
+                username: { [Op.iLike]: `${input.replace(" ", "_")}%` },
+              },
+              { name: { [Op.iLike]: `%${input}%` } },
+            ],
+          }
+        : {};
     const results = await users.findAll({
       attributes: QueryHelpers.attributes.user,
       where: {
-        [Op.or]: [
-          {
-            username: { [Op.iLike]: `%${input.replace(" ", "_")}%` },
-          },
-          { name: { [Op.iLike]: `%${input}%` } },
-        ],
+        ...conditionalWhere,
+        id: {
+          [Op.not]: currentUserId,
+        },
       },
+      ...optionalLimit,
     });
     return results;
   },
