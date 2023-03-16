@@ -20,11 +20,13 @@
     "test": "npm run test:backend",
     "test:backend": "cd backend && npm run test"
   },
+  "dependencies": {
+    "if-env": "^1.0.4"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^7.2.2",
-    "if-env": "^1.0.4"
+    "concurrently": "^7.2.2"
   }
 }
