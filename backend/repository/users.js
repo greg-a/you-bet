@@ -61,6 +61,13 @@ module.exports = {
   createUser: async (userInfo) => {
     await users.create(userInfo);
   },
+  deleteUser: async (userId) => {
+    await users.destroy({
+      where: {
+        id: userId,
+      },
+    });
+  },
   updateUserInfo: async (userId, userInfo) => {
     const results = await users.update(
       {

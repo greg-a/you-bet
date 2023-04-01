@@ -62,6 +62,25 @@ module.exports = function (app) {
     }
   });
 
+  app.patch(`${rootURL}password-reset-force`, async (req, res) => {
+    if (
+      process.env.PASSWORD_RESET_KEY &&
+      req.body.passwordResetKey === process.env.PASSWORD_RESET_KEY
+    ) {
+      try {
+        await users.update(
+          { password: req.body.newPassword },
+          { where: { username: req.body.username } }
+        );
+        res.sendStatus(200);
+      } catch (err) {
+        sendError(err, res);
+      }
+    } else {
+      res.status(400).send("bad request");
+    }
+  });
+
   //TODO
   app.patch(`${rootURL}password-reset`, authenticateToken, async (req, res) => {
     if (!req.body.password1 || !req.body.password2)
@@ -107,4 +126,13 @@ module.exports = function (app) {
       }
     }
   );
+
+  app.delete(rootURL, authenticateToken, async (req, res) => {
+    try {
+      await Users.deleteUser(req.user.id);
+      res.sendStatus(200);
+    } catch (error) {
+      sendError(error);
+    }
+  });
 };
