@@ -126,4 +126,13 @@ module.exports = function (app) {
       }
     }
   );
+
+  app.delete(rootURL, authenticateToken, async (req, res) => {
+    try {
+      await Users.deleteUser(req.user.id);
+      res.sendStatus(200);
+    } catch (error) {
+      sendError(error);
+    }
+  });
 };
