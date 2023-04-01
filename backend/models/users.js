@@ -73,11 +73,20 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   users.associate = (models) => {
-    users.hasMany(models.bets, { foreignKey: "mainUserId" });
+    users.hasMany(models.bets, {
+      foreignKey: "mainUserId",
+      onDelete: "CASCADE",
+    });
     users.hasMany(models.bets, { foreignKey: "acceptedUserId" });
-    users.hasMany(models.messages);
-    users.hasMany(models.followers, { foreignKey: "mainUserId" });
-    users.hasMany(models.followers, { foreignKey: "followedUserId" });
+    users.hasMany(models.messages, { onDelete: "CASCADE" });
+    users.hasMany(models.followers, {
+      foreignKey: "mainUserId",
+      onDelete: "CASCADE",
+    });
+    users.hasMany(models.followers, {
+      foreignKey: "followedUserId",
+      onDelete: "CASCADE",
+    });
   };
 
   return users;
