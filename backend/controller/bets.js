@@ -13,7 +13,7 @@ module.exports = (app) => {
   app.get(rootURL, authenticateToken, async (req, res) => {
     try {
       const followList = await Followers.getFollowerIds(req.user.id);
-      const results = await Bets.getBetsByUserId(
+      const results = await Bets.getMainBetFeed(
         [...followList, req.user.id],
         true
       );
@@ -26,7 +26,7 @@ module.exports = (app) => {
   app.get(`${rootURL}profile/:userId?`, authenticateToken, async (req, res) => {
     try {
       const profileId = Number(req.params?.userId) || req.user.id;
-      const results = await Bets.getBetsByUserId(profileId);
+      const results = await Bets.getAllBetsByUserId(profileId);
       res.json(results);
     } catch (error) {
       sendError(error, res);

@@ -3,18 +3,17 @@ const QueryHelpers = require("../repository/queryHelpers");
 const { Op } = Sequelize;
 
 module.exports = {
-  getBetsByUserId: async (userIds, current = false) => {
-    const endDateConstraint = current
-      ? {
-          endDate: {
-            [Op.gte]: new Date(),
-          },
-        }
-      : {};
+  getMainBetFeed: async (userIds) => {
+    const conditions = {
+      endDate: {
+        [Op.gte]: new Date(),
+      },
+      acceptedUserId: null,
+    };
     const results = await bets.findAll({
       where: {
         mainUserId: userIds,
-        ...endDateConstraint,
+        ...conditions,
       },
       order: [
         ["createdAt", "DESC"],
